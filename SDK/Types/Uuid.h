@@ -10,8 +10,15 @@
 namespace energo::types {
 
 class EXPORTS Uuid final {
-private:
+public:
     Uuid();
+
+    bool equals(const Uuid &other) const;
+
+    bool operator==(const Uuid &other) const;
+
+private:
+
 };
 
 }
