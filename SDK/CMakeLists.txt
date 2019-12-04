@@ -1,0 +1,14 @@
+cmake_minimum_required(VERSION 3.9)
+
+
+
+add_library(SDK)
+
+set_target_properties(SDK PROPERTIES LINKER_LANGUAGE CXX)
+
+set(CMAKE_CXX_STANDARD 17)
+set(CMAKE_CXX_STANDARD_REQUIRED ON)
+
+set_property(TARGET SDK PROPERTY CXX_STANDARD 17)
+
+install(TARGETS SDK RUNTIME DESTINATION bin)
