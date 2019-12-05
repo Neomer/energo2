@@ -6,6 +6,7 @@
 #include <random>
 #include <stdexcept>
 #include <sstream>
+#include <fmt/format.h>
 #include "Uuid.h"
 
 #ifdef ENVIRONMENT64
@@ -68,13 +69,7 @@ Uuid Uuid::Parse(std::string_view data) {
 }
 
 std::string Uuid::toString() const {
-    ostringstream stream;
-    char buf[26];
-    for (auto idx: _data) {
-        lltoa(idx, buf, 10);
-        stream << buf;
-    }
-    return stream.str();
+    return fmt::format(FMT_STRING("{:x}"), _data[0]);
 }
 
 #undef UUID_DATA_PARTS
