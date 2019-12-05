@@ -13,3 +13,8 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set_property(TARGET Configurator PROPERTY CXX_STANDARD 17)
 
 install(TARGETS Configurator RUNTIME DESTINATION bin)
+
+add_custom_command(TARGET Configurator POST_BUILD
+        COMMAND ${CMAKE_COMMAND} -E copy_if_different
+        "$<TARGET_FILE_DIR:SDK>/libSDK.dll"
+        $<TARGET_FILE_DIR:Configurator>)
