@@ -2,13 +2,21 @@
 // Created by vinokurov on 04.12.2019.
 //
 
+#include <iostream>
 #include <Types/Uuid.h>
 
 using namespace energo::types;
 
 int main(int argv, char **argc) {
-    Uuid uid1, uid2;
-    uid1.equals(uid2);
+    auto uid = Uuid::Random(),
+        uid2 = Uuid::Empty();
+
+    if (uid.equals(uid2)) {
+        std::cout << "Random is empty\n";
+    } else {
+        std::cout << "Random is NOT empty\n";
+    }
+
     return 0;
 }
 
