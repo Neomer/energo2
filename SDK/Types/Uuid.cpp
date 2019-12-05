@@ -4,6 +4,8 @@
 
 #include <cstring>
 #include <random>
+#include <stdexcept>
+#include <sstream>
 #include "Uuid.h"
 
 #ifdef ENVIRONMENT64
@@ -16,9 +18,13 @@
 using namespace std;
 using namespace energo::types;
 
+#pragma clang diagnostic push
+#pragma ide diagnostic ignored "hicpp-member-init"
+#pragma ide diagnostic ignored "cppcoreguidelines-pro-type-member-init"
 Uuid::Uuid() {
-
+    memset(_data, 0, UUID_DATA_PARTS);
 }
+#pragma clang diagnostic pop
 
 bool Uuid::equals(const Uuid &other) const {
     return !memcmp(_data, other._data, UUID_DATA_PARTS);
@@ -29,14 +35,10 @@ bool Uuid::operator==(const Uuid &other) const {
 }
 
 Uuid Uuid::Empty() {
-    Uuid uid;
-    memset(uid._data, 0, UUID_DATA_PARTS);
-    return uid;
+    return Uuid();
 }
 
-Uuid Uuid::Random() {
-    random_device rd;
-
+Uuid Uuid::Random(std::random_device &rd) {
 #ifdef ENVIRONMENT64
     mt19937_64 env(rd());
     uniform_int_distribution<uint64_t> dist(0, UINT64_MAX);
@@ -46,10 +48,33 @@ Uuid Uuid::Random() {
 #endif
 
     Uuid uid;
-    for (auto idx: uid._data) {
-        idx = dist(env);
+    for (uint8_t idx = 0; idx < UUID_DATA_PARTS; ++idx) { // NOLINT(modernize-loop-convert)
+        uid._data[idx] = dist(env);
+    }
+
+    return uid;
+}
+
+bool Uuid::TryParse(std::string_view data, Uuid &uid) {
+    return false;
+}
+
+Uuid Uuid::Parse(std::string_view data) {
+    Uuid uid;
+    if (!TryParse(data, uid)) {
+        throw std::invalid_argument("Входная строка не является корректным UUID.");
     }
     return uid;
+}
+
+std::string Uuid::toString() const {
+    ostringstream stream;
+    char buf[26];
+    for (auto idx: _data) {
+        lltoa(idx, buf, 10);
+        stream << buf;
+    }
+    return stream.str();
 }
 
 #undef UUID_DATA_PARTS

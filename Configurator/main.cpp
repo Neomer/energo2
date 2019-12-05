@@ -3,12 +3,16 @@
 //
 
 #include <iostream>
+#include <random>
 #include <Types/Uuid.h>
 
+using namespace std;
 using namespace energo::types;
 
 int main(int argv, char **argc) {
-    auto uid = Uuid::Random(),
+    random_device rd;
+
+    auto uid = Uuid::Random(rd),
         uid2 = Uuid::Empty();
 
     if (uid.equals(uid2)) {

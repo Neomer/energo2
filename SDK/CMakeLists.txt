@@ -1,6 +1,8 @@
 cmake_minimum_required(VERSION 3.9)
 add_compile_definitions(SDK_EXPORT)
 
+include_directories(../External/fmtlib)
+
 set(SOURCE_EXE global.h Types/Uuid.cpp Types/Uuid.h)
 
 add_library(SDK SHARED ${SOURCE_EXE})
