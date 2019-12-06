@@ -1,15 +1,16 @@
 @echo off
+echo =====================================
+echo #   Generation makefiles...
+echo =====================================
+cmake -S ./ -B ./cmake-build-release -G "MinGW Makefiles" -DCMAKE_BUILD_TYPE=Release
 
-echo Generation makefiles...
-cmake -S ./ -B ./cmake-build-release -G "MinGW Makefiles"
-
-echo 
-echo Building...
+echo =====================================
+echo #   Building...
+echo =====================================
 cmake --build ./cmake-build-release --target all -j 4
 
-
-@echo on
-echo
-echo Running tests...
+echo =====================================
+echo #   Running tests...
+echo =====================================
 call "./cmake-build-release/SDK_Tests/SDK_Tests.exe" --gtest_color=no
 pause
