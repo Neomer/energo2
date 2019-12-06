@@ -4,3 +4,9 @@
 [submodule "External/fmtlib"]
 	path = External/fmtlib
 	url = https://github.com/fmtlib/fmt.git
+[submodule ".\\External\\date"]
+	path = .\\External\\date
+	url = https://github.com/HowardHinnant/date.git
+[submodule ".\\External\\nlohmann_json"]
+	path = .\\External\\nlohmann_json
+	url = https://github.com/nlohmann/json.git
