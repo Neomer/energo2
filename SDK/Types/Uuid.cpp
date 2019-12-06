@@ -23,7 +23,7 @@ using namespace energo::types;
 #pragma ide diagnostic ignored "hicpp-member-init"
 #pragma ide diagnostic ignored "cppcoreguidelines-pro-type-member-init"
 Uuid::Uuid() {
-    memset(_data, 0, UUID_DATA_PARTS);
+    memset(_data, 0, UUID_BYTES);
 }
 #pragma clang diagnostic pop
 
@@ -68,9 +68,52 @@ Uuid Uuid::Parse(std::string_view data) {
     return uid;
 }
 
+#include <iostream>
+
 std::string Uuid::toString() const {
-    return fmt::format(FMT_STRING("{:x}"), _data[0]);
+#ifdef ENVIRONMENT64
+    return fmt::format("{:08x}-{:04x}-{:04x}-{:04x}-{:012x}",
+                       static_cast<uint32_t>((_data[0] & 0xFFFFFFFF00000000u) >> 32u),
+                       static_cast<uint16_t>((_data[0] & 0x00000000FFFF0000u) >> 16u),
+                       static_cast<uint16_t>((_data[0] & 0x000000000000FFFFu)),
+                       static_cast<uint16_t>((_data[1] & 0xFFFF000000000000u) >> 40u),
+                       static_cast<uint64_t>((_data[1] & 0x0000FFFFFFFFFFFFu)));
+#else
+    return fmt::format("{:08x}-{:04x}-{:04x}-{:04x}-{:4x}{:8x}",
+                       _data[0],
+                       static_cast<uint16_t>((_data[1] & 0xFFFF0000u) >> 8u),
+                       static_cast<uint16_t>((_data[1] & 0x0000FFFFu)),
+                       static_cast<uint16_t>((_data[2] & 0xFFFF0000u) >> 8u),
+                       static_cast<uint16_t>((_data[2] & 0x0000FFFFu)),
+                       _data[3]);
+#endif
 }
+
+#ifdef ENVIRONMENT64
+
+Uuid::Uuid(const uint64_t *data) { // NOLINT(cppcoreguidelines-pro-type-member-init)
+    memcpy(_data, data, UUID_DATA_PARTS);
+}
+
+Uuid::Uuid(uint64_t p1, uint64_t p2) { // NOLINT(cppcoreguidelines-pro-type-member-init)
+    _data[0] = p1;
+    _data[1] = p2;
+}
+
+#else
+
+Uuid::Uuid(const uint32_t *data) {
+    memcpy(_data, data, UUID_DATA_PARTS);
+}
+
+Uuid::Uuid(uint32_t p1, uint32_t p2, uint32_t p3, uint32_t p4) {
+    _data[0] = p1;
+    _data[1] = p2;
+    _data[2] = p3;
+    _data[3] = p4;
+}
+
+#endif
 
 #undef UUID_DATA_PARTS
 #undef UUID_BYTES

@@ -18,10 +18,17 @@ namespace energo::types {
  * Класс для работы с Uuid.
  */
 class EXPORTS Uuid final {
-    friend class Uuid_Tests;
-
 public:
     Uuid();
+
+#ifdef ENVIRONMENT64
+    explicit Uuid(const uint64_t *data);
+    Uuid(uint64_t p1, uint64_t p2);
+#else
+    explicit Uuid(const uint32_t *data);
+    Uuid(uint32_t p1, uint32_t p2, uint32_t p3, uint32_t p4);
+#endif
+
 
     /**
      * Формирует пустой Uuid {00000000-0000-0000-0000-000000000000}
@@ -50,7 +57,7 @@ public:
     static Uuid Parse(std::string_view data);
 
     /**
-     * Преобразует UUID  в строку вида XXXXXXXX-XXXX-XXXX-XXXX-XXXXXXXXXXXX.
+     * Преобразует UUID  в строку вида xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx.
      * @return
      */
     [[nodiscard]] std::string toString() const;
@@ -61,7 +68,7 @@ public:
 
 private:
 #ifdef ENVIRONMENT64
-    uint64_t _data[2];
+    uint64_t _data[2]{};
 #else
     uuint32_t _data[4];
 #endif
