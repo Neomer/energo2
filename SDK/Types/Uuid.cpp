@@ -56,7 +56,13 @@ Uuid Uuid::Random(std::random_device &rd) {
     return uid;
 }
 
+[[nodiscard]] inline bool is_correct_part(char symbol) {
+    return (symbol >= '0' && symbol <= '9') || (symbol >= 'a' && symbol <= 'f') || (symbol >= 'a' && symbol <= 'f');
+}
+
 bool Uuid::TryParse(std::string_view data, Uuid &uid) {
+    uint8_t state = 0, num = 0;
+    const char *ptr = data[0] == '{' ? data.data() : data.data() + 1;
     return false;
 }
 
