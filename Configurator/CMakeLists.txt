@@ -16,7 +16,15 @@ set_property(TARGET ${PROJECT_NAME} PROPERTY CXX_STANDARD 17)
 
 install(TARGETS Configurator RUNTIME DESTINATION bin)
 
+if (WIN32)
+    set(LibExt dll)
+endif (WIN32)
+
+if (UNIX)
+    set(LibExt so)
+endif (UNIX)
+
 add_custom_command(TARGET ${PROJECT_NAME} POST_BUILD
         COMMAND ${CMAKE_COMMAND} -E copy_if_different
-        "$<TARGET_FILE_DIR:SDK>/libSDK.dll"
+        "$<TARGET_FILE_DIR:SDK>/libSDK.${LibExt}"
         $<TARGET_FILE_DIR:${PROJECT_NAME}>)

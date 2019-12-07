@@ -15,7 +15,15 @@ set_target_properties(SDK_Tests PROPERTIES LINKER_LANGUAGE CXX)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set_property(TARGET SDK_Tests PROPERTY CXX_STANDARD 17)
 
+if (WIN32)
+    set(LibExt dll)
+endif (WIN32)
+
+if (UNIX)
+    set(LibExt so)
+endif (UNIX)
+
 add_custom_command(TARGET ${PROJECT_NAME} POST_BUILD
         COMMAND ${CMAKE_COMMAND} -E copy_if_different
-        "$<TARGET_FILE_DIR:SDK>/libSDK.dll"
+        "$<TARGET_FILE_DIR:SDK>/libSDK.${LibExt}"
         $<TARGET_FILE_DIR:${PROJECT_NAME}>)
