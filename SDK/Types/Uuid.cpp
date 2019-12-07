@@ -17,6 +17,7 @@
 #define UUID_BYTES               16
 
 using namespace std;
+using namespace std::string_literals;
 using namespace energo::types;
 
 #pragma clang diagnostic push
@@ -56,8 +57,116 @@ Uuid Uuid::Random(std::random_device &rd) {
     return uid;
 }
 
+[[nodiscard]] inline bool is_correct_part(char symbol) {
+    return (symbol >= '0' && symbol <= '9') || (symbol >= 'a' && symbol <= 'f') || (symbol >= 'a' && symbol <= 'f');
+}
+
+#ifdef ENVIRONMENT64
+[[nodiscard]] inline uint64_t parse_int(const char **symbol, uint8_t count, bool &ok) {
+    static uint64_t hex_pows[] = {
+            0x1,
+            0x10,
+            0x100,
+            0x1000,
+            0x10000,
+            0x100000,
+            0x1000000,
+            0x10000000,
+            0x100000000,
+            0x1000000000,
+            0x10000000000,
+            0x100000000000,
+            0x1000000000000,
+            0x10000000000000,
+    };
+    
+    uint64_t value = 0;
+#else
+[[nodiscard]] inline uint32_t parse_int(char **symbol, uint8_t count) {
+    uint32_t value = 0;
+#endif
+    while (count--) {
+        auto sym = **symbol;
+        (*symbol)++;
+        uint8_t dec_sym = 0;
+        if (sym >= '0' && sym <= '9') {
+            dec_sym = sym - '0';
+        } else if (sym >= 'a' && sym <= 'f') {
+            dec_sym = 10 + sym - 'a';
+        } else if (sym >= 'A' && sym <= 'F') {
+            dec_sym = 10 + sym - 'A';
+        } else {
+            ok = false;
+            return 0;
+        }
+        value += hex_pows[count] * dec_sym;
+    }
+    ok = true;
+    return value;
+}
+
 bool Uuid::TryParse(std::string_view data, Uuid &uid) {
-    return false;
+    const char *ptr = data[0] != '{' ? data.data() : data.data() + 1;
+    bool ok;
+#ifdef ENVIRONMENT64
+    uid._data[0] = parse_int(&ptr, 8, ok) << 32u;
+    if (!ok || *ptr != '-') {
+        return false;
+    }
+    ptr++;
+    uid._data[0] |= parse_int(&ptr, 4, ok) << 16u;
+    if (!ok || *ptr != '-') {
+        return false;
+    }
+    ptr++;
+    uid._data[0] |= parse_int(&ptr, 4, ok);
+    if (!ok || *ptr != '-') {
+        return false;
+    }
+    ptr++;
+    uid._data[1] |= parse_int(&ptr, 4, ok) << 48u;
+    if (!ok || *ptr != '-') {
+        return false;
+    }
+    ptr++;
+    uid._data[1] |= parse_int(&ptr, 12, ok);
+    if (*ptr == '}') {
+        ptr++;
+    }
+    if (!ok || *ptr) {
+        return false;
+    }
+#else
+    uid._data[0] = parse_int(&ptr, 8, ok);
+    if (!ok || *ptr != '-') {
+        return false;
+    }
+    ptr++;
+    uid._data[1] |= parse_int(&ptr, 4, ok) << 16u;
+    if (!ok || *ptr != '-') {
+        return false;
+    }
+    ptr++;
+    uid._data[1] |= parse_int(&ptr, 4, ok);
+    if (!ok || *ptr != '-') {
+        return false;
+    }
+    ptr++;
+    uid._data[2] |= parse_int(&ptr, 4, ok) << 16u;
+    if (!ok || *ptr != '-') {
+        return false;
+    }
+    ptr++;
+    uid._data[2] |= parse_int(&ptr, 4, ok);
+    uid._data[3] |= parse_int(&ptr, 8, ok);
+    if (*ptr == '}') {
+        ptr++;
+    }
+    if (!ok || *ptr) {
+        return false;
+    }
+#endif
+    return true;
 }
 
 Uuid Uuid::Parse(std::string_view data) {
@@ -76,7 +185,7 @@ std::string Uuid::toString() const {
                        static_cast<uint32_t>((_data[0] & 0xFFFFFFFF00000000u) >> 32u),
                        static_cast<uint16_t>((_data[0] & 0x00000000FFFF0000u) >> 16u),
                        static_cast<uint16_t>((_data[0] & 0x000000000000FFFFu)),
-                       static_cast<uint16_t>((_data[1] & 0xFFFF000000000000u) >> 40u),
+                       static_cast<uint16_t>((_data[1] & 0xFFFF000000000000u) >> 48u),
                        static_cast<uint64_t>((_data[1] & 0x0000FFFFFFFFFFFFu)));
 #else
     return fmt::format("{:08x}-{:04x}-{:04x}-{:04x}-{:4x}{:8x}",
