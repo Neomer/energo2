@@ -3,7 +3,7 @@ cmake_minimum_required(VERSION 3.9)
 project(SDK_Tests)
 
 set(CMAKE_CXX_STANDARD 17)
-set(SOURCE_EXE main.cpp Types/Uuid_Tests.cpp Types/Uuid_Tests.h)
+set(SOURCE_EXE main.cpp Types/Uuid_Tests.cpp Types/Uuid_Tests.h Database/SqlQuery_Tests.cpp Database/SqlQuery_Tests.h Database/DatabaseConnectionSettings_Tests.cpp Database/DatabaseConnectionSettings_Tests.h Database/DatabaseConnection_Tests.cpp Database/DatabaseConnection_Tests.h Database/SqlValue_Tests.cpp Database/SqlValue_Tests.h)
 
 include_directories(../SDK)
 include_directories(../External/GoogleTest/googletest/include)

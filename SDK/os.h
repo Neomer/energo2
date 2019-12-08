@@ -16,10 +16,8 @@
 
 #if __GNUC__
 #if __x86_64__ || __ppc64__
-#pragma message ("Compilation for 64-bit architecture")
 #define ENVIRONMENT64
 #else
-#pragma message "Compilation for 32-bit architecture"
 #define ENVIRONMENT32
 #endif
 #endif

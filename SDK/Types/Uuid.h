@@ -11,6 +11,7 @@
 #include <string>
 #include <string_view>
 #include <random>
+#include <ostream>
 
 namespace energo::types {
 
@@ -62,9 +63,21 @@ public:
      */
     [[nodiscard]] std::string toString() const;
 
+    /**
+     * Проверяет на равенство два UUID.
+     * @param other UUID для сравнения.
+     * @return
+     */
     [[nodiscard]] bool equals(const Uuid &other) const;
 
     bool operator==(const Uuid &other) const;
+    
+    bool operator!=(const Uuid &other) const;
+    
+    friend std::ostream &operator<<(std::ostream &os, const Uuid &uuid) {
+        os << uuid.toString();
+        return os;
+    }
 
 private:
 #ifdef ENVIRONMENT64

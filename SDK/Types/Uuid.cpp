@@ -36,6 +36,10 @@ bool Uuid::operator==(const Uuid &other) const {
     return equals(other);
 }
 
+bool Uuid::operator!=(const Uuid &other) const {
+    return !equals(other);
+}
+
 Uuid Uuid::Empty() {
     return Uuid();
 }
