@@ -9,8 +9,8 @@ using namespace std::string_literals;
 using namespace energo::db;
 using namespace energo::db::adapters;
 
-PostgreSqlSelectQueryBuilder::PostgreSqlSelectQueryBuilder(const TransformationProvider &provider) :
-    DatabaseSelectQueryBuilder(provider)
+PostgreSqlSelectQueryBuilder::PostgreSqlSelectQueryBuilder(const TransformationProvider &provider, std::string_view tableName) :
+    DatabaseSelectQueryBuilder(provider, tableName)
 {
 
 }

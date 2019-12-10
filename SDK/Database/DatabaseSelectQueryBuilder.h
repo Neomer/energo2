@@ -23,9 +23,7 @@ protected:
     std::optional<size_t> _limit;
     
 public:
-    explicit DatabaseSelectQueryBuilder(const TransformationProvider &provider);
-    
-    DatabaseSelectQueryBuilder &tableName(std::string_view tableName);
+    explicit DatabaseSelectQueryBuilder(const TransformationProvider &provider, std::string_view tableName);
     
     DatabaseSelectQueryBuilder &rawFilter(std::string_view whereClause);
     

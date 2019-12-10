@@ -9,7 +9,4 @@
 using namespace std;
 using namespace energo::db;
 
-TEST_F(SqlQuery_Tests, CreateSqlQueryWithSingleParam) {
-
-}
 #pragma clang diagnostic pop

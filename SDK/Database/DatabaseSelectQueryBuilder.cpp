@@ -8,15 +8,11 @@ using namespace std;
 using namespace std::string_literals;
 using namespace energo::db;
 
-DatabaseSelectQueryBuilder::DatabaseSelectQueryBuilder(const TransformationProvider &provider):
-    _provider{provider}
+DatabaseSelectQueryBuilder::DatabaseSelectQueryBuilder(const TransformationProvider &provider, std::string_view tableName):
+    _provider{provider},
+    _tableName{tableName}
 {
     _fields.reserve(256);
-}
-
-DatabaseSelectQueryBuilder &DatabaseSelectQueryBuilder::tableName(std::string_view tableName) {
-    _tableName = tableName;
-    return *this;
 }
 
 DatabaseSelectQueryBuilder &DatabaseSelectQueryBuilder::rawFilter(std::string_view whereClause) {

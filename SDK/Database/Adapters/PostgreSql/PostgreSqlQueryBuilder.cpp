@@ -16,7 +16,7 @@ PostgreSqlQueryBuilder::PostgreSqlQueryBuilder(const TransformationProvider &pro
 
 }
 
-unique_ptr<DatabaseSelectQueryBuilder> PostgreSqlQueryBuilder::createSelectQueryBuilder() const {
-    return move(unique_ptr<DatabaseSelectQueryBuilder>{new PostgreSqlSelectQueryBuilder(_provider)});
+unique_ptr<DatabaseSelectQueryBuilder> PostgreSqlQueryBuilder::createSelectQueryBuilder(std::string_view tableName) const {
+    return move(unique_ptr<DatabaseSelectQueryBuilder>{new PostgreSqlSelectQueryBuilder(_provider, tableName)});
 }
 

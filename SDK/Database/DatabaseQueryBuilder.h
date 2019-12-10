@@ -6,6 +6,7 @@
 #define ENERGO_DATABASEQUERYBUILDER_H
 
 #include <memory>
+#include <string_view>
 #include "TransformationProvider.h"
 #include "DatabaseSelectQueryBuilder.h"
 
@@ -19,7 +20,7 @@ public:
     explicit DatabaseQueryBuilder(const TransformationProvider &provider);
     virtual ~DatabaseQueryBuilder() = default;
     
-    [[nodiscard]] virtual std::unique_ptr<DatabaseSelectQueryBuilder> createSelectQueryBuilder() const = 0;
+    [[nodiscard]] virtual std::unique_ptr<DatabaseSelectQueryBuilder> createSelectQueryBuilder(std::string_view tableName) const = 0;
     
 };
 

@@ -13,7 +13,7 @@ class PostgreSqlQueryBuilder: DatabaseQueryBuilder {
 public:
     explicit PostgreSqlQueryBuilder(const TransformationProvider &provider);
     
-    [[nodiscard]] std::unique_ptr<DatabaseSelectQueryBuilder> createSelectQueryBuilder() const override;
+    [[nodiscard]] std::unique_ptr<DatabaseSelectQueryBuilder> createSelectQueryBuilder(std::string_view tableName) const override;
 };
 
 }

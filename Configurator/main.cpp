@@ -34,9 +34,9 @@ int main(int argv, char **argc) {
         cout << "Connection ready!\n";
         
         auto query = connection.exec(
-                queryBuilder.createSelectQueryBuilder()
-                ->tableName("Users")
-                .build());
+                queryBuilder
+                .createSelectQueryBuilder("Users")
+                ->build());
         User user;
         if (!query->any()) {
             cout << "No users were registered.";
