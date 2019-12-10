@@ -45,7 +45,7 @@ int PostgreSqlResultAdapter::getFieldIndexByName(std::string_view name) const {
 }
 
 energo::db::SqlValue PostgreSqlResultAdapter::value(int fieldIndex, int rowIndex) const {
-    return SqlValue(PQgetvalue(_result, fieldIndex, rowIndex));
+    return SqlValue(PQgetvalue(_result, rowIndex, fieldIndex));
 }
 
 void PostgreSqlResultAdapter::close() {

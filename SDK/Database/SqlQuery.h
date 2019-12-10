@@ -5,6 +5,7 @@
 #ifndef ENERGO_SQLQUERY_H
 #define ENERGO_SQLQUERY_H
 
+#include <memory>
 #include "DatabaseResultAdapter.h"
 #include "SqlQueryReader.h"
 
@@ -16,8 +17,11 @@ namespace energo::db {
  * Для чтения результатов выборки необходимо вызвать методы getReader() или getReader(int row).
  */
 class EXPORTS SqlQuery final {
+    std::shared_ptr<DatabaseResultAdapter> _adapter;
+    int _rowIdx;
+
 public:
-    explicit SqlQuery(const DatabaseResultAdapter &adapter);
+    explicit SqlQuery(std::unique_ptr<DatabaseResultAdapter> adapter);
     ~SqlQuery() = default;
     
     /**
@@ -59,9 +63,6 @@ public:
      */
     bool previous();
     
-private:
-    const DatabaseResultAdapter &_adapter;
-    int _rowIdx;
 };
 
 }

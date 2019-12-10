@@ -9,7 +9,5 @@
 using namespace std;
 using namespace energo::db;
 
-TEST_F(TransformationProvider_Tests, TransformationProviderShouldQuoteFieldName) {
-    EXPECT_EQ("\"SomeField\"", TransformationProvider::EscapeFieldNameIfNeeded("SomeField"));
-}
+
 #pragma clang diagnostic pop

@@ -5,6 +5,8 @@
 #include <iostream>
 
 #include <Database/Adapters/PostgreSql/PostgreSqlConnectionAdapter.h>
+#include <Database/Adapters/PostgreSql/PostgreSqlQueryBuilder.h>
+#include <Database/Adapters/PostgreSql/PostgreSqlTransformationProvider.h>
 #include <Database/DatabaseConnection.h>
 #include <Database/DatabaseUnavailableException.h>
 #include <Database/Model/User.h>
@@ -23,19 +25,25 @@ int main(int argv, char **argc) {
     settings.setUser("postgres");
     settings.setPassword("123456");
     settings.setDatabase("energo2");
-
+    
+    adapters::PostgreSqlTransformationProvider transformationProvider;
+    adapters::PostgreSqlQueryBuilder queryBuilder(transformationProvider);
     adapters::PostgreSqlConnectionAdapter connection(rd, settings);
     try {
         connection.open();
         cout << "Connection ready!\n";
-        auto query = connection.exec(R"(select * from "public"."Users")");
+        
+        auto query = connection.exec(
+                queryBuilder.createSelectQueryBuilder()
+                ->tableName("Users")
+                .build());
         User user;
         if (!query->any()) {
             cout << "No users were registered.";
         } else {
             do {
                 user.fromSql(query->getReader());
-                cout << "Found user: " << user.getFirstName() << " " << user.getSecondName() << endl;
+                cout << "Found user: " << user.getFirstName() << " " << user.getSecondName()  << " [" << user.getUid() << "] " << endl;
             } while (query->next());
         }
     } catch (DatabaseUnavailableException &) {

@@ -9,27 +9,27 @@ using namespace std;
 using namespace energo::db;
 using namespace string_literals;
 
-SqlQuery::SqlQuery(const DatabaseResultAdapter &adapter) :
-    _adapter{adapter},
+SqlQuery::SqlQuery(std::unique_ptr<DatabaseResultAdapter> adapter) :
+    _adapter{std::move(adapter)},
     _rowIdx{0}
 {
 
 }
 
 int SqlQuery::getRowsCount() const {
-    return _adapter.getRowsCount();
+    return _adapter->getRowsCount();
 }
 
 bool SqlQuery::isValid() const {
-    return _adapter.isValid();
+    return _adapter->isValid();
 }
 
 bool SqlQuery::any() const {
-    return _adapter.any();
+    return _adapter->any();
 }
 
 bool SqlQuery::next() {
-    if (_rowIdx >= getRowsCount()) {
+    if (getRowsCount() - _rowIdx <= 1) {
         return false;
     }
     _rowIdx++;

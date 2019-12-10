@@ -8,11 +8,11 @@
 #include <cinttypes>
 #include <string>
 #include <string_view>
-#include "DatabaseStoredEntity.h"
+#include "IdentifiedEntity.h"
 
 namespace energo::db::entity {
 
-class User : public DatabaseStoredEntity {
+class User : public IdentifiedEntity {
     std::string _username, _firstName, _secondName;
 
 public:

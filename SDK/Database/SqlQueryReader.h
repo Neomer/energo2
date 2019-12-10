@@ -5,6 +5,7 @@
 #ifndef ENERGO_SQLQUERYREADER_H
 #define ENERGO_SQLQUERYREADER_H
 
+#include <memory>
 #include <vector>
 #include <cinttypes>
 #include "DatabaseResultAdapter.h"
@@ -13,11 +14,11 @@
 namespace energo::db {
 
 class EXPORTS SqlQueryReader {
-    const DatabaseResultAdapter &_adapter;
+    std::shared_ptr<DatabaseResultAdapter> _adapter;
     int _rowIdx;
 
 public:
-    SqlQueryReader(const DatabaseResultAdapter &adapter, int row);
+    SqlQueryReader(std::shared_ptr<DatabaseResultAdapter> adapter, int row);
 
     /**
      * @return Количество колонок в результате.

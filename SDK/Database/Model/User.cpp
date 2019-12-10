@@ -10,6 +10,7 @@ using namespace energo::db;
 using namespace energo::db::entity;
 
 void User::fromSql(const SqlQueryReader &reader) {
+    IdentifiedEntity::fromSql(reader);
     _username = reader.value("Username").asString();
     _firstName = reader.value("FirstName").asString();
     _secondName = reader.value("SecondName").asString();

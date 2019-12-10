@@ -54,8 +54,8 @@ unique_ptr<SqlQuery> PostgreSqlConnectionAdapter::exec(std::string_view sql) con
         throw DatabaseConnectionIsClosedException();
     }
     
-    auto adapter = PostgreSqlResultAdapter(PQexec(_connection,sql.data()), _transformationProvider);
-    std::unique_ptr<SqlQuery> result(new SqlQuery(adapter));
+    unique_ptr<DatabaseResultAdapter> adapter(new PostgreSqlResultAdapter(PQexec(_connection,sql.data()), _transformationProvider));
+    std::unique_ptr<SqlQuery> result(new SqlQuery(move(adapter)));
     
     if (!result->isValid()) {
         throw SqlQueryBadResultException(PQerrorMessage(_connection));
