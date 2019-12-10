@@ -32,7 +32,6 @@ DateTime::DateTime(int year, int month, int day) {
 
 void DateTime::setDate(int year, int month, int day) {
     auto dt = date::year{year}/month/day;
-    _timePoint = floor<seconds>(days{2});
 }
 
 std::string DateTime::toString() const {

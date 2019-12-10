@@ -13,7 +13,24 @@ else(NOT ${PostgreSQL_FOUND})
     include_directories(${PostgreSQL_INCLUDE_DIRS})
 endif(NOT ${PostgreSQL_FOUND})
 
-set(SOURCE_EXE global.h Types/Uuid.cpp Types/Uuid.h Database/SqlQuery.cpp Database/SqlQuery.h Database/DatabaseConnection.cpp Database/DatabaseConnection.h Database/DatabaseConnectionSettings.cpp Database/DatabaseConnectionSettings.h Database/DatabaseUnavailableException.cpp Database/DatabaseUnavailableException.h Database/DatabaseConnectionIsClosedException.cpp Database/DatabaseConnectionIsClosedException.h Database/SqlValue.cpp Database/SqlValue.h Database/SqlQueryBadResultException.cpp Database/SqlQueryBadResultException.h Database/Managers/DataManager.cpp Database/Managers/DataManager.h Database/Model/Data.cpp Database/Model/Data.h Types/DateTime.cpp Types/DateTime.h)
+set(SOURCE_EXE global.h Types/Uuid.cpp Types/Uuid.h
+        Database/SqlQuery.cpp Database/SqlQuery.h
+        Database/DatabaseConnection.cpp Database/DatabaseConnection.h
+        Database/DatabaseConnectionSettings.cpp Database/DatabaseConnectionSettings.h
+        Database/DatabaseUnavailableException.cpp Database/DatabaseUnavailableException.h
+        Database/DatabaseConnectionIsClosedException.cpp Database/DatabaseConnectionIsClosedException.h
+        Database/SqlValue.cpp Database/SqlValue.h
+        Database/SqlQueryBadResultException.cpp Database/SqlQueryBadResultException.h
+        Database/Managers/DataManager.cpp Database/Managers/DataManager.h
+        Database/Model/Data.cpp Database/Model/Data.h
+        Database/Model/User.cpp Database/Model/User.h
+        Database/TransformationProvider.cpp Database/TransformationProvider.h
+        Database/DatabaseResultAdapter.cpp Database/DatabaseResultAdapter.h
+        Database/Model/DatabaseStoredEntity.h Database/Model/DatabaseStoredEntity.cpp
+        Types/DateTime.cpp Types/DateTime.h
+        Database/SqlQueryReader.h Database/SqlQueryReader.cpp
+        Database/Adapters/PostgreSql/PostgreSqlResultAdapter.cpp Database/Adapters/PostgreSql/PostgreSqlResultAdapter.h
+        Database/Adapters/PostgreSql/PostgreSqlTransformationProvider.cpp Database/Adapters/PostgreSql/PostgreSqlTransformationProvider.h)
 
 add_library(${PROJECT_NAME} SHARED ${SOURCE_EXE})
 

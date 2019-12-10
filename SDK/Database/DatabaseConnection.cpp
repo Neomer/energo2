@@ -58,17 +58,19 @@ const energo::types::Uuid &DatabaseConnection::getUid() const {
     return _uid;
 }
 
-SqlQuery DatabaseConnection::exec(std::string_view sql) const {
+std::unique_ptr<SqlQuery> DatabaseConnection::exec(std::string_view sql) const {
     if (!_open) {
         throw DatabaseConnectionIsClosedException();
     }
+
+    std::unique_ptr<SqlQuery> result(
+            new SqlQuery(
+                    PQexec(
+                        _connection,
+                        sql.data())));
     
-    SqlQuery query(PQexec(
-            _connection,
-            sql.data()));
-    
-    if (!query.isValid()) {
+    if (!result->isValid()) {
         throw SqlQueryBadResultException(PQerrorMessage(_connection));
     }
-    return query;
+    return std::move(result);
 }

@@ -5,11 +5,13 @@
 #ifndef ENERGO_DATA_H
 #define ENERGO_DATA_H
 
+#include "DatabaseStoredEntity.h"
+
 namespace energo::db::entity {
 
-class Data {
+class Data : public DatabaseStoredEntity {
 public:
-
+    void fromSql(const SqlQueryReader &reader) override;
 };
 
 }

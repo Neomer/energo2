@@ -6,6 +6,7 @@
 #define ENERGO_DATABASEUNAVAILABLEEXCEPTION_H
 
 #include <stdexcept>
+#include "../global.h"
 #include "DatabaseConnectionSettings.h"
 
 namespace energo::exceptions {
@@ -13,7 +14,7 @@ namespace energo::exceptions {
 /**
  * Не удалось подключиться к базе данных.
  */
-class DatabaseUnavailableException : public std::runtime_error {
+class EXPORTS DatabaseUnavailableException : public std::runtime_error {
 public:
     /**
      * Не удалось подключиться к базе данных.

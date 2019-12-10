@@ -7,7 +7,8 @@
 
 #include <atomic>
 #include <string_view>
-#include <postgresql/libpq-fe.h>
+#include <libpq-fe.h>
+#include <memory>
 #include "DatabaseConnectionSettings.h"
 #include "../Types/Uuid.h"
 #include "SqlQuery.h"
@@ -17,7 +18,7 @@ namespace energo::db {
 /**
  * Одиночное подключение к базе данных.
  */
-class DatabaseConnection {
+class EXPORTS DatabaseConnection {
 public:
     /**
      * Подготавливает новое подключение к базе данных. Для соединения необходимо вызвать метод DatabaseConnection::open().
@@ -53,7 +54,7 @@ public:
      * @throws DatabaseConnectionIsClosedException Попытка выполнить запрос при закрытом соединении.
      * @throws SqlQueryBadResultException выполнение запроса завершилось с ошибкой.
      */
-    SqlQuery exec(std::string_view sql) const; // NOLINT(modernize-use-nodiscard)
+    std::unique_ptr<SqlQuery> exec(std::string_view sql) const; // NOLINT(modernize-use-nodiscard)
     
 private:
     DatabaseConnectionSettings _connectionSettings;
