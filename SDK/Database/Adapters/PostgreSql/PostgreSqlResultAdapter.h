@@ -18,18 +18,20 @@ public:
     explicit PostgreSqlResultAdapter(PGresult *result, const TransformationProvider &transformationProvider);
     ~PostgreSqlResultAdapter() override;
 
-    int getRowsCount() const override;
+    [[nodiscard]] int getRowsCount() const override;
 
-    int getFieldsCount() const override;
+    [[nodiscard]] int getFieldsCount() const override;
 
-    void getFieldNames(std::vector<std::string> &fields) const override;
+    void getFieldNames(std::vector<const char *> &fields) const override;
 
-    bool isValid() const override;
+    [[nodiscard]] bool isValid() const override;
 
-    int getFieldIndexByName(std::string_view name) const override;
+    [[nodiscard]] int getFieldIndexByName(std::string_view name) const override;
 
-    SqlValue value(int fieldIndex, int rowIndex) const override;
-
+    [[nodiscard]] SqlValue value(int fieldIndex, int rowIndex) const override;
+    
+    bool any() const override;
+    
     void close() override;
 };
 

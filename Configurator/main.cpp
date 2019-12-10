@@ -4,6 +4,7 @@
 
 #include <iostream>
 
+#include <Database/Adapters/PostgreSql/PostgreSqlConnectionAdapter.h>
 #include <Database/DatabaseConnection.h>
 #include <Database/DatabaseUnavailableException.h>
 #include <Database/Model/User.h>
@@ -23,7 +24,7 @@ int main(int argv, char **argc) {
     settings.setPassword("123456");
     settings.setDatabase("energo2");
 
-    DatabaseConnection connection(rd, settings);
+    adapters::PostgreSqlConnectionAdapter connection(rd, settings);
     try {
         connection.open();
         cout << "Connection ready!\n";

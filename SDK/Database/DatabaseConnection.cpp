@@ -13,40 +13,19 @@ using namespace energo::db;
 using namespace energo::types;
 using namespace energo::exceptions;
 
-DatabaseConnection::DatabaseConnection(std::random_device &randomDevice, energo::db::DatabaseConnectionSettings &settings) :
+DatabaseConnection::DatabaseConnection(random_device &randomDevice, const DatabaseConnectionSettings &settings) :
     _connectionSettings{settings},
     _open{false},
-    _connection{nullptr},
     _uid{Uuid::Random(randomDevice)}
 {
 
 }
 
 void DatabaseConnection::open() {
-    if (_open) {
-        return;
-    }
-    _connection = PQsetdbLogin(
-            _connectionSettings.getHost().data(),
-            to_string(_connectionSettings.getPort()).c_str(),
-            nullptr,
-            nullptr,
-            _connectionSettings.getDatabase().data(),
-            _connectionSettings.getUser().data(),
-            _connectionSettings.getPassword().data());
-    
-    auto status = PQstatus(_connection);
-    if (status != CONNECTION_OK) {
-        throw DatabaseUnavailableException(_connectionSettings);
-    }
     _open = true;
 }
 
 void DatabaseConnection::close() {
-    if (!_open) {
-        return;
-    }
-    PQfinish(_connection);
     _open = false;
 }
 
@@ -56,21 +35,4 @@ bool DatabaseConnection::isOpen() const {
 
 const energo::types::Uuid &DatabaseConnection::getUid() const {
     return _uid;
-}
-
-std::unique_ptr<SqlQuery> DatabaseConnection::exec(std::string_view sql) const {
-    if (!_open) {
-        throw DatabaseConnectionIsClosedException();
-    }
-
-    std::unique_ptr<SqlQuery> result(
-            new SqlQuery(
-                    PQexec(
-                        _connection,
-                        sql.data())));
-    
-    if (!result->isValid()) {
-        throw SqlQueryBadResultException(PQerrorMessage(_connection));
-    }
-    return std::move(result);
 }

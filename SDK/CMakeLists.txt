@@ -9,8 +9,8 @@ find_package(PostgreSQL REQUIRED)
 if (NOT ${PostgreSQL_FOUND})
     message("PostrgreSql isn't found!")
 else(NOT ${PostgreSQL_FOUND})
-    message("PostgreSql version" + ${PostgreSQL_VERSION_STRING})
-    include_directories(${PostgreSQL_INCLUDE_DIRS})
+    message("PostgreSql version found ${PostgreSQL_VERSION_STRING}")
+    include_directories(${PostgreSQL_INCLUDE_DIR})
 endif(NOT ${PostgreSQL_FOUND})
 
 set(SOURCE_EXE global.h Types/Uuid.cpp Types/Uuid.h
@@ -30,7 +30,7 @@ set(SOURCE_EXE global.h Types/Uuid.cpp Types/Uuid.h
         Types/DateTime.cpp Types/DateTime.h
         Database/SqlQueryReader.h Database/SqlQueryReader.cpp
         Database/Adapters/PostgreSql/PostgreSqlResultAdapter.cpp Database/Adapters/PostgreSql/PostgreSqlResultAdapter.h
-        Database/Adapters/PostgreSql/PostgreSqlTransformationProvider.cpp Database/Adapters/PostgreSql/PostgreSqlTransformationProvider.h)
+        Database/Adapters/PostgreSql/PostgreSqlTransformationProvider.cpp Database/Adapters/PostgreSql/PostgreSqlTransformationProvider.h Database/Adapters/PostgreSql/PostgreSqlConnectionAdapter.cpp Database/Adapters/PostgreSql/PostgreSqlConnectionAdapter.h)
 
 add_library(${PROJECT_NAME} SHARED ${SOURCE_EXE})
 

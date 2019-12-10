@@ -5,19 +5,19 @@
 #ifndef ENERGO_SQLQUERYREADER_H
 #define ENERGO_SQLQUERYREADER_H
 
-#include <libpq-fe.h>
 #include <vector>
 #include <cinttypes>
+#include "DatabaseResultAdapter.h"
 #include "SqlValue.h"
 
 namespace energo::db {
 
 class EXPORTS SqlQueryReader {
-    PGresult *_result;
+    const DatabaseResultAdapter &_adapter;
     int _rowIdx;
 
 public:
-    SqlQueryReader(PGresult *result, int row);
+    SqlQueryReader(const DatabaseResultAdapter &adapter, int row);
 
     /**
      * @return Количество колонок в результате.
@@ -40,7 +40,7 @@ public:
     /**
      * @return Список наименований колонок.
      */
-    [[nodiscard]] std::vector<const char *> getFieldNames() const;
+    void getFieldNames(std::vector<const char *> &fields) const;
 
 };
 

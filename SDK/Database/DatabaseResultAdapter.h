@@ -22,13 +22,15 @@ public:
 
     [[nodiscard]] virtual int getFieldsCount() const = 0;
 
-    virtual void getFieldNames(std::vector<std::string> &fields) const = 0;
+    virtual void getFieldNames(std::vector<const char *> &fields) const = 0;
 
     [[nodiscard]] virtual bool isValid() const = 0;
 
     [[nodiscard]] virtual int getFieldIndexByName(std::string_view name) const = 0;
 
     [[nodiscard]] virtual SqlValue value(int fieldIndex, int rowIndex) const = 0;
+    
+    [[nodiscard]] virtual bool any() const = 0;
 
     virtual void close() = 0;
 };

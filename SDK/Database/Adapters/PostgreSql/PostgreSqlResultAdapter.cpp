@@ -27,7 +27,7 @@ int PostgreSqlResultAdapter::getFieldsCount() const {
     return PQnfields(_result);
 }
 
-void PostgreSqlResultAdapter::getFieldNames(std::vector<std::string> &fields) const {
+void PostgreSqlResultAdapter::getFieldNames(std::vector<const char *> &fields) const {
     fields.clear();
     auto length = getFieldsCount();
     for (auto idx = 0; idx < length; ++idx) {
@@ -50,5 +50,9 @@ energo::db::SqlValue PostgreSqlResultAdapter::value(int fieldIndex, int rowIndex
 
 void PostgreSqlResultAdapter::close() {
     PQclear(_result);
+}
+
+bool PostgreSqlResultAdapter::any() const {
+    return PQresultStatus(_result) != PGRES_EMPTY_QUERY && getRowsCount() > 0;
 }
 

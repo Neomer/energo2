@@ -5,7 +5,7 @@
 #ifndef ENERGO_SQLQUERY_H
 #define ENERGO_SQLQUERY_H
 
-#include <libpq-fe.h>
+#include "DatabaseResultAdapter.h"
 #include "SqlQueryReader.h"
 
 namespace energo::db {
@@ -17,8 +17,8 @@ namespace energo::db {
  */
 class EXPORTS SqlQuery final {
 public:
-    explicit SqlQuery(PGresult *result);
-    ~SqlQuery();
+    explicit SqlQuery(const DatabaseResultAdapter &adapter);
+    ~SqlQuery() = default;
     
     /**
      * @return Выполнение запроса прошло без ошибок.
@@ -60,7 +60,7 @@ public:
     bool previous();
     
 private:
-    PGresult *_result;
+    const DatabaseResultAdapter &_adapter;
     int _rowIdx;
 };
 

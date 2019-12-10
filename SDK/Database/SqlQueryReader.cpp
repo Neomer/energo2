@@ -9,43 +9,30 @@
 using namespace std;
 using namespace energo::db;
 
-SqlQueryReader::SqlQueryReader(PGresult *result, int row) :
-        _result{result},
+SqlQueryReader::SqlQueryReader(const DatabaseResultAdapter &adapter, int row) :
+        _adapter{adapter},
         _rowIdx{row}
 {
 
 }
 
 uint16_t SqlQueryReader::getFieldsCount() const {
-    return PQnfields(_result);
+    return _adapter.getFieldsCount();
 }
 
 SqlValue SqlQueryReader::value(int fieldIndex) const {
-    return SqlValue(
-            PQgetvalue(
-                    _result,
-                    _rowIdx,
-                    fieldIndex));
+    return _adapter.value(fieldIndex, _rowIdx);
 }
 
 SqlValue SqlQueryReader::value(string_view fieldName) const {
-    auto fieldIdx = PQfnumber(_result, fieldName.data());
+    auto fieldIdx = _adapter.getFieldIndexByName(fieldName);
     if (fieldIdx == -1) {
         throw range_error("Колонки с указанным наименованием не найдено.");
     }
-    return SqlValue(
-            PQgetvalue(
-                    _result,
-                    _rowIdx,
-                    fieldIdx));
+    return _adapter.value(fieldIdx, _rowIdx);
 }
 
-std::vector<const char *> SqlQueryReader::getFieldNames() const {
-    std::vector<const char *> result;
-    auto fields = getFieldsCount();
-    for (auto idx = 0; idx < fields; ++idx) {
-        result.push_back(PQfname(_result, idx));
-    }
-    return result;
+void SqlQueryReader::getFieldNames(std::vector<const char *> &fields) const {
+    _adapter.getFieldNames(fields);
 }
 
