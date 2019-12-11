@@ -6,13 +6,13 @@
 #define ENERGO_DATABASESTOREDENTITY_H
 
 #include "../SqlQueryReader.h"
+#include "../../Metadata/MetaClass.h"
 
 namespace energo::db::entity {
 
-class DatabaseStoredEntity {
+class DatabaseStoredEntity : public meta::MetaClass {
 public:
-    DatabaseStoredEntity() = default;
-    virtual ~DatabaseStoredEntity() = default;
+    explicit DatabaseStoredEntity(const types::Uuid &typeUid);
 
     virtual void fromSql(const SqlQueryReader &reader) = 0;
 };

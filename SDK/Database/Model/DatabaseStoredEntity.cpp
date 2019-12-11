@@ -3,3 +3,12 @@
 //
 
 #include "DatabaseStoredEntity.h"
+
+using namespace energo::types;
+using namespace energo::db::entity;
+
+DatabaseStoredEntity::DatabaseStoredEntity(const Uuid &typeUid) :
+    MetaClass(typeUid)
+{
+
+}

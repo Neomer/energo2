@@ -7,7 +7,14 @@
 
 using namespace std;
 using namespace energo::db;
+using namespace energo::types;
 using namespace energo::db::entity;
+
+User::User() :
+    IdentifiedEntity{Uuid{0, 1}}
+{
+
+}
 
 void User::fromSql(const SqlQueryReader &reader) {
     IdentifiedEntity::fromSql(reader);
@@ -38,4 +45,14 @@ void User::setFirstName(std::string_view firstName) {
 
 void User::setSecondName(std::string_view secondName) {
     _secondName = secondName;
+}
+
+UserMetadata::UserMetadata() :
+    ClassMetadata(Uuid{0, 1}, Uuid::Empty())
+{
+
+}
+
+energo::meta::MetaClass *UserMetadata::createInstance() const {
+    return new User();
 }

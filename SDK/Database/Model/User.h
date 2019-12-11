@@ -8,6 +8,7 @@
 #include <cinttypes>
 #include <string>
 #include <string_view>
+#include "../../Metadata/ClassMetadata.h"
 #include "IdentifiedEntity.h"
 
 namespace energo::db::entity {
@@ -16,6 +17,8 @@ class User : public IdentifiedEntity {
     std::string _username, _firstName, _secondName;
 
 public:
+    User();
+
     [[nodiscard]] std::string_view getUsername() const;
 
     void setUsername(std::string_view username);
@@ -30,6 +33,13 @@ public:
 
 public:
     void fromSql(const SqlQueryReader &reader) override;
+};
+
+class UserMetadata : public meta::ClassMetadata {
+public:
+    UserMetadata();
+
+    [[nodiscard]] meta::MetaClass *createInstance() const override;
 };
 
 }

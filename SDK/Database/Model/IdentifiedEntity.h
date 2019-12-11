@@ -14,6 +14,8 @@ class IdentifiedEntity : public DatabaseStoredEntity {
     energo::types::Uuid _uid;
     
 public:
+    explicit IdentifiedEntity(const types::Uuid &typeUid);
+
     void fromSql(const SqlQueryReader &reader) override;
     
     [[nodiscard]] const types::Uuid &getUid() const;

@@ -8,19 +8,27 @@
 #include <Database/Adapters/PostgreSql/PostgreSqlConnectionAdapter.h>
 #include <Database/Adapters/PostgreSql/PostgreSqlQueryBuilder.h>
 #include <Database/Adapters/PostgreSql/PostgreSqlTransformationProvider.h>
-#include <Database/DatabaseConnection.h>
 #include <Database/DatabaseUnavailableException.h>
 #include <Database/Model/User.h>
+#include <Database/Model/EntityMetadataRegistrar.h>
+#include <Metadata/MetadataProvider.h>
 
 using namespace std;
 using namespace energo::benchmark;
 using namespace energo::db;
 using namespace energo::db::entity;
+using namespace energo::meta;
 using namespace energo::exceptions;
 
 int main(int argv, char **argc) {
     BenchmarkTimer timer("Configurator app", cout);
     random_device rd;
+
+    {
+        MetadataProvider metadataProvider;
+        EntityMetadataRegistrar::RegisterEntityTypes(metadataProvider);
+    }
+    timer.lap("metadata registered");
 
     DatabaseConnectionSettings settings;
     settings.setHost("localhost");
