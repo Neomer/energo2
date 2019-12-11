@@ -9,14 +9,16 @@ using namespace std::string_literals;
 using namespace energo::db;
 
 DatabaseSelectQueryBuilder::DatabaseSelectQueryBuilder(const TransformationProvider &provider, std::string_view tableName):
-    _provider{provider},
-    _tableName{tableName}
+        _provider{provider},
+        _tableName{tableName},
+        _limit{nullopt},
+        _offset{nullopt}
 {
     _fields.reserve(256);
 }
 
-DatabaseSelectQueryBuilder &DatabaseSelectQueryBuilder::rawFilter(std::string_view whereClause) {
-    _whereClause = whereClause;
+DatabaseSelectQueryBuilder &DatabaseSelectQueryBuilder::where(std::string_view where) {
+    _whereClause = where;
     return *this;
 }
 
@@ -27,12 +29,15 @@ DatabaseSelectQueryBuilder &DatabaseSelectQueryBuilder::fields(std::string_view 
 
 DatabaseSelectQueryBuilder &DatabaseSelectQueryBuilder::fields(const vector<pair<string_view, optional<string_view>>> &fields) {
     _fields = "";
-    for (auto &field : fields) {
+    for (auto it = fields.begin(); it != fields.end(); ++it) {
+        auto field = *it;
         _fields += _provider.EscapeFieldNameIfNeeded(field.first.data());
         if (field.second) {
             _fields += " as "s + _provider.EscapeFieldNameIfNeeded(field.second.value());
         }
-        _fields += ", ";
+        if (std::next(it) != fields.end()) {
+            _fields += ", ";
+        }
     }
     return *this;
 }
@@ -44,6 +49,11 @@ DatabaseSelectQueryBuilder &DatabaseSelectQueryBuilder::limit(size_t limit) {
 
 DatabaseSelectQueryBuilder &DatabaseSelectQueryBuilder::schema(std::string_view schema) {
     _schema = schema;
+    return *this;
+}
+
+DatabaseSelectQueryBuilder &DatabaseSelectQueryBuilder::offset(size_t offset) {
+    _offset = offset;
     return *this;
 }
 

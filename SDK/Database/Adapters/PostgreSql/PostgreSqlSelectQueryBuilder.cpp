@@ -27,6 +27,12 @@ string PostgreSqlSelectQueryBuilder::build() const {
     if (!_whereClause.empty()) {
         sql += " where " + _whereClause;
     }
+    if (_limit) {
+        sql += " limit " + to_string(_limit.value());
+    }
+    if (_offset) {
+        sql += " offset " + to_string(_offset.value());
+    }
     sql += ";";
     return sql;
 }

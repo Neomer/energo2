@@ -21,17 +21,22 @@ protected:
     std::string _fields;
     std::string _schema;
     std::optional<size_t> _limit;
+    std::optional<size_t> _offset;
     
 public:
+    using TFieldWithAliasList = std::vector<std::pair<std::string_view, std::optional<std::string_view>>>;
+
     explicit DatabaseSelectQueryBuilder(const TransformationProvider &provider, std::string_view tableName);
     
-    DatabaseSelectQueryBuilder &rawFilter(std::string_view whereClause);
+    DatabaseSelectQueryBuilder &where(std::string_view where);
     
-    DatabaseSelectQueryBuilder &fields(const std::vector<std::pair<std::string_view, std::optional<std::string_view>>> &fields);
+    DatabaseSelectQueryBuilder &fields(const TFieldWithAliasList &fields);
     
     DatabaseSelectQueryBuilder &fields(std::string_view rawFields);
     
     DatabaseSelectQueryBuilder &limit(size_t limit);
+
+    DatabaseSelectQueryBuilder &offset(size_t offset);
     
     DatabaseSelectQueryBuilder &schema(std::string_view schema);
     
