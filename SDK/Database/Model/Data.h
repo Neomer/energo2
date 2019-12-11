@@ -9,7 +9,7 @@
 
 namespace energo::db::entity {
 
-class Data : public DatabaseStoredEntity {
+class EXPORTS Data : public DatabaseStoredEntity {
 public:
     void fromSql(const SqlQueryReader &reader) override;
 };

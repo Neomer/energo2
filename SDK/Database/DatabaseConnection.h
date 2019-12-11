@@ -11,13 +11,14 @@
 #include "DatabaseConnectionSettings.h"
 #include "../Types/Uuid.h"
 #include "SqlQuery.h"
+#include "DatabaseQueryBuilder.h"
 
 namespace energo::db {
 
 /**
  * Одиночное подключение к базе данных.
  */
-class DatabaseConnection {
+class EXPORTS DatabaseConnection {
 public:
     /**
      * Подготавливает новое подключение к базе данных. Для соединения необходимо вызвать метод DatabaseConnection::open().
@@ -45,6 +46,11 @@ public:
      * @return Уникальный идентификатор подключения.
      */
     [[nodiscard]] const energo::types::Uuid &getUid() const;
+    
+    /**
+     * @return Билдер SQL-запросов для текущего адаптера базы данных.
+     */
+    [[nodiscard]] virtual const DatabaseQueryBuilder *queryBuilder() const = 0;
     
     /**
      * Выполняет SQL-запрос к базе данных.

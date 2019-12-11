@@ -8,12 +8,13 @@
 #include <cinttypes>
 #include <string>
 #include <string_view>
-#include "../../Metadata/ClassMetadata.h"
+#include "../../Metadata/EntityMetadata.h"
 #include "IdentifiedEntity.h"
+
 
 namespace energo::db::entity {
 
-class User : public IdentifiedEntity {
+class EXPORTS User : public IdentifiedEntity {
     std::string _username, _firstName, _secondName;
 
 public:
@@ -35,13 +36,21 @@ public:
     void fromSql(const SqlQueryReader &reader) override;
 };
 
-class UserMetadata : public meta::ClassMetadata {
+class UserMetadata : public meta::EntityMetadata {
 public:
     UserMetadata();
 
-    [[nodiscard]] meta::MetaClass *createInstance() const override;
+    [[nodiscard]] meta::MetaClass *createInstance() const override {
+        return new User();
+    }
 
-    std::string_view getTypeName() const override;
+    [[nodiscard]] std::string_view getTypeName() const override {
+        return "User";
+    }
+    
+    [[nodiscard]] std::string_view getTableName() const override {
+        return "Users";
+    }
 };
 
 }

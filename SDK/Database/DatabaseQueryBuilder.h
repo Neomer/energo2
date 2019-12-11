@@ -12,7 +12,7 @@
 
 namespace energo::db {
 
-class DatabaseQueryBuilder {
+class EXPORTS DatabaseQueryBuilder {
 protected:
     const TransformationProvider &_provider;
     

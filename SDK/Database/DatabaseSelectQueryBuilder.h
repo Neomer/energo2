@@ -13,7 +13,7 @@
 
 namespace energo::db {
 
-class DatabaseSelectQueryBuilder {
+class EXPORTS DatabaseSelectQueryBuilder {
 protected:
     const TransformationProvider &_provider;
     std::string _tableName;

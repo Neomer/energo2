@@ -5,29 +5,27 @@
 #include <iostream>
 
 #include <BenchmarkTimer.h>
-#include <Database/Adapters/PostgreSql/PostgreSqlConnectionAdapter.h>
-#include <Database/Adapters/PostgreSql/PostgreSqlQueryBuilder.h>
-#include <Database/Adapters/PostgreSql/PostgreSqlTransformationProvider.h>
 #include <Database/DatabaseUnavailableException.h>
-#include <Database/Model/User.h>
 #include <Database/Model/EntityMetadataRegistrar.h>
 #include <Metadata/MetadataProvider.h>
+#include <Database/Adapters/PostgreSql/PostgreSqlConnectionProvider.h>
+#include <Database/Managers/UserManager.h>
+#include <Database/Model/User.h>
 
 using namespace std;
 using namespace energo::benchmark;
 using namespace energo::db;
 using namespace energo::db::entity;
 using namespace energo::meta;
-using namespace energo::exceptions;
+using namespace energo::db::managers;
+using namespace energo::types;
+using namespace std::string_literals;
 
 int main(int argv, char **argc) {
     BenchmarkTimer timer("Configurator app", cout);
-    random_device rd;
 
-    {
-        MetadataProvider metadataProvider;
-        EntityMetadataRegistrar::RegisterEntityTypes(metadataProvider);
-    }
+    MetadataProvider metadataProvider;
+    EntityMetadataRegistrar::RegisterEntityTypes(metadataProvider);
     timer.lap("metadata registered");
 
     DatabaseConnectionSettings settings;
@@ -37,37 +35,20 @@ int main(int argv, char **argc) {
     settings.setPassword("123456");
     settings.setDatabase("energo2");
     
-    adapters::PostgreSqlTransformationProvider transformationProvider;
-    adapters::PostgreSqlQueryBuilder queryBuilder(transformationProvider);
-    adapters::PostgreSqlConnectionAdapter connection(rd, settings);
-    try {
-        BenchmarkTimer timer2("Read users table", cout);
-        connection.open();
-        timer2.lap("database connection");
-        cout << "Connection ready!\n";
-
-        auto sql = queryBuilder
-            .createSelectQueryBuilder("Users")
-            ->build();
-        timer2.lap("Query building");
-
-        auto query = connection.exec(sql);
-        timer2.lap("Query execution");
-
-        User user;
-        if (!query->any()) {
-            cout << "No users were registered.";
-        } else {
-            do {
-                user.fromSql(query->getReader());
-                cout << "Found user: " << user.getFirstName() << " " << user.getSecondName()  << " [" << user.getUid() << "] " << endl;
-            } while (query->next());
-        }
-        timer2.lap("Entities generation");
-    } catch (DatabaseUnavailableException &) {
-        cout << "Database is unavailable!\n";
+    adapters::PostgreSqlConnectionProvider connectionProvider{settings};
+    connectionProvider.initialize(1);
+    
+    UserManager manager{connectionProvider, metadataProvider};
+    auto entity = manager.get(Uuid::Parse("4635efb6-1466-414b-97ca-5068d808032b"));
+    if (entity == nullptr) {
+        cout << "User not found.\n";
+    } else {
+        auto user = dynamic_cast<User *>(entity.get());
+        cout << "User found!\n"
+             << "   " << user->getFirstName() << " [" << user->getUid() << "]\n";
     }
-    connection.close();
+    
+    connectionProvider.release();
 
     return 0;
 }

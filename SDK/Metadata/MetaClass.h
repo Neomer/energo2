@@ -13,7 +13,7 @@ namespace energo::meta {
 /**
  * Базовый класс для дргих классов, которые имеют метаданные и хранятся в контейнере метаданных.
  */
-class MetaClass {
+class EXPORTS MetaClass {
     energo::types::Uuid _typeUid;
     energo::types::Uuid _parentTypeUid;
 

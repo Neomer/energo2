@@ -10,7 +10,7 @@
 
 namespace energo::db::entity {
 
-class DatabaseStoredEntity : public meta::MetaClass {
+class EXPORTS DatabaseStoredEntity : public meta::MetaClass {
 public:
     explicit DatabaseStoredEntity(const types::Uuid &typeUid);
 

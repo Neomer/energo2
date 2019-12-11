@@ -4,6 +4,7 @@
 
 #include <iostream>
 #include "User.h"
+#include "../../Metadata/TypeUids.h"
 
 using namespace std;
 using namespace energo::db;
@@ -11,7 +12,7 @@ using namespace energo::types;
 using namespace energo::db::entity;
 
 User::User() :
-    IdentifiedEntity{Uuid{0, 1}}
+    IdentifiedEntity{USER_TYPE_UID}
 {
 
 }
@@ -48,15 +49,7 @@ void User::setSecondName(std::string_view secondName) {
 }
 
 UserMetadata::UserMetadata() :
-    ClassMetadata(Uuid{0, 1}, Uuid::Empty())
+    EntityMetadata(USER_TYPE_UID, Uuid::Empty())
 {
 
-}
-
-energo::meta::MetaClass *UserMetadata::createInstance() const {
-    return new User();
-}
-
-string_view UserMetadata::getTypeName() const {
-    return  "User";
 }

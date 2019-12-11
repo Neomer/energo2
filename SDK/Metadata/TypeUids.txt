@@ -1,1 +1,0 @@
-energo::db::entity::User = {0, 1}

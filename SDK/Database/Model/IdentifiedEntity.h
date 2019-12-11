@@ -10,7 +10,7 @@
 
 namespace energo::db::entity {
 
-class IdentifiedEntity : public DatabaseStoredEntity {
+class EXPORTS IdentifiedEntity : public DatabaseStoredEntity {
     energo::types::Uuid _uid;
     
 public:

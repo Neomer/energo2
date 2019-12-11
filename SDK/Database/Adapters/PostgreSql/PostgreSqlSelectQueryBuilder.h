@@ -9,7 +9,7 @@
 
 namespace energo::db::adapters {
 
-class PostgreSqlSelectQueryBuilder: public DatabaseSelectQueryBuilder {
+class EXPORTS PostgreSqlSelectQueryBuilder: public DatabaseSelectQueryBuilder {
 public:
     explicit PostgreSqlSelectQueryBuilder(const TransformationProvider &provider, std::string_view tableName);
     

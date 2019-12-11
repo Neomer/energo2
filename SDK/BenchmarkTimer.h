@@ -9,6 +9,7 @@
 #include <string_view>
 #include <string>
 #include <chrono>
+#include "os.h"
 
 namespace energo::benchmark {
 

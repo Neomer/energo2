@@ -9,7 +9,7 @@
 
 namespace energo::db::adapters {
 
-class PostgreSqlQueryBuilder: DatabaseQueryBuilder {
+class EXPORTS PostgreSqlQueryBuilder: public DatabaseQueryBuilder {
 public:
     explicit PostgreSqlQueryBuilder(const TransformationProvider &provider);
     

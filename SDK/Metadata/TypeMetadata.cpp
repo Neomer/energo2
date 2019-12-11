@@ -16,3 +16,4 @@ TypeMetadata::TypeMetadata(const Uuid &typeUid) :
 const Uuid &TypeMetadata::getTypeUid() const {
     return _typeUid;
 }
+

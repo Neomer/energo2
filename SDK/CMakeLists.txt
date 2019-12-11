@@ -40,7 +40,16 @@ set(SOURCE_EXE global.h Types/Uuid.cpp Types/Uuid.h
         Database/Model/IdentifiedEntity.cpp Database/Model/IdentifiedEntity.h
         Metadata/MetaClass.cpp Metadata/MetaClass.h
         Metadata/MetadataProvider.cpp Metadata/MetadataProvider.h
-        BenchmarkTimer.cpp BenchmarkTimer.h Metadata/MetaClass.cpp Metadata/MetaClass.h Metadata/MetadataProvider.cpp Metadata/MetadataProvider.h Metadata/ClassMetadata.cpp Metadata/ClassMetadata.h Metadata/TypeMetadata.cpp Metadata/TypeMetadata.h Database/Model/EntityMetadataRegistrar.cpp Database/Model/EntityMetadataRegistrar.h)
+        BenchmarkTimer.cpp BenchmarkTimer.h
+        Metadata/MetaClass.cpp Metadata/MetaClass.h
+        Metadata/TypeUids.h
+        Metadata/MetadataProvider.cpp Metadata/MetadataProvider.h
+        Metadata/ClassMetadata.cpp Metadata/ClassMetadata.h
+        Metadata/TypeMetadata.cpp Metadata/TypeMetadata.h
+        Database/Model/EntityMetadataRegistrar.cpp Database/Model/EntityMetadataRegistrar.h
+        Database/Managers/UserManager.cpp Database/Managers/UserManager.h
+        Database/Managers/EntityManager.cpp Database/Managers/EntityManager.h
+        Metadata/EntityMetadata.cpp Metadata/EntityMetadata.h Database/DatabaseConnectionProvider.cpp Database/DatabaseConnectionProvider.h Database/Adapters/PostgreSql/PostgreSqlConnectionProvider.cpp Database/Adapters/PostgreSql/PostgreSqlConnectionProvider.h)
 
 add_library(${PROJECT_NAME} SHARED ${SOURCE_EXE})
 

@@ -10,7 +10,7 @@
 
 namespace energo::meta {
 
-class ClassMetadata: public TypeMetadata {
+class EXPORTS ClassMetadata: public TypeMetadata {
     energo::types::Uuid _parentTypeUid;
 
 public:

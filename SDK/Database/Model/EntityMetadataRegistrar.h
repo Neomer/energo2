@@ -9,7 +9,7 @@
 
 namespace energo::db::entity {
 
-class EntityMetadataRegistrar {
+class EXPORTS EntityMetadataRegistrar {
     EntityMetadataRegistrar() = default;
     ~EntityMetadataRegistrar() = default;
 

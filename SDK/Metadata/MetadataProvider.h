@@ -14,7 +14,7 @@ namespace energo::meta {
 /**
  * Контейнер зарегистрированных метаданных типов.
  */
-class MetadataProvider {
+class EXPORTS MetadataProvider {
     std::vector<std::shared_ptr<TypeMetadata>> _metadataVector;
 
 public:

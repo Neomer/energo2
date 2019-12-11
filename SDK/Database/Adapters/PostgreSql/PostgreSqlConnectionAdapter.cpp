@@ -15,7 +15,9 @@ using namespace energo::db::adapters;
 using namespace energo::exceptions;
 
 PostgreSqlConnectionAdapter::PostgreSqlConnectionAdapter(random_device &randomDevice, const DatabaseConnectionSettings &settings) :
-    DatabaseConnection(randomDevice, settings)
+    DatabaseConnection(randomDevice, settings),
+    _transformationProvider{},
+    _queryBuilder{_transformationProvider}
 {
 
 }
@@ -61,4 +63,8 @@ unique_ptr<SqlQuery> PostgreSqlConnectionAdapter::exec(std::string_view sql) con
         throw SqlQueryBadResultException(PQerrorMessage(_connection));
     }
     return std::move(result);
+}
+
+const DatabaseQueryBuilder *PostgreSqlConnectionAdapter::queryBuilder() const {
+    return &_queryBuilder;
 }
