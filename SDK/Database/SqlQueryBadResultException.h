@@ -7,10 +7,11 @@
 
 #include <stdexcept>
 #include <string_view>
+#include "../global.h"
 
 namespace energo::exceptions {
 
-class SqlQueryBadResultException : public std::runtime_error {
+class EXPORTS SqlQueryBadResultException : public std::runtime_error {
 public:
     explicit SqlQueryBadResultException(std::string_view message);
 };

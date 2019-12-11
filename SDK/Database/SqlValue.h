@@ -12,7 +12,7 @@
 
 namespace energo::db {
 
-class SqlValue {
+class EXPORTS SqlValue final {
 public:
     explicit SqlValue(std::string_view data);
     

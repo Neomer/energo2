@@ -5,10 +5,18 @@ project(Configurator)
 set(CMAKE_CXX_STANDARD 17)
 set(SOURCE_EXE main.cpp)
 
+find_package(PostgreSQL REQUIRED)
+if (NOT ${PostgreSQL_FOUND})
+    message("PostrgreSql isn't found!")
+else(NOT ${PostgreSQL_FOUND})
+    message("PostgreSql version found ${PostgreSQL_VERSION_STRING}")
+    include_directories(${PostgreSQL_INCLUDE_DIR})
+endif(NOT ${PostgreSQL_FOUND})
+
 include_directories(../SDK)
 
 add_executable(${PROJECT_NAME} ${SOURCE_EXE})
-target_link_libraries(${PROJECT_NAME} SDK)
+target_link_libraries(${PROJECT_NAME} SDK ${PostgreSQL_LIBRARIES})
 
 set_target_properties(${PROJECT_NAME} PROPERTIES LINKER_LANGUAGE CXX)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)

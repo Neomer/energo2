@@ -20,16 +20,52 @@ using namespace std;
 using namespace std::string_literals;
 using namespace energo::types;
 
-#pragma clang diagnostic push
-#pragma ide diagnostic ignored "hicpp-member-init"
-#pragma ide diagnostic ignored "cppcoreguidelines-pro-type-member-init"
-Uuid::Uuid() {
-    memset(_data, 0, UUID_BYTES);
+#ifdef ENVIRONMENT64
+Uuid::Uuid() :
+    _data{ 0, 0 }
+{
+
 }
-#pragma clang diagnostic pop
+
+Uuid::Uuid(const uint64_t *data) :
+    _data{ data[0], data[1] }
+{
+
+}
+
+Uuid::Uuid(uint64_t p1, uint64_t p2) :
+    _data{ p1, p2 }
+{
+
+}
+#else
+Uuid::Uuid() :
+    _data{ 0, 0, 0, 0 }
+{
+
+}
+
+Uuid::Uuid(const uint32_t *data) :
+    _data{ data[0], data[1], data[2], data[3] }
+{
+
+}
+
+Uuid::Uuid(uint32_t p1, uint32_t p2, uint32_t p3, uint32_t p4) :
+    _data{ p1, p2, p3, p4 }
+{
+
+}
+
+#endif
+
 
 bool Uuid::equals(const Uuid &other) const {
+#ifdef ENVIRONMENT64
+    return _data[0] == other._data[0] && _data[1] == other._data[1];
+#else
     return !memcmp(_data, other._data, UUID_DATA_PARTS);
+#endif
 }
 
 bool Uuid::operator==(const Uuid &other) const {
@@ -202,31 +238,6 @@ std::string Uuid::toString() const {
 #endif
 }
 
-#ifdef ENVIRONMENT64
-
-Uuid::Uuid(const uint64_t *data) { // NOLINT(cppcoreguidelines-pro-type-member-init)
-    memcpy(_data, data, UUID_DATA_PARTS);
-}
-
-Uuid::Uuid(uint64_t p1, uint64_t p2) { // NOLINT(cppcoreguidelines-pro-type-member-init)
-    _data[0] = p1;
-    _data[1] = p2;
-}
-
-#else
-
-Uuid::Uuid(const uint32_t *data) {
-    memcpy(_data, data, UUID_DATA_PARTS);
-}
-
-Uuid::Uuid(uint32_t p1, uint32_t p2, uint32_t p3, uint32_t p4) {
-    _data[0] = p1;
-    _data[1] = p2;
-    _data[2] = p3;
-    _data[3] = p4;
-}
-
-#endif
 
 #undef UUID_DATA_PARTS
 #undef UUID_BYTES

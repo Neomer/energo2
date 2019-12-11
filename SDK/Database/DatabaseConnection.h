@@ -7,34 +7,35 @@
 
 #include <atomic>
 #include <string_view>
-#include <postgresql/libpq-fe.h>
+#include <memory>
 #include "DatabaseConnectionSettings.h"
 #include "../Types/Uuid.h"
 #include "SqlQuery.h"
+#include "DatabaseQueryBuilder.h"
 
 namespace energo::db {
 
 /**
  * Одиночное подключение к базе данных.
  */
-class DatabaseConnection {
+class EXPORTS DatabaseConnection {
 public:
     /**
      * Подготавливает новое подключение к базе данных. Для соединения необходимо вызвать метод DatabaseConnection::open().
      * @param settings Настройки подключения к базе данных.
      */
-    explicit DatabaseConnection(std::random_device &randomDevice, DatabaseConnectionSettings &settings);
+    explicit DatabaseConnection(std::random_device &randomDevice, const DatabaseConnectionSettings &settings);
     
     /**
      * Открывает новое подключение к базе данных. Если оно было открыто до этого, то ничего не произойдет.
      * @throw DatabaseUnavailableException Не удалось подключиться к базе данных.
      */
-    void open();
+    virtual void open();
     
     /**
      * Закрывает подключение к базе данных. Если оно не было открыто, то ничего не произойдет.
      */
-    void close();
+    virtual void close();
     
     /**
      * @return Открыто ли подлючение к базе данных.
@@ -47,19 +48,25 @@ public:
     [[nodiscard]] const energo::types::Uuid &getUid() const;
     
     /**
+     * @return Билдер SQL-запросов для текущего адаптера базы данных.
+     */
+    [[nodiscard]] virtual const DatabaseQueryBuilder *queryBuilder() const = 0;
+    
+    /**
      * Выполняет SQL-запрос к базе данных.
      * @param sql SQL-запрос.
      * @return SqlQuery, представляющий результат выполнения запроса.
      * @throws DatabaseConnectionIsClosedException Попытка выполнить запрос при закрытом соединении.
      * @throws SqlQueryBadResultException выполнение запроса завершилось с ошибкой.
      */
-    SqlQuery exec(std::string_view sql) const; // NOLINT(modernize-use-nodiscard)
+    [[nodiscard]] virtual std::unique_ptr<SqlQuery> exec(std::string_view sql) const = 0;
     
 private:
-    DatabaseConnectionSettings _connectionSettings;
     std::atomic_bool _open;
-    PGconn *_connection;
     energo::types::Uuid _uid;
+
+protected:
+    DatabaseConnectionSettings _connectionSettings;
 };
 
 }

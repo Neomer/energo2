@@ -6,13 +6,14 @@
 #define ENERGO_DATABASECONNECTIONISCLOSEDEXCEPTION_H
 
 #include <stdexcept>
+#include "../global.h"
 
 namespace energo::exceptions {
 
 /**
  * Попытка работать с закрытым подключением к базе данных.
  */
-class DatabaseConnectionIsClosedException : public std::runtime_error {
+class EXPORTS DatabaseConnectionIsClosedException : public std::runtime_error {
 public:
     /**
      * Попытка работать с закрытым подключением к базе данных.
