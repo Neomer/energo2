@@ -48,4 +48,10 @@ TEST_F(PostgreSqlSelectQueryBuilder_Tests, WhereClauseByString) {
     EXPECT_EQ(builder.build(), "select * from \"public\".\"SomeTable\" where a > 4;");
 }
 
+TEST_F(PostgreSqlSelectQueryBuilder_Tests, ChangeDefaultSchema) {
+    PostgreSqlSelectQueryBuilder builder(*provider, "SomeTable");
+    builder.schema("test");
+    EXPECT_EQ(builder.build(), "select * from \"test\".\"SomeTable\";");
+}
+
 #pragma clang diagnostic pop

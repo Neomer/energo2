@@ -4,6 +4,7 @@
 
 #include <iostream>
 
+#include <BenchmarkTimer.h>
 #include <Database/Adapters/PostgreSql/PostgreSqlConnectionAdapter.h>
 #include <Database/Adapters/PostgreSql/PostgreSqlQueryBuilder.h>
 #include <Database/Adapters/PostgreSql/PostgreSqlTransformationProvider.h>
@@ -12,11 +13,13 @@
 #include <Database/Model/User.h>
 
 using namespace std;
+using namespace energo::benchmark;
 using namespace energo::db;
 using namespace energo::db::entity;
 using namespace energo::exceptions;
 
 int main(int argv, char **argc) {
+    BenchmarkTimer timer("Configurator app", cout);
     random_device rd;
 
     DatabaseConnectionSettings settings;
@@ -30,13 +33,19 @@ int main(int argv, char **argc) {
     adapters::PostgreSqlQueryBuilder queryBuilder(transformationProvider);
     adapters::PostgreSqlConnectionAdapter connection(rd, settings);
     try {
+        BenchmarkTimer timer2("Read users table", cout);
         connection.open();
+        timer2.lap("database connection");
         cout << "Connection ready!\n";
-        
-        auto query = connection.exec(
-                queryBuilder
-                .createSelectQueryBuilder("Users")
-                ->build());
+
+        auto sql = queryBuilder
+            .createSelectQueryBuilder("Users")
+            ->build();
+        timer2.lap("Query building");
+
+        auto query = connection.exec(sql);
+        timer2.lap("Query execution");
+
         User user;
         if (!query->any()) {
             cout << "No users were registered.";
@@ -46,6 +55,7 @@ int main(int argv, char **argc) {
                 cout << "Found user: " << user.getFirstName() << " " << user.getSecondName()  << " [" << user.getUid() << "] " << endl;
             } while (query->next());
         }
+        timer2.lap("Entities generation");
     } catch (DatabaseUnavailableException &) {
         cout << "Database is unavailable!\n";
     }

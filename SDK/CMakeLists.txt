@@ -30,7 +30,15 @@ set(SOURCE_EXE global.h Types/Uuid.cpp Types/Uuid.h
         Types/DateTime.cpp Types/DateTime.h
         Database/SqlQueryReader.h Database/SqlQueryReader.cpp
         Database/Adapters/PostgreSql/PostgreSqlResultAdapter.cpp Database/Adapters/PostgreSql/PostgreSqlResultAdapter.h
-        Database/Adapters/PostgreSql/PostgreSqlTransformationProvider.cpp Database/Adapters/PostgreSql/PostgreSqlTransformationProvider.h Database/Adapters/PostgreSql/PostgreSqlConnectionAdapter.cpp Database/Adapters/PostgreSql/PostgreSqlConnectionAdapter.h Database/DatabaseQueryBuilder.cpp Database/DatabaseQueryBuilder.h Database/DatabaseSelectQueryBuilder.cpp Database/DatabaseSelectQueryBuilder.h Database/Adapters/PostgreSql/PostgreSqlSelectQueryBuilder.cpp Database/Adapters/PostgreSql/PostgreSqlSelectQueryBuilder.h Database/Adapters/PostgreSql/PostgreSqlQueryBuilder.cpp Database/Adapters/PostgreSql/PostgreSqlQueryBuilder.h Database/Model/IdentifiedEntity.cpp Database/Model/IdentifiedEntity.h)
+        Database/Adapters/PostgreSql/PostgreSqlTransformationProvider.cpp Database/Adapters/PostgreSql/PostgreSqlTransformationProvider.h
+        Database/Adapters/PostgreSql/PostgreSqlConnectionAdapter.cpp Database/Adapters/PostgreSql/PostgreSqlConnectionAdapter.h
+        Database/DatabaseQueryBuilder.cpp Database/DatabaseQueryBuilder.h
+        Database/DatabaseSelectQueryBuilder.cpp Database/DatabaseSelectQueryBuilder.h
+        Database/Adapters/PostgreSql/PostgreSqlSelectQueryBuilder.cpp Database/Adapters/PostgreSql/PostgreSqlSelectQueryBuilder.h
+        Database/Adapters/PostgreSql/PostgreSqlQueryBuilder.cpp Database/Adapters/PostgreSql/PostgreSqlQueryBuilder.h
+        BenchmarkTimer.h BenchmarkTimer.cpp
+        Database/Model/IdentifiedEntity.cpp Database/Model/IdentifiedEntity.h
+        BenchmarkTimer.cpp BenchmarkTimer.h)
 
 add_library(${PROJECT_NAME} SHARED ${SOURCE_EXE})
 
