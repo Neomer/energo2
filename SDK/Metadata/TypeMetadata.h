@@ -12,14 +12,13 @@ namespace energo::meta {
 
 class TypeMetadata {
     energo::types::Uuid _typeUid;
-    std::string_view _typeName;
 
 public:
     explicit TypeMetadata(const types::Uuid &typeUid);
 
     [[nodiscard]] const types::Uuid &getTypeUid() const;
 
-    [[nodiscard]] std::string_view getTypeName() const;
+    [[nodiscard]] virtual std::string_view getTypeName() const = 0;
 };
 
 }

@@ -40,6 +40,8 @@ public:
     UserMetadata();
 
     [[nodiscard]] meta::MetaClass *createInstance() const override;
+
+    std::string_view getTypeName() const override;
 };
 
 }

@@ -56,3 +56,7 @@ UserMetadata::UserMetadata() :
 energo::meta::MetaClass *UserMetadata::createInstance() const {
     return new User();
 }
+
+string_view UserMetadata::getTypeName() const {
+    return  "User";
+}

@@ -13,4 +13,5 @@ using namespace energo::types;
 
 void EntityMetadataRegistrar::RegisterEntityTypes(MetadataProvider &provider) {
     provider.registerMetadata(shared_ptr<TypeMetadata>(new UserMetadata()));
+    provider.registerMetadata(shared_ptr<TypeMetadata>(new UserMetadata()));
 }
