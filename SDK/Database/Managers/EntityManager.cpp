@@ -55,5 +55,25 @@ shared_ptr<DatabaseStoredEntity> EntityManager::get(const Uuid &uid) const {
 }
 
 void EntityManager::all(vector<shared_ptr<DatabaseStoredEntity>> &result) const {
+    auto connection = _connectionProvider.getConnection();
+    if (connection == nullptr) {
+        throw DatabaseConnectionIsClosedException();
+    }
+    auto sql = connection
+            ->queryBuilder()
+            ->createSelectQueryBuilder(_entityMetadata->getTableName())
+            ->build();
 
+    auto queryResult = connection->exec(sql);
+    if (!queryResult->any()) {
+        return;
+    }
+    do
+    {
+        auto instance = _entityMetadata->createInstance();
+        auto entity = dynamic_cast<DatabaseStoredEntity *>(instance);
+        entity->fromSql(queryResult->getReader());
+        result.emplace_back(shared_ptr<DatabaseStoredEntity>(entity));
+    }
+    while (queryResult->next());
 }

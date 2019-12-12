@@ -47,6 +47,7 @@ public:
     /**
      * Заполняет вектор всеми сущностями, хранящимися в базе данных.
      * @param result
+     * @throws energo::exceptions::DatabaseConnectionIsClosedException Не удалось получить активное подключение.
      */
     virtual void all(std::vector<std::shared_ptr<energo::db::entity::DatabaseStoredEntity>> &result) const;
 };
