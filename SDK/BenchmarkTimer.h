@@ -21,6 +21,7 @@ class BenchmarkTimer {
     std::chrono::time_point<std::chrono::high_resolution_clock> _startPoint, _lap;
     std::ostream &_stream;
     std::string_view _benchName;
+    bool _stopped;
 
 public:
     /**
@@ -36,6 +37,12 @@ public:
      */
     explicit BenchmarkTimer(std::string_view benchmarkName, std::ostream &stream);
 
+    /**
+     * Создать новый бенчмарк. вывод будет осуществляться в stdout.
+     * @param benchmarkName
+     */
+    explicit BenchmarkTimer(std::string_view benchmarkName);
+
     ~BenchmarkTimer();
 
     /**
@@ -50,6 +57,8 @@ public:
      * @return Время выполнения этапа.
      */
     std::chrono::nanoseconds lap(std::string_view lapName);
+
+    void stop();
 };
 
 }

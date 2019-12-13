@@ -2,6 +2,7 @@
 // Created by kir on 11.12.2019.
 //
 
+#include "../../BenchmarkTimer.h"
 #include <stdexcept>
 #include "../DatabaseConnectionIsClosedException.h"
 #include "../SqlComparisonBuilder.h"
@@ -15,6 +16,7 @@ using namespace energo::db::managers;
 using namespace energo::types;
 using namespace energo::meta;
 using namespace energo::exceptions;
+using namespace energo::benchmark;
 
 EntityManager::EntityManager(const DatabaseConnectionProvider &provider, const Uuid &typeUid, const MetadataProvider &metadataProvider) :
     _connectionProvider{provider},
@@ -33,6 +35,7 @@ EntityManager::EntityManager(const DatabaseConnectionProvider &provider, const U
 }
 
 shared_ptr<DatabaseStoredEntity> EntityManager::get(const Uuid &uid) const {
+    BenchmarkTimer timer("entity get");
     auto connection = _connectionProvider.getConnection();
     if (connection == nullptr) {
         throw DatabaseConnectionIsClosedException();
@@ -46,15 +49,19 @@ shared_ptr<DatabaseStoredEntity> EntityManager::get(const Uuid &uid) const {
                             connection->transformationProvider().formatValue(uid)))
             .limit(1)
             .build();
+    timer.lap("SQL query ready");
 
     auto result = connection->exec(sql);
+    timer.lap("SQL execution");
     if (!result->any()) {
         return shared_ptr<DatabaseStoredEntity>(nullptr);
     }
     auto instance = _entityMetadata->createInstance();
     auto entity = dynamic_cast<DatabaseStoredEntity *>(instance);
+    timer.lap("entity instance created");
     entity->fromSql(result->getReader());
-    
+    timer.lap("entity deserialized");
+
     return shared_ptr<DatabaseStoredEntity>(entity);
 }
 

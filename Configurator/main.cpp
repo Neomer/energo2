@@ -37,9 +37,10 @@ int main(int argv, char **argc) {
     
     adapters::PostgreSqlConnectionProvider connectionProvider{settings};
     connectionProvider.initialize(1);
-    
     UserManager manager{connectionProvider, metadataProvider};
-    auto entity = manager.get(Uuid::Parse("4635efb6-1466-414b-97ca-5068d808032b"));
+    timer.lap("initialization finished");
+
+    auto entity = manager.get(Uuid::Parse("b3b756eb-99ad-4300-a4e0-c2ffe0925c0d"));
     if (entity == nullptr) {
         cout << "User not found.\n";
     } else {

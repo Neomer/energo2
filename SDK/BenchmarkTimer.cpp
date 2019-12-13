@@ -14,7 +14,8 @@ using namespace std::string_literals;
 BenchmarkTimer::BenchmarkTimer(std::ostream &stream) :
     _startPoint{ high_resolution_clock::now() },
     _lap{high_resolution_clock::now()},
-    _stream{ stream }
+    _stream{ stream },
+    _stopped{false}
 {
 
 }
@@ -23,28 +24,27 @@ BenchmarkTimer::BenchmarkTimer(string_view benchmarkName, ostream &stream)  :
     _startPoint{ high_resolution_clock::now() },
     _lap{high_resolution_clock::now()},
     _stream{ stream },
-    _benchName{benchmarkName}
+    _benchName{benchmarkName},
+    _stopped{false}
 {
 
 }
 
-BenchmarkTimer::~BenchmarkTimer() {
-    auto endPoint = high_resolution_clock::now();
-    auto duration = endPoint - _startPoint;
 
-    _stream << "Benchmark";
-    if (_benchName != "") {
-        _stream << "[" << _benchName << "]";
-    }
-    if (duration.count() > 3000000000) {
-        _stream << ": " << duration_cast<seconds>(duration).count() << " s\n";
-    } else if (duration.count() > 3000000) {
-        _stream << ": " << duration_cast<milliseconds>(duration).count() << " ms\n";
-    } else if (duration.count() > 3000) {
-        _stream << ": " << duration_cast<microseconds>(duration).count() << " mcs\n";
-    } else {
-        _stream << ": " << duration.count() << " ns\n";
-    }
+BenchmarkTimer::BenchmarkTimer(std::string_view benchmarkName) :
+        _startPoint{ high_resolution_clock::now() },
+        _lap{high_resolution_clock::now()},
+        _stream{ cout },
+        _benchName{benchmarkName},
+        _stopped{false}
+{
+
+}
+
+
+
+BenchmarkTimer::~BenchmarkTimer() {
+    stop();
 }
 
 nanoseconds BenchmarkTimer::lap() {
@@ -74,3 +74,24 @@ nanoseconds BenchmarkTimer::lap(std::string_view lapName) {
     return duration;
 }
 
+void BenchmarkTimer::stop() {
+    if (_stopped) {
+        return;
+    }
+    auto endPoint = high_resolution_clock::now();
+    auto duration = endPoint - _startPoint;
+
+    _stream << "Benchmark";
+    if (_benchName != "") {
+        _stream << "[" << _benchName << "]";
+    }
+    if (duration.count() > 3000000000) {
+        _stream << ": " << duration_cast<seconds>(duration).count() << " s\n";
+    } else if (duration.count() > 3000000) {
+        _stream << ": " << duration_cast<milliseconds>(duration).count() << " ms\n";
+    } else if (duration.count() > 3000) {
+        _stream << ": " << duration_cast<microseconds>(duration).count() << " mcs\n";
+    } else {
+        _stream << ": " << duration.count() << " ns\n";
+    }
+}
