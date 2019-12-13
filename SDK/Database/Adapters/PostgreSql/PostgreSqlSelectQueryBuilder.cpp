@@ -10,7 +10,7 @@ using namespace energo::db;
 using namespace energo::db::adapters;
 
 PostgreSqlSelectQueryBuilder::PostgreSqlSelectQueryBuilder(const TransformationProvider &provider, std::string_view tableName) :
-    DatabaseSelectQueryBuilder(provider, tableName)
+        SqlSelectQueryBuilder(provider, tableName)
 {
 
 }
@@ -23,7 +23,8 @@ string PostgreSqlSelectQueryBuilder::build() const {
     }
     
     sql +=  "select " + (_fields.empty() ? "*" : _fields);
-    sql += " from " + _provider.EscapeTableNameIfNeeded(_schema.empty() ? "public" : _schema) + "." + _provider.EscapeTableNameIfNeeded(_tableName);
+    sql += " from " + _provider.escapeTableNameIfNeeded(_schema.empty() ? "public" : _schema) + "." +
+           _provider.escapeTableNameIfNeeded(_tableName);
     if (!_whereClause.empty()) {
         sql += " where " + _whereClause;
     }

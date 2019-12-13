@@ -11,12 +11,12 @@ using namespace energo::db::adapters;
 
 
 PostgreSqlQueryBuilder::PostgreSqlQueryBuilder(const TransformationProvider &provider) :
-    DatabaseQueryBuilder(provider)
+        SqlQueryBuilder(provider)
 {
 
 }
 
-unique_ptr<DatabaseSelectQueryBuilder> PostgreSqlQueryBuilder::createSelectQueryBuilder(std::string_view tableName) const {
-    return move(unique_ptr<DatabaseSelectQueryBuilder>{new PostgreSqlSelectQueryBuilder(_provider, tableName)});
+unique_ptr<SqlSelectQueryBuilder> PostgreSqlQueryBuilder::createSelectQueryBuilder(std::string_view tableName) const {
+    return move(unique_ptr<SqlSelectQueryBuilder>{new PostgreSqlSelectQueryBuilder(_provider, tableName)});
 }
 

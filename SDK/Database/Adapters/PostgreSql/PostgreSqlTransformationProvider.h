@@ -15,9 +15,9 @@ public:
     PostgreSqlTransformationProvider() = default;
     ~PostgreSqlTransformationProvider() override = default;
 
-    [[nodiscard]] std::string EscapeFieldNameIfNeeded(std::string_view fieldName) const override;
+    [[nodiscard]] std::string escapeFieldNameIfNeeded(std::string_view fieldName) const override;
 
-    [[nodiscard]] std::string EscapeTableNameIfNeeded(std::string_view tableName) const override;
+    [[nodiscard]] std::string escapeTableNameIfNeeded(std::string_view tableName) const override;
 };
 
 }

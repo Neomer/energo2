@@ -7,6 +7,7 @@
 
 #include <Database/Adapters/PostgreSql/PostgreSqlTransformationProvider.h>
 #include <Database/Adapters/PostgreSql/PostgreSqlSelectQueryBuilder.h>
+#include <Database/SqlComparisonBuilder.h>
 #include <gtest/gtest.h>
 
 namespace energo::db::adapters {
@@ -14,15 +15,16 @@ namespace energo::db::adapters {
 
 class PostgreSqlSelectQueryBuilder_Tests: public testing::Test {
 protected:
-    PostgreSqlTransformationProvider *provider;
+    PostgreSqlTransformationProvider *transformationProvider;
+    energo::db::SqlComparisonBuilder *comparisonBuilder;
     
     void SetUp() override {
         Test::SetUp();
-        provider = new PostgreSqlTransformationProvider();
+        transformationProvider = new PostgreSqlTransformationProvider();
     }
     
     void TearDown() override {
-        delete provider;
+        delete transformationProvider;
         Test::TearDown();
     }
 };

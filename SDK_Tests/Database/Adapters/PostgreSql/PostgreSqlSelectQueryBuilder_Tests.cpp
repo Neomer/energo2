@@ -11,18 +11,18 @@ using namespace energo::db;
 using namespace energo::db::adapters;
 
 TEST_F(PostgreSqlSelectQueryBuilder_Tests, SimpleSelectAllRecordsFromTable) {
-    PostgreSqlSelectQueryBuilder builder(*provider, "SomeTable");
+    PostgreSqlSelectQueryBuilder builder(*transformationProvider, "SomeTable");
     EXPECT_EQ(builder.build(), "select * from \"public\".\"SomeTable\";");
 }
 
 TEST_F(PostgreSqlSelectQueryBuilder_Tests, SelectSomeFieldsGivenByString) {
-    PostgreSqlSelectQueryBuilder builder(*provider, "SomeTable");
+    PostgreSqlSelectQueryBuilder builder(*transformationProvider, "SomeTable");
     builder.fields("f1, f2 as f_alias");
     EXPECT_EQ(builder.build(), "select f1, f2 as f_alias from \"public\".\"SomeTable\";");
 }
 
 TEST_F(PostgreSqlSelectQueryBuilder_Tests, SelectSomeFieldsGivenByVector) {
-    PostgreSqlSelectQueryBuilder builder(*provider, "SomeTable");
+    PostgreSqlSelectQueryBuilder builder(*transformationProvider, "SomeTable");
     builder.fields({
         {"f1", nullopt },
         {"f2", "f_alias"}
@@ -31,7 +31,7 @@ TEST_F(PostgreSqlSelectQueryBuilder_Tests, SelectSomeFieldsGivenByVector) {
 }
 
 TEST_F(PostgreSqlSelectQueryBuilder_Tests, SelectSomeFieldsGivenByVectorWithLimitAndOffset) {
-    PostgreSqlSelectQueryBuilder builder(*provider, "SomeTable");
+    PostgreSqlSelectQueryBuilder builder(*transformationProvider, "SomeTable");
     builder
         .fields({
                                {"f1", nullopt },
@@ -43,13 +43,17 @@ TEST_F(PostgreSqlSelectQueryBuilder_Tests, SelectSomeFieldsGivenByVectorWithLimi
 }
 
 TEST_F(PostgreSqlSelectQueryBuilder_Tests, WhereClauseByString) {
-    PostgreSqlSelectQueryBuilder builder(*provider, "SomeTable");
-    builder.where("a > 4");
-    EXPECT_EQ(builder.build(), "select * from \"public\".\"SomeTable\" where a > 4;");
+    PostgreSqlSelectQueryBuilder builder(*transformationProvider, "SomeTable");
+    builder.where(
+            SqlComparisonBuilder::Eq(
+                    transformationProvider->escapeFieldNameIfNeeded("a"),
+                    transformationProvider->formatValue(4))
+            );
+    EXPECT_EQ(builder.build(), R"(select * from "public"."SomeTable" where "a"=4;)");
 }
 
 TEST_F(PostgreSqlSelectQueryBuilder_Tests, ChangeDefaultSchema) {
-    PostgreSqlSelectQueryBuilder builder(*provider, "SomeTable");
+    PostgreSqlSelectQueryBuilder builder(*transformationProvider, "SomeTable");
     builder.schema("test");
     EXPECT_EQ(builder.build(), "select * from \"test\".\"SomeTable\";");
 }

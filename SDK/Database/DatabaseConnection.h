@@ -11,7 +11,7 @@
 #include "DatabaseConnectionSettings.h"
 #include "../Types/Uuid.h"
 #include "SqlQuery.h"
-#include "DatabaseQueryBuilder.h"
+#include "SqlQueryBuilder.h"
 
 namespace energo::db {
 
@@ -50,7 +50,7 @@ public:
     /**
      * @return Билдер SQL-запросов для текущего адаптера базы данных.
      */
-    [[nodiscard]] virtual const DatabaseQueryBuilder *queryBuilder() const = 0;
+    [[nodiscard]] virtual const SqlQueryBuilder *queryBuilder() const = 0;
     
     /**
      * Выполняет SQL-запрос к базе данных.
