@@ -68,3 +68,7 @@ unique_ptr<SqlQuery> PostgreSqlConnectionAdapter::exec(std::string_view sql) con
 const SqlQueryBuilder *PostgreSqlConnectionAdapter::queryBuilder() const {
     return &_queryBuilder;
 }
+
+const TransformationProvider &PostgreSqlConnectionAdapter::transformationProvider() const {
+    return _transformationProvider;
+}

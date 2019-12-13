@@ -4,6 +4,7 @@
 
 #include <stdexcept>
 #include "../DatabaseConnectionIsClosedException.h"
+#include "../SqlComparisonBuilder.h"
 #include "EntityManager.h"
 
 using namespace std;
@@ -39,10 +40,13 @@ shared_ptr<DatabaseStoredEntity> EntityManager::get(const Uuid &uid) const {
     auto sql = connection
             ->queryBuilder()
             ->createSelectQueryBuilder(_entityMetadata->getTableName())
-            ->where(R"("Uid"=')" + uid.toString() + "'")
+            ->where(
+                    SqlComparisonBuilder::Eq(
+                            connection->transformationProvider().escapeFieldNameIfNeeded("Uid"),
+                            connection->transformationProvider().formatValue(uid)))
             .limit(1)
             .build();
-    
+
     auto result = connection->exec(sql);
     if (!result->any()) {
         return shared_ptr<DatabaseStoredEntity>(nullptr);

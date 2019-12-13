@@ -60,6 +60,8 @@ public:
      * @throws SqlQueryBadResultException выполнение запроса завершилось с ошибкой.
      */
     [[nodiscard]] virtual std::unique_ptr<SqlQuery> exec(std::string_view sql) const = 0;
+
+    [[nodiscard]] virtual const TransformationProvider &transformationProvider() const = 0;
     
 private:
     std::atomic_bool _open;
