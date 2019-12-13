@@ -26,7 +26,7 @@ public:
     
     [[nodiscard]] std::unique_ptr<SqlQuery> exec(std::string_view sql) const override;
     
-    [[nodiscard]] const DatabaseQueryBuilder *queryBuilder() const override;
+    [[nodiscard]] const SqlQueryBuilder *queryBuilder() const override;
 };
 
 }
