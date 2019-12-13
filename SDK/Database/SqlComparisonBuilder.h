@@ -5,11 +5,12 @@
 #ifndef ENERGO_SQLCOMPARISONBUILDER_H
 #define ENERGO_SQLCOMPARISONBUILDER_H
 
+#include "../global.h"
 #include "../classes.h"
 
 namespace energo::db {
 
-class SqlComparisonBuilder final {
+class EXPORTS SqlComparisonBuilder final {
     STATIC_CLASS(SqlComparisonBuilder)
 
 public:
