@@ -87,10 +87,16 @@ void BenchmarkTimer::stop() {
     }
     if (duration.count() > 3000000000) {
         _stream << ": " << duration_cast<seconds>(duration).count() << " s\n";
+    } else if (duration.count() > 1000000000) {
+        _stream << ": " << duration_cast<milliseconds>(duration).count() * 0.001 << " s\n";
     } else if (duration.count() > 3000000) {
         _stream << ": " << duration_cast<milliseconds>(duration).count() << " ms\n";
+    } else if (duration.count() > 1000000) {
+        _stream << ": " << duration_cast<microseconds>(duration).count() * 0.001 << " ms\n";
     } else if (duration.count() > 3000) {
         _stream << ": " << duration_cast<microseconds>(duration).count() << " mcs\n";
+    } else if (duration.count() > 1000) {
+        _stream << ": " << duration.count() * 0.001 << " mcs\n";
     } else {
         _stream << ": " << duration.count() << " ns\n";
     }
