@@ -41,7 +41,7 @@ bool PostgreSqlResultAdapter::isValid() const {
 }
 
 int PostgreSqlResultAdapter::getFieldIndexByName(std::string_view name) const {
-    return PQfnumber(_result, _transformationProvider.EscapeFieldNameIfNeeded(name).c_str());
+    return PQfnumber(_result, _transformationProvider.escapeFieldNameIfNeeded(name).c_str());
 }
 
 energo::db::SqlValue PostgreSqlResultAdapter::value(int fieldIndex, int rowIndex) const {

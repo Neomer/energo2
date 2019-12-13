@@ -8,10 +8,10 @@ using namespace std;
 using namespace std::string_literals;
 using namespace energo::db::adapters;
 
-string PostgreSqlTransformationProvider::EscapeFieldNameIfNeeded(string_view fieldName) const {
+string PostgreSqlTransformationProvider::escapeFieldNameIfNeeded(string_view fieldName) const {
     return "\""s + fieldName.data() + "\"";
 }
 
-string PostgreSqlTransformationProvider::EscapeTableNameIfNeeded(std::string_view tableName) const {
+string PostgreSqlTransformationProvider::escapeTableNameIfNeeded(std::string_view tableName) const {
     return "\""s + tableName.data() + "\"";
 }

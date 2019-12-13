@@ -2,12 +2,12 @@
 // Created by kir on 10.12.2019.
 //
 
-#include "DatabaseQueryBuilder.h"
+#include "SqlQueryBuilder.h"
 
 using namespace std;
 using namespace energo::db;
 
-DatabaseQueryBuilder::DatabaseQueryBuilder(const TransformationProvider &provider):
+SqlQueryBuilder::SqlQueryBuilder(const TransformationProvider &provider):
     _provider{provider}
 {
 

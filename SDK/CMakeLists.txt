@@ -32,8 +32,8 @@ set(SOURCE_EXE global.h Types/Uuid.cpp Types/Uuid.h
         Database/Adapters/PostgreSql/PostgreSqlResultAdapter.cpp Database/Adapters/PostgreSql/PostgreSqlResultAdapter.h
         Database/Adapters/PostgreSql/PostgreSqlTransformationProvider.cpp Database/Adapters/PostgreSql/PostgreSqlTransformationProvider.h
         Database/Adapters/PostgreSql/PostgreSqlConnectionAdapter.cpp Database/Adapters/PostgreSql/PostgreSqlConnectionAdapter.h
-        Database/DatabaseQueryBuilder.cpp Database/DatabaseQueryBuilder.h
-        Database/DatabaseSelectQueryBuilder.cpp Database/DatabaseSelectQueryBuilder.h
+        Database/SqlQueryBuilder.cpp Database/SqlQueryBuilder.h
+        Database/SqlSelectQueryBuilder.cpp Database/SqlSelectQueryBuilder.h
         Database/Adapters/PostgreSql/PostgreSqlSelectQueryBuilder.cpp Database/Adapters/PostgreSql/PostgreSqlSelectQueryBuilder.h
         Database/Adapters/PostgreSql/PostgreSqlQueryBuilder.cpp Database/Adapters/PostgreSql/PostgreSqlQueryBuilder.h
         BenchmarkTimer.h BenchmarkTimer.cpp
@@ -49,7 +49,10 @@ set(SOURCE_EXE global.h Types/Uuid.cpp Types/Uuid.h
         Database/Model/EntityMetadataRegistrar.cpp Database/Model/EntityMetadataRegistrar.h
         Database/Managers/UserManager.cpp Database/Managers/UserManager.h
         Database/Managers/EntityManager.cpp Database/Managers/EntityManager.h
-        Metadata/EntityMetadata.cpp Metadata/EntityMetadata.h Database/DatabaseConnectionProvider.cpp Database/DatabaseConnectionProvider.h Database/Adapters/PostgreSql/PostgreSqlConnectionProvider.cpp Database/Adapters/PostgreSql/PostgreSqlConnectionProvider.h)
+        Metadata/EntityMetadata.cpp Metadata/EntityMetadata.h
+        Database/DatabaseConnectionProvider.cpp Database/DatabaseConnectionProvider.h
+        Database/Adapters/PostgreSql/PostgreSqlConnectionProvider.cpp Database/Adapters/PostgreSql/PostgreSqlConnectionProvider.h
+        Database/SqlComparisonBuilder.cpp Database/SqlComparisonBuilder.h classes.h)
 
 add_library(${PROJECT_NAME} SHARED ${SOURCE_EXE})
 

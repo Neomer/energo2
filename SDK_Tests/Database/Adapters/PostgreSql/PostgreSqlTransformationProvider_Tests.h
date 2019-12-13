@@ -5,6 +5,7 @@
 #ifndef ENERGO_POSTGRESQLTRANSFORMATIONPROVIDER_TESTS_H
 #define ENERGO_POSTGRESQLTRANSFORMATIONPROVIDER_TESTS_H
 
+#include <random>
 #include <Database/Adapters/PostgreSql/PostgreSqlTransformationProvider.h>
 #include <gtest/gtest.h>
 
@@ -13,6 +14,7 @@ namespace energo::db::adapters {
 class PostgreSqlTransformationProvider_Tests: public testing::Test {
 protected:
     PostgreSqlTransformationProvider *provider;
+    std::random_device rd;
 
     void SetUp() override {
         Test::SetUp();

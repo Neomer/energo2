@@ -11,7 +11,7 @@ set(SOURCE_EXE main.cpp
         Database/DatabaseConnectionSettings_Tests.cpp Database/DatabaseConnectionSettings_Tests.h
         Database/DatabaseConnection_Tests.cpp Database/DatabaseConnection_Tests.h
         Database/SqlValue_Tests.cpp Database/SqlValue_Tests.h
-        Types/DateTime_Tests.cpp Types/DateTime_Tests.h Database/Adapters/PostgreSql/PostgreSqlTransformationProvider_Tests.cpp Database/Adapters/PostgreSql/PostgreSqlTransformationProvider_Tests.h Database/Adapters/PostgreSql/PostgreSqlSelectQueryBuilder_Tests.cpp Database/Adapters/PostgreSql/PostgreSqlSelectQueryBuilder_Tests.h)
+        Types/DateTime_Tests.cpp Types/DateTime_Tests.h Database/Adapters/PostgreSql/PostgreSqlTransformationProvider_Tests.cpp Database/Adapters/PostgreSql/PostgreSqlTransformationProvider_Tests.h Database/Adapters/PostgreSql/PostgreSqlSelectQueryBuilder_Tests.cpp Database/Adapters/PostgreSql/PostgreSqlSelectQueryBuilder_Tests.h Database/SqlComparisonBuilder_Tests.cpp Database/SqlComparisonBuilder_Tests.h)
 
 include_directories(../SDK)
 include_directories(../External/GoogleTest/googletest/include)
@@ -24,7 +24,7 @@ else(NOT ${PostgreSQL_FOUND})
 endif(NOT ${PostgreSQL_FOUND})
 
 add_executable(${PROJECT_NAME} ${SOURCE_EXE})
-target_link_libraries(${PROJECT_NAME} gtest gtest_main SDK ${PostgreSQL_LIBRARIES})
+target_link_libraries(${PROJECT_NAME} gtest gtest_main fmt SDK ${PostgreSQL_LIBRARIES})
 
 set_target_properties(SDK_Tests PROPERTIES LINKER_LANGUAGE CXX)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)

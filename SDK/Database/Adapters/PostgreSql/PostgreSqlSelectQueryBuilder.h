@@ -5,11 +5,11 @@
 #ifndef ENERGO_POSTGRESQLSELECTQUERYBUILDER_H
 #define ENERGO_POSTGRESQLSELECTQUERYBUILDER_H
 
-#include "../../DatabaseSelectQueryBuilder.h"
+#include "../../SqlSelectQueryBuilder.h"
 
 namespace energo::db::adapters {
 
-class EXPORTS PostgreSqlSelectQueryBuilder: public DatabaseSelectQueryBuilder {
+class EXPORTS PostgreSqlSelectQueryBuilder: public SqlSelectQueryBuilder {
 public:
     explicit PostgreSqlSelectQueryBuilder(const TransformationProvider &provider, std::string_view tableName);
     
