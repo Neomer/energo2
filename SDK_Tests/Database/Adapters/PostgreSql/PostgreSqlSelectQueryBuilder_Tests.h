@@ -7,7 +7,7 @@
 
 #include <Database/Adapters/PostgreSql/PostgreSqlTransformationProvider.h>
 #include <Database/Adapters/PostgreSql/PostgreSqlSelectQueryBuilder.h>
-#include <Database/SqlComparisonBuilder.h>
+#include <Database/SqlConditionBuilder.h>
 #include <gtest/gtest.h>
 
 namespace energo::db::adapters {

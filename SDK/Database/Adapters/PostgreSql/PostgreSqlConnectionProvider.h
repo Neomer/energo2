@@ -9,7 +9,7 @@
 
 namespace energo::db::adapters {
 
-class PostgreSqlConnectionProvider : public DatabaseConnectionProvider {
+class EXPORTS PostgreSqlConnectionProvider : public DatabaseConnectionProvider {
 public:
     explicit PostgreSqlConnectionProvider(const DatabaseConnectionSettings &connectionSettings);
 

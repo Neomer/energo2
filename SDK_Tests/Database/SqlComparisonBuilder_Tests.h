@@ -6,7 +6,7 @@
 #define ENERGO_SQLCOMPARISONBUILDER_TESTS_H
 
 #include <Database/Adapters/PostgreSql/PostgreSqlTransformationProvider.h>
-#include <Database/SqlComparisonBuilder.h>
+#include <Database/SqlConditionBuilder.h>
 #include <gtest/gtest.h>
 
 namespace energo::db {

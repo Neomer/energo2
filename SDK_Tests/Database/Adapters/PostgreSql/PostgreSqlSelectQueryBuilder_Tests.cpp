@@ -45,7 +45,7 @@ TEST_F(PostgreSqlSelectQueryBuilder_Tests, SelectSomeFieldsGivenByVectorWithLimi
 TEST_F(PostgreSqlSelectQueryBuilder_Tests, WhereClauseByString) {
     PostgreSqlSelectQueryBuilder builder(*transformationProvider, "SomeTable");
     builder.where(
-            SqlComparisonBuilder::Eq(
+            SqlConditionBuilder::Eq(
                     transformationProvider->escapeFieldNameIfNeeded("a"),
                     transformationProvider->formatValue(4))
             );

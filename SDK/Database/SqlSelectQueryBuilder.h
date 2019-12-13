@@ -13,21 +13,27 @@
 
 namespace energo::db {
 
+/**
+ * Абстрактный билдер для Select запроса.
+ */
 class EXPORTS SqlSelectQueryBuilder {
 protected:
     const TransformationProvider &_provider;
     std::string _tableName;
     std::string _whereClause;
-    std::string _fields;
     std::string _schema;
+    std::string _fields;
     std::optional<size_t> _limit;
     std::optional<size_t> _offset;
     
 public:
+    /**
+     * Класс для алиасов таблиц.
+     */
     using TFieldWithAliasList = std::vector<std::pair<std::string_view, std::optional<std::string_view>>>;
 
     explicit SqlSelectQueryBuilder(const TransformationProvider &provider, std::string_view tableName);
-    
+
     SqlSelectQueryBuilder &where(std::string_view where);
     
     SqlSelectQueryBuilder &fields(const TFieldWithAliasList &fields);

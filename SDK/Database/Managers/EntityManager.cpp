@@ -5,7 +5,7 @@
 #include "../../BenchmarkTimer.h"
 #include <stdexcept>
 #include "../DatabaseConnectionIsClosedException.h"
-#include "../SqlComparisonBuilder.h"
+#include "../SqlConditionBuilder.h"
 #include "EntityManager.h"
 
 using namespace std;
@@ -18,11 +18,12 @@ using namespace energo::meta;
 using namespace energo::exceptions;
 using namespace energo::benchmark;
 
-EntityManager::EntityManager(const DatabaseConnectionProvider &provider, const Uuid &typeUid, const MetadataProvider &metadataProvider) :
-    _connectionProvider{provider},
-    _typeUid{typeUid},
-    _metadataProvider{metadataProvider},
-    _entityMetadata{nullptr}
+
+managers::EntityManager::EntityManager(const energo::db::DatabaseConnectionProvider &provider, const energo::types::Uuid &typeUid, const energo::meta::MetadataProvider &metadataProvider) :
+        _connectionProvider{provider},
+        _typeUid{typeUid},
+        _metadataProvider{metadataProvider},
+        _entityMetadata{nullptr}
 {
     auto typeMetadata = _metadataProvider.find(_typeUid);
     if (typeMetadata == nullptr) {
@@ -34,7 +35,7 @@ EntityManager::EntityManager(const DatabaseConnectionProvider &provider, const U
     }
 }
 
-shared_ptr<DatabaseStoredEntity> EntityManager::get(const Uuid &uid) const {
+std::shared_ptr<energo::db::entity::DatabaseStoredEntity> managers::EntityManager::get(const energo::types::Uuid &uid) const {
     BenchmarkTimer timer("entity get");
     auto connection = _connectionProvider.getConnection();
     if (connection == nullptr) {
@@ -44,7 +45,7 @@ shared_ptr<DatabaseStoredEntity> EntityManager::get(const Uuid &uid) const {
             ->queryBuilder()
             ->createSelectQueryBuilder(_entityMetadata->getTableName())
             ->where(
-                    SqlComparisonBuilder::Eq(
+                    SqlConditionBuilder::Eq(
                             connection->transformationProvider().escapeFieldNameIfNeeded("Uid"),
                             connection->transformationProvider().formatValue(uid)))
             .limit(1)
@@ -65,7 +66,8 @@ shared_ptr<DatabaseStoredEntity> EntityManager::get(const Uuid &uid) const {
     return shared_ptr<DatabaseStoredEntity>(entity);
 }
 
-void EntityManager::all(vector<shared_ptr<DatabaseStoredEntity>> &result) const {
+
+void managers::EntityManager::all(std::vector<std::shared_ptr<energo::db::entity::DatabaseStoredEntity>> &result) const {
     auto connection = _connectionProvider.getConnection();
     if (connection == nullptr) {
         throw DatabaseConnectionIsClosedException();
@@ -88,3 +90,26 @@ void EntityManager::all(vector<shared_ptr<DatabaseStoredEntity>> &result) const 
     }
     while (queryResult->next());
 }
+
+void managers::EntityManager::remove(energo::db::entity::IdentifiedEntity &&entity) const {
+    remove(entity.getUid());
+    entity.setUid(Uuid::Empty());
+}
+
+void managers::EntityManager::remove(const energo::types::Uuid &uid) const {
+    auto connection = _connectionProvider.getConnection();
+    if (connection == nullptr) {
+        throw DatabaseConnectionIsClosedException();
+    }
+    auto sql = connection
+            ->queryBuilder()
+            ->createDeleteQueryBuilder(_entityMetadata->getTableName())
+            ->where(
+                    SqlConditionBuilder::Eq(
+                        connection->transformationProvider().escapeFieldNameIfNeeded("Uid"),
+                        connection->transformationProvider().formatValue(uid)
+            ))
+            .build();
+    auto queryResult = connection->exec(sql);
+}
+

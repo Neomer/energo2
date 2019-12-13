@@ -47,7 +47,7 @@ SqlInsertQueryBuilder &SqlInsertQueryBuilder::returns(std::vector<std::string_vi
     _returns = "";
     for (auto it = fields.begin(); it != fields.end(); ++it) {
         auto field = *it;
-        _returns += field.data();
+        _returns += _provider.escapeFieldNameIfNeeded(field);
         if (next(it) != fields.end()) {
             _returns += ", ";
         }

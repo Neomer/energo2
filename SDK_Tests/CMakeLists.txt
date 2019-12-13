@@ -11,7 +11,13 @@ set(SOURCE_EXE main.cpp
         Database/DatabaseConnectionSettings_Tests.cpp Database/DatabaseConnectionSettings_Tests.h
         Database/DatabaseConnection_Tests.cpp Database/DatabaseConnection_Tests.h
         Database/SqlValue_Tests.cpp Database/SqlValue_Tests.h
-        Types/DateTime_Tests.cpp Types/DateTime_Tests.h Database/Adapters/PostgreSql/PostgreSqlTransformationProvider_Tests.cpp Database/Adapters/PostgreSql/PostgreSqlTransformationProvider_Tests.h Database/Adapters/PostgreSql/PostgreSqlSelectQueryBuilder_Tests.cpp Database/Adapters/PostgreSql/PostgreSqlSelectQueryBuilder_Tests.h Database/SqlComparisonBuilder_Tests.cpp Database/SqlComparisonBuilder_Tests.h Database/Adapters/PostgreSql/PostgreSqlInsertQueryBuilder_Tests.cpp Database/Adapters/PostgreSql/PostgreSqlInsertQueryBuilder_Tests.h)
+        Types/DateTime_Tests.cpp Types/DateTime_Tests.h
+        Database/Adapters/PostgreSql/PostgreSqlTransformationProvider_Tests.cpp Database/Adapters/PostgreSql/PostgreSqlTransformationProvider_Tests.h
+        Database/Adapters/PostgreSql/PostgreSqlSelectQueryBuilder_Tests.cpp Database/Adapters/PostgreSql/PostgreSqlSelectQueryBuilder_Tests.h
+        Database/SqlComparisonBuilder_Tests.cpp Database/SqlComparisonBuilder_Tests.h
+        Database/Adapters/PostgreSql/PostgreSqlInsertQueryBuilder_Tests.cpp Database/Adapters/PostgreSql/PostgreSqlInsertQueryBuilder_Tests.h
+        Database/Adapters/PostgreSql/PostgreSqlUpdateQueryBuilder_Tests.cpp Database/Adapters/PostgreSql/PostgreSqlUpdateQueryBuilder_Tests.h
+        Database/Adapters/PostgreSql/PostgreSqlDeleteQueryBuilder_Tests.cpp Database/Adapters/PostgreSql/PostgreSqlDeleteQueryBuilder_Tests.h)
 
 include_directories(../SDK)
 include_directories(../External/GoogleTest/googletest/include)

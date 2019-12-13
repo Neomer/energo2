@@ -52,7 +52,7 @@ set(SOURCE_EXE global.h Types/Uuid.cpp Types/Uuid.h
         Metadata/EntityMetadata.cpp Metadata/EntityMetadata.h
         Database/DatabaseConnectionProvider.cpp Database/DatabaseConnectionProvider.h
         Database/Adapters/PostgreSql/PostgreSqlConnectionProvider.cpp Database/Adapters/PostgreSql/PostgreSqlConnectionProvider.h
-        Database/SqlComparisonBuilder.cpp Database/SqlComparisonBuilder.h classes.h Database/SqlInsertQueryBuilder.cpp Database/SqlInsertQueryBuilder.h Database/Adapters/PostgreSql/PostgreSqlInsertQueryBuilder.cpp Database/Adapters/PostgreSql/PostgreSqlInsertQueryBuilder.h)
+        Database/SqlConditionBuilder.cpp Database/SqlConditionBuilder.h classes.h Database/SqlInsertQueryBuilder.cpp Database/SqlInsertQueryBuilder.h Database/Adapters/PostgreSql/PostgreSqlInsertQueryBuilder.cpp Database/Adapters/PostgreSql/PostgreSqlInsertQueryBuilder.h Database/SqlUpdateQueryBuilder.cpp Database/SqlUpdateQueryBuilder.h Database/Adapters/PostgreSql/PostgreSqlUpdateQueryBuilder.cpp Database/Adapters/PostgreSql/PostgreSqlUpdateQueryBuilder.h Database/SqlDeleteQueryBuilder.cpp Database/SqlDeleteQueryBuilder.h Database/Adapters/PostgreSql/PostgreSqlDeleteQueryBuilder.cpp Database/Adapters/PostgreSql/PostgreSqlDeleteQueryBuilder.h)
 
 add_library(${PROJECT_NAME} SHARED ${SOURCE_EXE})
 

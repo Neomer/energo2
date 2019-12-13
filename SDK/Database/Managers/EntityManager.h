@@ -5,6 +5,7 @@
 #ifndef ENERGO_ENTITYMANAGER_H
 #define ENERGO_ENTITYMANAGER_H
 
+#include "../Model/IdentifiedEntity.h"
 #include "../../Types/Uuid.h"
 #include "../Model/DatabaseStoredEntity.h"
 #include "../DatabaseConnectionProvider.h"
@@ -50,6 +51,10 @@ public:
      * @throws energo::exceptions::DatabaseConnectionIsClosedException Не удалось получить активное подключение.
      */
     virtual void all(std::vector<std::shared_ptr<energo::db::entity::DatabaseStoredEntity>> &result) const;
+
+    virtual void remove(energo::db::entity::IdentifiedEntity &&entity) const;
+
+    virtual void remove(const energo::types::Uuid &uid) const;
 };
 
 }
