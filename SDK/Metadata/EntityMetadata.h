@@ -10,6 +10,9 @@
 
 namespace energo::meta {
 
+/**
+ * Метаданные сущности.
+ */
 class EntityMetadata : public ClassMetadata {
 public:
     EntityMetadata(const types::Uuid &typeUid, const types::Uuid &parentTypeUid);

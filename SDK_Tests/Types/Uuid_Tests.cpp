@@ -46,6 +46,11 @@ TEST_F(Uuid_Tests, ParseEmptyUuidString) {
     EXPECT_EQ(Uuid::Empty(), uid);
 }
 
+TEST_F(Uuid_Tests, IsEmptyCheck) {
+    Uuid uid;
+    EXPECT_TRUE( uid.isEmpty());
+}
+
 TEST_F(Uuid_Tests, ParseAndToStringBackEquals) {
     Uuid uid;
     EXPECT_TRUE(Uuid::TryParse("12345678-1234-1234-1234-000000054321", uid));

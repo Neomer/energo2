@@ -7,6 +7,7 @@
 #include "../DatabaseConnectionIsClosedException.h"
 #include "../SqlConditionBuilder.h"
 #include "EntityManager.h"
+#include "../../Metadata/TypeUids.h"
 
 using namespace std;
 using namespace std::string_literals;
@@ -18,20 +19,22 @@ using namespace energo::meta;
 using namespace energo::exceptions;
 using namespace energo::benchmark;
 
-
-managers::EntityManager::EntityManager(const energo::db::DatabaseConnectionProvider &provider, const energo::types::Uuid &typeUid, const energo::meta::MetadataProvider &metadataProvider) :
+managers::EntityManager::EntityManager(const energo::db::DatabaseConnectionProvider &provider,
+                                       const energo::types::Uuid &entityTypeUid,
+                                       const energo::meta::MetadataProvider &metadataProvider) :
         _connectionProvider{provider},
-        _typeUid{typeUid},
+        _entityTypeUid{entityTypeUid},
         _metadataProvider{metadataProvider},
         _entityMetadata{nullptr}
+
 {
-    auto typeMetadata = _metadataProvider.find(_typeUid);
+    auto typeMetadata = _metadataProvider.find(entityTypeUid);
     if (typeMetadata == nullptr) {
-        throw runtime_error("Метаданные для типа "s + _typeUid.toString() + " не зарегистрированы.");
+        throw runtime_error("Метаданные для типа "s + entityTypeUid.toString() + " не зарегистрированы.");
     }
     _entityMetadata = dynamic_cast<const EntityMetadata *>(typeMetadata);
     if (_entityMetadata == nullptr) {
-        throw runtime_error("Метаданные для типа "s + _typeUid.toString() + " не являются метаданными сущности.");
+        throw runtime_error("Метаданные для типа "s + entityTypeUid.toString() + " не являются метаданными сущности.");
     }
 }
 
@@ -112,4 +115,9 @@ void managers::EntityManager::remove(const energo::types::Uuid &uid) const {
             .build();
     auto queryResult = connection->exec(sql);
 }
+
+const Uuid &managers::EntityManager::getEntityTypeUid() const {
+    return _entityTypeUid;
+}
+
 

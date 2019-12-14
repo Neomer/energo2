@@ -238,6 +238,14 @@ std::string Uuid::toString() const {
 #endif
 }
 
+bool Uuid::isEmpty() const {
+#ifdef ENVIRONMENT64
+    return !(_data[0] || _data[1]);
+#else
+    return !(_data[0] || _data[1] || _data[2] || _data[3]);
+#endif
+}
+
 
 #undef UUID_DATA_PARTS
 #undef UUID_BYTES

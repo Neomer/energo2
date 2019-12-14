@@ -69,6 +69,12 @@ public:
      * @return
      */
     [[nodiscard]] bool equals(const Uuid &other) const;
+    
+    /**
+     * Проверяет нулевой ли Uuid.
+     * @return
+     */
+    [[nodiscard]] bool isEmpty() const;
 
     bool operator==(const Uuid &other) const;
     
