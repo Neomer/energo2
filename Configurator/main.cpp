@@ -12,6 +12,7 @@
 #include <Database/Model/User.h>
 #include <Metadata/TypeUids.h>
 #include <Database/Managers/EntityManager.h>
+#include <Plugin/PluginLoader.h>
 
 using namespace std;
 using namespace energo::benchmark;
@@ -20,11 +21,17 @@ using namespace energo::db::entity;
 using namespace energo::meta;
 using namespace energo::db::managers;
 using namespace energo::types;
-using namespace std::string_literals;
+
+using namespace energo::plugin;
 
 int main(int argv, char **argc) {
     random_device rd;
     BenchmarkTimer timer("Configurator app", cout);
+    
+    Plugin *plugin;
+    if (PluginLoader::tryLoadPlugin("../Plugins/TestPlugin/libTestPlugin.so", &plugin)) {
+        cout << "Loading plugin...\n";
+    }
 
     DatabaseConnectionSettings settings;
     settings.setHost("localhost");
@@ -51,19 +58,9 @@ int main(int argv, char **argc) {
         cout << "User found!\n"
              << "   " << user->getFirstName() << " [" << user->getUid() << "]\n";
         
-        user->setFirstName("Кирилл");
+        user->setFirstName("Администратор");
         manager->update(*user);
     }
-    
-    manager->saveAll({
-                             new User{Uuid::Random(rd)},
-                             new User{Uuid::Random(rd)},
-                             new User{Uuid::Random(rd)},
-                             new User{Uuid::Random(rd)},
-                             new User{Uuid::Random(rd)},
-                             new User{Uuid::Random(rd)}
-                     });
-    
     connectionProvider.release();
 
     return 0;
