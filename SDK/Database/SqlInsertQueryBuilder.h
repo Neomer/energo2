@@ -13,7 +13,8 @@ namespace energo::db {
 class EXPORTS SqlInsertQueryBuilder {
 protected:
     const TransformationProvider &_provider;
-    std::string _fields, _values, _returns, _schema;
+    std::string _fields, _returns, _schema;
+    std::vector<std::string> _values;
     std::string _tableName;
 
 
@@ -24,11 +25,11 @@ public:
 
     SqlInsertQueryBuilder &fields(std::string_view fields);
 
-    SqlInsertQueryBuilder &fields(std::vector<std::string_view> fields);
+    SqlInsertQueryBuilder &fields(std::vector<std::string> fields);
 
-    SqlInsertQueryBuilder &values(std::vector<std::string_view> values);
+    SqlInsertQueryBuilder &values(std::vector<std::string> values);
 
-    SqlInsertQueryBuilder &returns(std::vector<std::string_view> fields);
+    SqlInsertQueryBuilder &returns(std::vector<std::string> fields);
 
     [[nodiscard]] virtual std::string build() const = 0;
 };

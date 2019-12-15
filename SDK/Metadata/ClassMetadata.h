@@ -41,7 +41,7 @@ public:
     /**
      * @return Создает новый инстанс класса.
      */
-    [[nodiscard]] virtual MetaClass *createInstance() const = 0;
+    [[nodiscard]] virtual void *createInstance() const = 0;
 };
 
 }

@@ -22,6 +22,9 @@ public:
     [[nodiscard]] const types::Uuid &getTypeUid() const;
 
     [[nodiscard]] virtual std::string_view getTypeName() const = 0;
+    
+    TypeMetadata(const TypeMetadata &other) = delete;
+    TypeMetadata(const TypeMetadata &&other) = delete;
 };
 
 }

@@ -7,6 +7,7 @@
 
 #include <vector>
 #include <memory>
+#include <functional>
 #include "TypeMetadata.h"
 
 namespace energo::meta {
@@ -15,14 +16,14 @@ namespace energo::meta {
  * Контейнер зарегистрированных метаданных типов.
  */
 class EXPORTS MetadataProvider {
-    std::vector<std::shared_ptr<TypeMetadata>> _metadataVector;
+    std::vector<const meta::TypeMetadata *> _metadataVector;
 
 public:
     /**
      * Зарегистрировать в контейнере метаданные для типа.
      * @param metadata Метаданные типа.
      */
-    void registerMetadata(std::shared_ptr<TypeMetadata> metadata);
+    void registerMetadata(const TypeMetadata *metadata);
 
     /**
      * Найти метаданные для указанного идентификатора типа.
@@ -30,6 +31,13 @@ public:
      * @return Метаданные типа, либо nullptr, если тип с указанным иденгтификатором не зарегистрирован.
      */
     [[nodiscard]] const TypeMetadata* find(const energo::types::Uuid &typeUid) const;
+    
+    /**
+     * Найти метаданные для указанного идентификатора типа.
+     * @param comparator Метод для поиска подходящего варианта.
+     * @return Метаданные типа, либо nullptr, если тип с указанным иденгтификатором не зарегистрирован.
+     */
+    [[nodiscard]] const TypeMetadata* find(const std::function<bool(const meta::TypeMetadata *)> &comparator) const;
 };
 
 }

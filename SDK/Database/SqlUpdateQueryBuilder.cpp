@@ -26,6 +26,7 @@ SqlUpdateQueryBuilder &SqlUpdateQueryBuilder::where(std::string_view where) {
     return *this;
 }
 
+/*
 SqlUpdateQueryBuilder &SqlUpdateQueryBuilder::values(std::vector<std::pair<std::string_view, std::string_view>> values) {
     _values = "";
     for (auto it = values.begin(); it != values.end(); ++it) {
@@ -39,8 +40,23 @@ SqlUpdateQueryBuilder &SqlUpdateQueryBuilder::values(std::vector<std::pair<std::
     }
     return *this;
 }
+ */
 
 SqlUpdateQueryBuilder &SqlUpdateQueryBuilder::limit(size_t limit) {
     _limit = limit;
+    return *this;
+}
+
+SqlUpdateQueryBuilder &SqlUpdateQueryBuilder::values(std::vector<std::pair<std::string, std::string>> values) {
+    _values = "";
+    for (auto it = values.begin(); it != values.end(); ++it) {
+        auto value = *it;
+        _values += fmt::format("{0}={1}",
+                               _transformationProvider.escapeFieldNameIfNeeded(value.first.data()),
+                               value.second);
+        if (std::next(it) != values.end()) {
+            _values += ", ";
+        }
+    }
     return *this;
 }

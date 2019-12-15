@@ -20,8 +20,10 @@ using namespace energo::exceptions;
 using namespace energo::benchmark;
 
 managers::EntityManager::EntityManager(const energo::db::DatabaseConnectionProvider &provider,
+                                       const energo::types::Uuid &typeUid,
                                        const energo::types::Uuid &entityTypeUid,
                                        const energo::meta::MetadataProvider &metadataProvider) :
+        ClassMetadata{typeUid, Uuid::Empty()},
         _connectionProvider{provider},
         _entityTypeUid{entityTypeUid},
         _metadataProvider{metadataProvider},
@@ -61,7 +63,7 @@ std::shared_ptr<energo::db::entity::DatabaseStoredEntity> managers::EntityManage
         return shared_ptr<DatabaseStoredEntity>(nullptr);
     }
     auto instance = _entityMetadata->createInstance();
-    auto entity = dynamic_cast<DatabaseStoredEntity *>(instance);
+    auto entity = reinterpret_cast<DatabaseStoredEntity *>(instance);
     timer.lap("entity instance created");
     entity->fromSql(result->getReader());
     timer.lap("entity deserialized");
@@ -87,7 +89,7 @@ void managers::EntityManager::all(std::vector<std::shared_ptr<energo::db::entity
     do
     {
         auto instance = _entityMetadata->createInstance();
-        auto entity = dynamic_cast<DatabaseStoredEntity *>(instance);
+        auto entity = reinterpret_cast<DatabaseStoredEntity *>(instance);
         entity->fromSql(queryResult->getReader());
         result.emplace_back(shared_ptr<DatabaseStoredEntity>(entity));
     }
@@ -120,4 +122,80 @@ const Uuid &managers::EntityManager::getEntityTypeUid() const {
     return _entityTypeUid;
 }
 
+void managers::EntityManager::update(const IdentifiedEntity &entity) const {
+    auto connection = _connectionProvider.getConnection();
+    if (connection == nullptr) {
+        throw DatabaseConnectionIsClosedException();
+    }
+    entity::DatabaseStoredEntity::TFieldValuePairList fieldValues;
+    entity.toSqlValues(fieldValues, connection->transformationProvider());
+    
+    auto sql = connection
+            ->queryBuilder()
+            ->createUpdateQueryBuilder(_entityMetadata->getTableName())
+            ->where(
+                    SqlConditionBuilder::Eq(
+                            connection->transformationProvider().escapeFieldNameIfNeeded("Uid"),
+                            connection->transformationProvider().formatValue(entity.getUid())
+            ))
+            .values(fieldValues)
+            .build();
+    
+    auto result = connection->exec(sql);
+}
 
+void managers::EntityManager::save(const entity::IdentifiedEntity &entity) const {
+    auto connection = _connectionProvider.getConnection();
+    if (connection == nullptr) {
+        throw DatabaseConnectionIsClosedException();
+    }
+    entity::DatabaseStoredEntity::TFieldValuePairList fieldValues;
+    entity.toSqlValues(fieldValues, connection->transformationProvider());
+    
+    vector<string> fields, values;
+    for_each(fieldValues.begin(), fieldValues.end(),
+            [&fields, &values](const pair<string, string> &item) {
+                fields.emplace_back(item.first);
+                values.emplace_back(item.second);
+            });
+    
+    auto sql = connection
+            ->queryBuilder()
+            ->createInsertQueryBuilder(_entityMetadata->getTableName())
+            ->fields(fields)
+            .values(values)
+            .build();
+    
+    auto result = connection->exec(sql);
+}
+
+void managers::EntityManager::saveAll(const std::vector<const entity::IdentifiedEntity *> &entities) const {
+    auto connection = _connectionProvider.getConnection();
+    if (connection == nullptr) {
+        throw DatabaseConnectionIsClosedException();
+    }
+    
+    auto queryBuilder = connection
+            ->queryBuilder()
+            ->createInsertQueryBuilder(_entityMetadata->getTableName());
+    auto fieldNames = _entityMetadata->getFieldNames();
+    vector<string> fields;
+    fields.reserve(fieldNames.size());
+    for (auto field : fieldNames) {
+        fields.emplace_back(field.first);
+    }
+    queryBuilder->fields(fields);
+    
+    for_each(entities.begin(), entities.end(),
+                [&connection, &queryBuilder, &fieldNames](const IdentifiedEntity *entity) {
+                    vector<string> values;
+                    values.reserve(fieldNames.size());
+                    for (auto field : fieldNames) {
+                        values.push_back(entity->getFieldValue(field.second, connection->transformationProvider()));
+                    }
+                    queryBuilder->values(values);
+                });
+    
+    auto sql = queryBuilder->build();
+    auto result = connection->exec(sql);
+}

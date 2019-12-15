@@ -12,5 +12,15 @@ using namespace energo::types;
 #include "User.h"
 
 void EntityMetadataRegistrar::RegisterEntityTypes(MetadataProvider &provider) {
-    provider.registerMetadata(shared_ptr<TypeMetadata>(new UserMetadata()));
+    provider.registerMetadata(new UserMetadata());
+}
+
+#include "../Managers/UserManager.h"
+
+using namespace energo::db::managers;
+
+void EntityMetadataRegistrar::RegisterEntityManagers(MetadataProvider &metadataProvider,
+                                                     const energo::db::DatabaseConnectionProvider &databaseConnectionProvider)
+{
+    metadataProvider.registerMetadata(new UserManager{databaseConnectionProvider, metadataProvider});
 }

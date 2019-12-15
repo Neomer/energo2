@@ -25,8 +25,10 @@ public:
 
     SqlUpdateQueryBuilder &where(std::string_view where);
 
-    SqlUpdateQueryBuilder &values(std::vector<std::pair<std::string_view, std::string_view>> values);
-
+    //SqlUpdateQueryBuilder &values(std::vector<std::pair<std::string_view, std::string_view>> values);
+    
+    SqlUpdateQueryBuilder &values(std::vector<std::pair<std::string, std::string>> values);
+    
     SqlUpdateQueryBuilder &limit(size_t limit);
 
     [[nodiscard]] virtual std::string build() const = 0;

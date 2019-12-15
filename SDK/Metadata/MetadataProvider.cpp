@@ -10,7 +10,7 @@ using namespace std;
 using namespace energo::meta;
 using namespace std::string_literals;
 
-void MetadataProvider::registerMetadata(std::shared_ptr<TypeMetadata> metadata) {
+void MetadataProvider::registerMetadata(const TypeMetadata* metadata) {
     auto storedMetadata = find(metadata->getTypeUid());
     if (storedMetadata != nullptr) {
         throw runtime_error("Не удалось зарегистрировать метаданные для типа "s +
@@ -18,15 +18,25 @@ void MetadataProvider::registerMetadata(std::shared_ptr<TypeMetadata> metadata) 
             ". Идентификатор "s + metadata->getTypeUid().toString() +
             " уже зарегистрированы для типа " + storedMetadata->getTypeName().data() + ".");
     }
-    _metadataVector.emplace_back(metadata);
+    _metadataVector.push_back(metadata);
 }
 
 const TypeMetadata *MetadataProvider::find(const energo::types::Uuid &typeUid) const {
-    std::vector<std::shared_ptr<TypeMetadata>>::const_iterator it;
+    std::vector<const TypeMetadata *>::const_iterator it;
     for (it = _metadataVector.begin(); it != _metadataVector.end(); ++it) {
         if ((*it)->getTypeUid().equals(typeUid)) {
             break;
         }
     }
-    return (it != _metadataVector.end()) ? it->get() : nullptr;
+    return (it != _metadataVector.end()) ? *it : nullptr;
+}
+
+const TypeMetadata *MetadataProvider::find(const function<bool(const meta::TypeMetadata *)>& comparator) const {
+    std::vector<const TypeMetadata *>::const_iterator it;
+    for (it = _metadataVector.begin(); it != _metadataVector.end(); ++it) {
+        if (comparator(*it)) {
+            break;
+        }
+    }
+    return (it != _metadataVector.end()) ? *it : nullptr;
 }

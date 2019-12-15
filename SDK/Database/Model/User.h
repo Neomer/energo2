@@ -19,6 +19,8 @@ class EXPORTS User : public IdentifiedEntity {
 
 public:
     User();
+    
+    explicit User(const types::Uuid &uid);
 
     [[nodiscard]] std::string_view getUsername() const;
 
@@ -31,16 +33,20 @@ public:
     [[nodiscard]] std::string_view getSecondName() const;
 
     void setSecondName(std::string_view secondName);
-
+    
 public:
     void fromSql(const SqlQueryReader &reader) override;
+    
+    void toSqlValues(DatabaseStoredEntity::TFieldValuePairList &fieldValueList, const TransformationProvider &transformationProvider) const override;
+    
+    [[nodiscard]] std::string getFieldValue(size_t fieldHash, const TransformationProvider &transformationProvider) const override;
 };
 
 class UserMetadata : public meta::EntityMetadata {
 public:
     UserMetadata();
 
-    [[nodiscard]] meta::MetaClass *createInstance() const override {
+    [[nodiscard]] void *createInstance() const override {
         return new User();
     }
 

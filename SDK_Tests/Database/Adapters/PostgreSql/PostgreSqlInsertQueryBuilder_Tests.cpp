@@ -25,6 +25,22 @@ TEST_F(PostgreSqlInsertQueryBuilder_Tests, ValuesWithoutFields) {
     EXPECT_EQ(builder.build(), R"(insert into "public"."SomeTable" values (4, 4.3, 'fgg');)");
 }
 
+TEST_F(PostgreSqlInsertQueryBuilder_Tests, MultipleValueGroups) {
+    PostgreSqlInsertQueryBuilder builder(*transformationProvider, "SomeTable");
+    builder
+        .values({
+               transformationProvider->formatValue(4),
+               transformationProvider->formatValue(4.3),
+               transformationProvider->formatValue("fgg"),
+        })
+        .values({
+                        transformationProvider->formatValue(4),
+                        transformationProvider->formatValue(4.3),
+                        transformationProvider->formatValue("fgg"),
+        });
+    EXPECT_EQ(builder.build(), R"(insert into "public"."SomeTable" values (4, 4.3, 'fgg'), (4, 4.3, 'fgg');)");
+}
+
 TEST_F(PostgreSqlInsertQueryBuilder_Tests, ValuesWithFields) {
     PostgreSqlInsertQueryBuilder builder(*transformationProvider, "SomeTable");
     builder.fields({"a", "b", "c"});

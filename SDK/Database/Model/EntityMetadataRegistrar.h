@@ -6,6 +6,7 @@
 #define ENERGO_ENTITYMETADATAREGISTRAR_H
 
 #include "../../Metadata/MetadataProvider.h"
+#include "../DatabaseConnectionProvider.h"
 
 namespace energo::db::entity {
 
@@ -15,6 +16,9 @@ class EXPORTS EntityMetadataRegistrar {
 
 public:
     static void RegisterEntityTypes(meta::MetadataProvider &provider);
+    
+    static void RegisterEntityManagers(meta::MetadataProvider &metadataProvider,
+            const DatabaseConnectionProvider &databaseConnectionProvider);
 };
 
 }

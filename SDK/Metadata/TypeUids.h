@@ -7,4 +7,4 @@
 /***********
  * Entity manager types
  */
-#define USERMANAGER_TYPE_UID    energo::types::Uuid{1, 1};
+#define USERMANAGER_TYPE_UID    energo::types::Uuid{1, 1}

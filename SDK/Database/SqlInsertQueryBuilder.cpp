@@ -19,7 +19,7 @@ SqlInsertQueryBuilder &SqlInsertQueryBuilder::fields(std::string_view fields) {
     return *this;
 }
 
-SqlInsertQueryBuilder &SqlInsertQueryBuilder::fields(std::vector<std::string_view> fields) {
+SqlInsertQueryBuilder &SqlInsertQueryBuilder::fields(std::vector<std::string> fields) {
     _fields = "";
     for (auto it = fields.begin(); it != fields.end(); ++it) {
         auto field = *it;
@@ -31,19 +31,19 @@ SqlInsertQueryBuilder &SqlInsertQueryBuilder::fields(std::vector<std::string_vie
     return *this;
 }
 
-SqlInsertQueryBuilder &SqlInsertQueryBuilder::values(std::vector<std::string_view> values) {
-    _values = "";
+SqlInsertQueryBuilder &SqlInsertQueryBuilder::values(std::vector<std::string> values) {
+    string value;
     for (auto it = values.begin(); it != values.end(); ++it) {
-        auto field = *it;
-        _values += field.data();
+        value += *it;
         if (next(it) != values.end()) {
-            _values += ", ";
+            value += ", ";
         }
     }
+    _values.push_back(value);
     return *this;
 }
 
-SqlInsertQueryBuilder &SqlInsertQueryBuilder::returns(std::vector<std::string_view> fields) {
+SqlInsertQueryBuilder &SqlInsertQueryBuilder::returns(std::vector<std::string> fields) {
     _returns = "";
     for (auto it = fields.begin(); it != fields.end(); ++it) {
         auto field = *it;

@@ -15,18 +15,13 @@ namespace energo::meta {
  */
 class EXPORTS MetaClass {
     energo::types::Uuid _typeUid;
-    energo::types::Uuid _parentTypeUid;
 
 public:
     explicit MetaClass(const energo::types::Uuid &typeUid);
 
-    explicit MetaClass(const energo::types::Uuid &typeUid, const energo::types::Uuid &parentTypeUid);
-
     virtual ~MetaClass() = default;
 
     [[nodiscard]] const types::Uuid &getTypeUid() const;
-
-    [[nodiscard]] const types::Uuid &getParentTypeUid() const;
 };
 
 }

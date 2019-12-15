@@ -18,7 +18,8 @@ namespace energo::db::managers {
 /**
  * Менеджер сущности. Используется для базовой работы с записями в базе данных.
  */
-class EntityManager {
+class EntityManager : public meta::ClassMetadata
+{
 protected:
     const energo::db::DatabaseConnectionProvider &_connectionProvider;
     const energo::types::Uuid &_entityTypeUid;
@@ -35,6 +36,7 @@ public:
      */
     explicit EntityManager(
             const energo::db::DatabaseConnectionProvider &provider,
+            const energo::types::Uuid &typeUid,
             const energo::types::Uuid &entityTypeUid,
             const energo::meta::MetadataProvider &metadataProvider);
     
@@ -58,10 +60,24 @@ public:
     
     virtual void remove(const energo::types::Uuid &uid) const;
     
+    virtual void update(const entity::IdentifiedEntity &entity) const;
+    
+    virtual void save(const entity::IdentifiedEntity &entity) const;
+    
+    virtual void saveAll(const std::vector<const entity::IdentifiedEntity *> &entities) const;
+    
     /**
      * @return Тип данных сущности, с которой работает данный менеджер.
      */
     [[nodiscard]] const types::Uuid &getEntityTypeUid() const;
+    
+    [[nodiscard]] void *createInstance() const override {
+        return (void *)this;
+    }
+    
+    [[nodiscard]] std::string_view getTypeName() const override {
+        return "EntityManager";
+    }
 };
 
 }

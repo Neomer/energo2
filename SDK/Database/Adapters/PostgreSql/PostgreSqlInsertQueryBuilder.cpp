@@ -24,7 +24,17 @@ string PostgreSqlInsertQueryBuilder::build() const {
     if (!_fields.empty()) {
         sql += " (" + _fields + ")";
     }
-    sql += " values (" + _values + ")";
+    sql += " values ";
+    if (_values.empty()) {
+        sql += "()";
+    } else {
+        for (auto it = _values.begin(); it != _values.end(); ++it) {
+            sql += "(" + *it + ")";
+            if (next(it) != _values.end()) {
+                sql += ", ";
+            }
+        }
+    }
     if (!_returns.empty()) {
         sql += " returns "s + _returns + ";";
     } else {

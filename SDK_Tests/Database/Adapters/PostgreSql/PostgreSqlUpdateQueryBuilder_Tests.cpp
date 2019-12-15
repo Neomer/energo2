@@ -16,7 +16,7 @@ using namespace energo::db::adapters;
 TEST_F(PostgreSqlUpdateQueryBuilder_Tests, UpdateOneNumericField) {
     PostgreSqlUpdateQueryBuilder builder(*transformationProvider, "SomeTable");
     builder.values({
-                           { "a", transformationProvider->formatValue(5)}
+           { "a", transformationProvider->formatValue(5)}
     });
     EXPECT_EQ(builder.build(), R"(update "public"."SomeTable" set "a"=5;)");
 }

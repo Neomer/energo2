@@ -15,7 +15,7 @@ using namespace energo::meta;
 
 managers::UserManager::UserManager(const DatabaseConnectionProvider &provider,
                                    const MetadataProvider &metadataProvider)  :
-        EntityManager(provider, USER_TYPE_UID, metadataProvider)
+        EntityManager{provider, USERMANAGER_TYPE_UID, USER_TYPE_UID, metadataProvider}
 {
 
 }
