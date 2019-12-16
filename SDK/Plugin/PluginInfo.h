@@ -20,6 +20,7 @@ extern "C" struct PluginInfo {
 
 typedef PluginInfo (*PluginInfoFunc)();
 
+
 }
 
 

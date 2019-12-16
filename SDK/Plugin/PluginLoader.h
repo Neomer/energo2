@@ -6,6 +6,7 @@
 #define ENERGO_PLUGINLOADER_H
 
 #include <string_view>
+#include "../Database/DatabaseConnectionProvider.h"
 #include "Plugin.h"
 
 namespace energo::plugin {
@@ -13,6 +14,8 @@ namespace energo::plugin {
 class PluginLoader {
 public:
     static bool tryLoadPlugin(std::string_view path, Plugin **plugin);
+    
+    static db::DatabaseConnectionProvider *createDatabaseProvider(const Plugin *plugin, const db::DatabaseConnectionSettings &settings);
 };
 
 }

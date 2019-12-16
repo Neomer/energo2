@@ -3,7 +3,7 @@ cmake_minimum_required(VERSION 3.9)
 project(TestPlugin)
 
 set(CMAKE_CXX_STANDARD 17)
-set(SOURCE_EXE PluginInfo.cpp)
+set(SOURCE_EXE PluginInfo.cpp FakeDatabaseAdapter.cpp FakeDatabaseAdapter.h FakeTransformationProvider.cpp FakeTransformationProvider.h FakeConnectionProvider.cpp FakeConnectionProvider.h)
 
 add_library(${PROJECT_NAME} SHARED ${SOURCE_EXE})
 

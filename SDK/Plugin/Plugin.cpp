@@ -33,3 +33,7 @@ const string &Plugin::getName() const {
 PluginType Plugin::getType() const {
     return _type;
 }
+
+void *Plugin::getHandle() const {
+    return _handle;
+}

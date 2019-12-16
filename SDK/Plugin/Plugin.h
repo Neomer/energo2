@@ -28,6 +28,8 @@ public:
     [[nodiscard]] const std::string &getName() const;
     
     [[nodiscard]] PluginType getType() const;
+    
+    void *getHandle() const;
 };
 
 }
