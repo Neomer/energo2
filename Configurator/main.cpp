@@ -29,7 +29,7 @@ int main(int argv, char **argc) {
     BenchmarkTimer timer("Configurator app", cout);
     
     Plugin *plugin;
-    if (PluginLoader::tryLoadPlugin("../Plugins/TestPlugin/libTestPlugin.so", &plugin)) {
+    if (PluginLoader::tryLoadPlugin("../Plugins/TestPlugin/libTestPlugin.dll", &plugin)) {
         cout << "Loading plugin...\n";
     }
 
