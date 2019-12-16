@@ -12,6 +12,7 @@
 #include <Database/Model/User.h>
 #include <Metadata/TypeUids.h>
 #include <Database/Managers/EntityManager.h>
+#include <Plugin/PluginLoader.h>
 
 using namespace std;
 using namespace energo::benchmark;
@@ -20,12 +21,13 @@ using namespace energo::db::entity;
 using namespace energo::meta;
 using namespace energo::db::managers;
 using namespace energo::types;
-using namespace std::string_literals;
+
+using namespace energo::plugin;
 
 int main(int argv, char **argc) {
     random_device rd;
     BenchmarkTimer timer("Configurator app", cout);
-
+    
     DatabaseConnectionSettings settings;
     settings.setHost("localhost");
     settings.setPort(5432);
@@ -33,13 +35,29 @@ int main(int argv, char **argc) {
     settings.setPassword("123456");
     settings.setDatabase("energo2");
     
-    adapters::PostgreSqlConnectionProvider connectionProvider{settings};
-    connectionProvider.initialize(1);
+    DatabaseConnectionProvider *connectionProvider = nullptr;
+    Plugin *plugin;
+    if (PluginLoader::tryLoadPlugin("../Plugins/TestPlugin/libTestPlugin.so", &plugin)) {
+        cout << "Loading plugin...\n";
+        switch (plugin->getType()) {
+            case PluginType::DatabaseAdapter:
+            {
+                connectionProvider = PluginLoader::createDatabaseProvider(plugin, settings);
+                break;
+            }
+        }
+    }
+    
+    if (connectionProvider == nullptr) {
+        connectionProvider = new adapters::PostgreSqlConnectionProvider{settings};
+    }
+    
+    connectionProvider->initialize(1);
     timer.lap("connection ready");
     
     MetadataProvider metadataProvider;
     EntityMetadataRegistrar::RegisterEntityTypes(metadataProvider);
-    EntityMetadataRegistrar::RegisterEntityManagers(metadataProvider, connectionProvider);
+    EntityMetadataRegistrar::RegisterEntityManagers(metadataProvider, *connectionProvider);
     timer.lap("initialization finished");
 
     auto manager = dynamic_cast<const EntityManager *>(metadataProvider.find(USERMANAGER_TYPE_UID));
@@ -51,20 +69,10 @@ int main(int argv, char **argc) {
         cout << "User found!\n"
              << "   " << user->getFirstName() << " [" << user->getUid() << "]\n";
         
-        user->setFirstName("Кирилл");
+        user->setFirstName("Администратор");
         manager->update(*user);
     }
-    
-    manager->saveAll({
-                             new User{Uuid::Random(rd)},
-                             new User{Uuid::Random(rd)},
-                             new User{Uuid::Random(rd)},
-                             new User{Uuid::Random(rd)},
-                             new User{Uuid::Random(rd)},
-                             new User{Uuid::Random(rd)}
-                     });
-    
-    connectionProvider.release();
+    connectionProvider->release();
 
     return 0;
 }

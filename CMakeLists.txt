@@ -8,3 +8,6 @@ add_subdirectory(SDK)
 add_subdirectory(SDK_Tests)
 add_subdirectory(Configurator)
 add_subdirectory(Tools/HashGen)
+
+# Plugins
+add_subdirectory(Plugins/TestPlugin)
