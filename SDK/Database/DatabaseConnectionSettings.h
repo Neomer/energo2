@@ -8,6 +8,7 @@
 #include <string>
 #include <string_view>
 #include <cinttypes>
+#include "../global.h"
 #include "../os.h"
 
 namespace energo::db {
@@ -15,7 +16,7 @@ namespace energo::db {
 /**
  * Настройки подключения к базе данных.
  */
-class DatabaseConnectionSettings {
+class EXPORTS DatabaseConnectionSettings {
 public:
     /**
      * @return Порт подключения к базе данных.

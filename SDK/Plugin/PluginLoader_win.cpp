@@ -14,6 +14,7 @@
 
 using namespace std;
 using namespace energo::plugin;
+using namespace energo::db;
 
 
 bool PluginLoader::tryLoadPlugin(string_view path, class Plugin **plugin) {
@@ -32,7 +33,24 @@ bool PluginLoader::tryLoadPlugin(string_view path, class Plugin **plugin) {
         cout << ex.what() << endl;
         return false;
     }
+    return true;
 }
 
+
+DatabaseConnectionProvider *PluginLoader::createDatabaseProvider(const Plugin *plugin, const DatabaseConnectionSettings &settings) {
+    auto libraryPluginInfoFunc = reinterpret_cast<DatabaseConnectionProvider *(*)(const DatabaseConnectionSettings &)>(
+            GetProcAddress(static_cast<HMODULE>(plugin->getHandle()), "create_provider"));
+
+    if (libraryPluginInfoFunc == nullptr) {
+        return nullptr;
+    }
+    try{
+        return libraryPluginInfoFunc(settings);
+    }
+    catch (exception &ex) {
+        cout << ex.what() << endl;
+        return nullptr;
+    }
+}
 
 #endif // OS_WIN

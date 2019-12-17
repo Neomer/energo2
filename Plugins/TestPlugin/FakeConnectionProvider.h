@@ -9,9 +9,11 @@
 
 namespace energo::db::adapters {
 
-class FakeConnectionProvider : public DatabaseConnectionProvider {
+class EXPORTS FakeConnectionProvider : public DatabaseConnectionProvider {
 public:
     explicit FakeConnectionProvider(const DatabaseConnectionSettings &connectionSettings);
+
+    ~FakeConnectionProvider() override;
 
 protected:
     DatabaseConnection *

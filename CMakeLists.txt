@@ -7,7 +7,10 @@ add_subdirectory(External/fmtlib)
 add_subdirectory(SDK)
 add_subdirectory(SDK_Tests)
 add_subdirectory(Configurator)
+
+# Tools
 add_subdirectory(Tools/HashGen)
+add_subdirectory(Tools/UuidParser)
 
 # Plugins
 add_subdirectory(Plugins/TestPlugin)

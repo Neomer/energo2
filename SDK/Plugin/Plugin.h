@@ -11,7 +11,7 @@
 
 namespace energo::plugin {
 
-class Plugin {
+class EXPORTS Plugin {
     const types::Uuid _pluginUid;
     const types::Version _version;
     std::string _name;

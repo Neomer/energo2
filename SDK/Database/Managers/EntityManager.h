@@ -18,7 +18,7 @@ namespace energo::db::managers {
 /**
  * Менеджер сущности. Используется для базовой работы с записями в базе данных.
  */
-class EntityManager : public meta::ClassMetadata
+class EXPORTS EntityManager : public meta::ClassMetadata
 {
 protected:
     const energo::db::DatabaseConnectionProvider &_connectionProvider;

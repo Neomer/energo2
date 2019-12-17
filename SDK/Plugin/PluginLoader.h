@@ -11,7 +11,7 @@
 
 namespace energo::plugin {
 
-class PluginLoader {
+class EXPORTS PluginLoader {
 public:
     static bool tryLoadPlugin(std::string_view path, Plugin **plugin);
     

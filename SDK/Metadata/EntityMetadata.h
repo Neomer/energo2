@@ -15,7 +15,7 @@ namespace energo::meta {
 /**
  * Метаданные сущности.
  */
-class EntityMetadata : public ClassMetadata {
+class EXPORTS EntityMetadata : public ClassMetadata {
 public:
     using TFieldWithHashList = std::vector<std::pair<std::string_view, size_t>>;
 

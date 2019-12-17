@@ -10,7 +10,7 @@
 
 namespace energo::db {
 
-class SqlDeleteQueryBuilder {
+class EXPORTS SqlDeleteQueryBuilder {
 
 protected:
     const TransformationProvider &_transformationProvider;

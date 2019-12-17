@@ -8,10 +8,11 @@
 #include <cinttypes>
 #include <string_view>
 #include <ostream>
+#include "../global.h"
 
 namespace energo::types {
 
-class Version {
+class EXPORTS Version final {
     uint16_t _major, _minor;
     uint32_t _patch, _build;
 

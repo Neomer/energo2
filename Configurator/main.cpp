@@ -37,7 +37,7 @@ int main(int argv, char **argc) {
     
     DatabaseConnectionProvider *connectionProvider = nullptr;
     Plugin *plugin;
-    if (PluginLoader::tryLoadPlugin("../Plugins/TestPlugin/libTestPlugin.so", &plugin)) {
+    if (PluginLoader::tryLoadPlugin("../Plugins/TestPlugin/libTestPlugin.dll", &plugin)) {
         cout << "Loading plugin...\n";
         switch (plugin->getType()) {
             case PluginType::DatabaseAdapter:
@@ -54,12 +54,13 @@ int main(int argv, char **argc) {
     
     connectionProvider->initialize(1);
     timer.lap("connection ready");
-    
+
     MetadataProvider metadataProvider;
     EntityMetadataRegistrar::RegisterEntityTypes(metadataProvider);
     EntityMetadataRegistrar::RegisterEntityManagers(metadataProvider, *connectionProvider);
     timer.lap("initialization finished");
 
+    /*
     auto manager = dynamic_cast<const EntityManager *>(metadataProvider.find(USERMANAGER_TYPE_UID));
     auto entity = manager->get(Uuid::Parse("4635efb6-1466-414b-97ca-5068d808032b"));
     if (entity == nullptr) {
@@ -72,7 +73,10 @@ int main(int argv, char **argc) {
         user->setFirstName("Администратор");
         manager->update(*user);
     }
+    */
+
     connectionProvider->release();
+    delete connectionProvider;
 
     return 0;
 }

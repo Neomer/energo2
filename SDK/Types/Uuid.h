@@ -85,6 +85,12 @@ public:
         return os;
     }
 
+#ifdef ENVIRONMENT64
+    [[nodiscard]] const uint64_t *rawData() const;
+#else
+    [[nodiscard]] const uint32_t *rawData() const;
+#endif
+
 private:
 #ifdef ENVIRONMENT64
     uint64_t _data[2]{};

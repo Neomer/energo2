@@ -10,13 +10,14 @@
 
 namespace energo::db {
 
-class DatabaseConnectionProvider {
+class EXPORTS DatabaseConnectionProvider {
     std::vector<std::shared_ptr<DatabaseConnection>> _connections;
     std::random_device _randomDevice;
     const DatabaseConnectionSettings _connectionSettings;
     
 public:
     explicit DatabaseConnectionProvider(const DatabaseConnectionSettings &connectionSettings);
+    virtual ~DatabaseConnectionProvider() = default;
     
     void initialize(size_t defaultConnectionCount);
     

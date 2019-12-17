@@ -247,5 +247,16 @@ bool Uuid::isEmpty() const {
 }
 
 
+const
+#ifdef ENVIRONMENT64
+uint64_t
+#else
+uint32_t
+#endif
+*Uuid::rawData() const {
+    return _data;
+}
+
+
 #undef UUID_DATA_PARTS
 #undef UUID_BYTES

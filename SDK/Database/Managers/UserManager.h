@@ -9,7 +9,7 @@
 
 namespace energo::db::managers {
 
-class UserManager : public EntityManager {
+class EXPORTS UserManager : public EntityManager {
 public:
     UserManager(const DatabaseConnectionProvider &provider,
                 const meta::MetadataProvider &metadataProvider);

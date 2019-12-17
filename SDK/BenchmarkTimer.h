@@ -9,6 +9,7 @@
 #include <string_view>
 #include <string>
 #include <chrono>
+#include "global.h"
 #include "os.h"
 
 namespace energo::benchmark {
@@ -17,7 +18,7 @@ namespace energo::benchmark {
  * Класс для организации проверки быстродействия.
  * Для использования необходимо создать экземпляр класса, при удалении будет выведена информация о времени жизни объекта.
  */
-class BenchmarkTimer {
+class EXPORTS BenchmarkTimer {
     std::chrono::time_point<std::chrono::high_resolution_clock> _startPoint, _lap;
     std::ostream &_stream;
     std::string_view _benchName;

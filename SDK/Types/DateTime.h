@@ -8,10 +8,11 @@
 #include <chrono>
 #include <string>
 #include <ostream>
+#include "../global.h"
 
 namespace energo::types {
 
-class DateTime {
+class EXPORTS DateTime {
 public:
     static DateTime Now();
     
