@@ -6,17 +6,19 @@
 #define ENERGO_DATABASECONNECTIONPROVIDER_H
 
 #include <vector>
+#include "../Metadata/TypeMetadata.h"
 #include "DatabaseConnection.h"
 
 namespace energo::db {
 
-class EXPORTS DatabaseConnectionProvider {
+class EXPORTS DatabaseConnectionProvider : public meta::TypeMetadata {
     std::vector<std::shared_ptr<DatabaseConnection>> _connections;
     std::random_device _randomDevice;
     const DatabaseConnectionSettings _connectionSettings;
     
 public:
-    explicit DatabaseConnectionProvider(const DatabaseConnectionSettings &connectionSettings);
+    explicit DatabaseConnectionProvider(const DatabaseConnectionSettings &connectionSettings, const types::Uuid &typeUid);
+    
     virtual ~DatabaseConnectionProvider() = default;
     
     void initialize(size_t defaultConnectionCount);
@@ -24,7 +26,7 @@ public:
     void release();
     
     [[nodiscard]] const DatabaseConnection *getConnection() const;
-
+    
 protected:
     [[nodiscard]] virtual DatabaseConnection *createConnection(std::random_device &randomDevice, const DatabaseConnectionSettings &connectionSettings) = 0;
 };

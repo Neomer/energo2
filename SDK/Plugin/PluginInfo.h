@@ -8,7 +8,8 @@
 namespace energo::plugin {
 
 enum class PluginType {
-    DatabaseAdapter
+    DatabaseAdapter,
+    DatabasePatch
 };
 
 extern "C" struct PluginInfo {

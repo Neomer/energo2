@@ -20,6 +20,13 @@ namespace energo::db {
  */
 class EXPORTS DatabaseConnection {
 public:
+    enum class IsolationLevel {
+        Serializable,
+        RepeatableRead,
+        ReadCommited,
+        ReadUncommited,
+    };
+    
     /**
      * Подготавливает новое подключение к базе данных. Для соединения необходимо вызвать метод DatabaseConnection::open().
      * @param settings Настройки подключения к базе данных.
@@ -63,8 +70,16 @@ public:
 
     [[nodiscard]] virtual const TransformationProvider &transformationProvider() const = 0;
     
+    virtual void beginTransaction(IsolationLevel isolationLevel);
+    
+    [[nodiscard]] bool inTransaction() const;
+    
+    virtual void commit();
+    
+    virtual void rollback();
+    
 private:
-    std::atomic_bool _open;
+    std::atomic_bool _open, _transaction;
     energo::types::Uuid _uid;
 
 protected:

@@ -36,3 +36,19 @@ bool DatabaseConnection::isOpen() const {
 const energo::types::Uuid &DatabaseConnection::getUid() const {
     return _uid;
 }
+
+void DatabaseConnection::beginTransaction(IsolationLevel isolationLevel) {
+    _transaction = true;
+}
+
+bool DatabaseConnection::inTransaction() const {
+    return _transaction.load();
+}
+
+void DatabaseConnection::commit() {
+    _transaction = false;
+}
+
+void DatabaseConnection::rollback() {
+    _transaction = false;
+}

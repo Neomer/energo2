@@ -8,7 +8,8 @@
 using namespace std;
 using namespace energo::db;
 
-DatabaseConnectionProvider::DatabaseConnectionProvider(const DatabaseConnectionSettings &connectionSettings) :
+DatabaseConnectionProvider::DatabaseConnectionProvider(const DatabaseConnectionSettings &connectionSettings, const types::Uuid &typeUid) :
+    meta::TypeMetadata{typeUid},
     _connectionSettings{connectionSettings},
     _randomDevice{}
 {

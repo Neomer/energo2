@@ -2,6 +2,7 @@
 // Created by kir on 10.12.2019.
 //
 
+#include <fmt/format.h>
 #include "../../DatabaseUnavailableException.h"
 #include "../../SqlQueryBadResultException.h"
 #include "../../DatabaseConnectionIsClosedException.h"
@@ -71,4 +72,26 @@ const SqlQueryBuilder *PostgreSqlConnectionAdapter::queryBuilder() const {
 
 const TransformationProvider &PostgreSqlConnectionAdapter::transformationProvider() const {
     return _transformationProvider;
+}
+
+void PostgreSqlConnectionAdapter::beginTransaction(DatabaseConnection::IsolationLevel isolationLevel) {
+    DatabaseConnection::beginTransaction(isolationLevel);
+    string sql;
+    switch (isolationLevel) {
+        case IsolationLevel::Serializable: exec("START TRANSACTION SERIALIZABLE;").reset(nullptr); break;
+        case IsolationLevel::ReadCommited: exec("START TRANSACTION REPEATABLE READ;").reset(nullptr); break;
+        case IsolationLevel::ReadUncommited: exec("START TRANSACTION READ COMMITTED;").reset(nullptr); break;
+        case IsolationLevel::RepeatableRead: exec("START TRANSACTION READ UNCOMMITTED;").reset(nullptr); break;
+        default: throw invalid_argument("Указанный уровень изоляции транзакции не поддерживается данной СУБД.");
+    }
+}
+
+void PostgreSqlConnectionAdapter::commit() {
+    DatabaseConnection::commit();
+    exec("COMMIT").reset(nullptr);
+}
+
+void PostgreSqlConnectionAdapter::rollback() {
+    DatabaseConnection::rollback();
+    exec("ROLLBACK;").reset(nullptr);
 }
