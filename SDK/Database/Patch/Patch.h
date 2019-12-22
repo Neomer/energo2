@@ -36,7 +36,7 @@ public:
      * @param provider Провайдер подключений к базе данных.
      * @return
      */
-    [[nodiscard]] bool isSupported(const DatabaseConnectionProvider &provider) const;
+    //[[nodiscard]] bool isSupported(const DatabaseConnectionProviderMetadata *providerMetadata) const;
     
     
     /**

@@ -3,13 +3,14 @@
 //
 
 #include <algorithm>
+#include "../Metadata/TypeUids.h"
 #include "DatabaseConnectionProvider.h"
+#include "../Metadata/ClassMetadata.h"
 
 using namespace std;
 using namespace energo::db;
 
 DatabaseConnectionProvider::DatabaseConnectionProvider(const DatabaseConnectionSettings &connectionSettings, const types::Uuid &typeUid) :
-    meta::TypeMetadata{typeUid},
     _connectionSettings{connectionSettings},
     _randomDevice{}
 {
@@ -39,4 +40,11 @@ void DatabaseConnectionProvider::release() {
             });
 }
 
-
+DatabaseConnectionProvider *DatabaseConnectionProvider::GetFromMetadata(const meta::MetadataProvider &metadataProvider) {
+    auto providerMetadata = metadataProvider.find(
+            [](const meta::TypeMetadata *metadata) {
+                auto classMetadata = dynamic_cast<const meta::ClassMetadata *>(metadata);
+                return classMetadata != nullptr && classMetadata->getParentTypeUid() == DATABASEPROVIDER_TYPE_UID;
+            });
+    return reinterpret_cast<DatabaseConnectionProvider *>(dynamic_cast<const meta::ClassMetadata *>(providerMetadata)->createInstance());
+}

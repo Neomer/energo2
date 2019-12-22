@@ -43,7 +43,13 @@ public:
      * @param benchmarkName
      */
     explicit BenchmarkTimer(std::string_view benchmarkName);
-
+    
+    /**
+     * Создать новый бенчмарк. вывод будет осуществляться в stdout.
+     * @param benchmarkName
+     */
+    explicit BenchmarkTimer(std::string_view benchmarkName, bool disabled);
+    
     ~BenchmarkTimer();
 
     /**

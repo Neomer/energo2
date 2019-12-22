@@ -18,9 +18,6 @@ public:
 protected:
     DatabaseConnection *
     createConnection(std::random_device &randomDevice, const DatabaseConnectionSettings &connectionSettings) override;
-
-public:
-    std::string_view getTypeName() const override;
 };
 
 }

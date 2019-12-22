@@ -42,6 +42,15 @@ BenchmarkTimer::BenchmarkTimer(std::string_view benchmarkName) :
 }
 
 
+BenchmarkTimer::BenchmarkTimer(std::string_view benchmarkName, bool disabled) :
+        _startPoint{ high_resolution_clock::now() },
+        _lap{high_resolution_clock::now()},
+        _stream{ cout },
+        _benchName{benchmarkName},
+        _stopped{disabled}
+{
+
+}
 
 BenchmarkTimer::~BenchmarkTimer() {
     stop();
@@ -52,6 +61,9 @@ nanoseconds BenchmarkTimer::lap() {
 }
 
 nanoseconds BenchmarkTimer::lap(std::string_view lapName) {
+    if (_stopped) {
+        return 0ns;
+    }
     auto lapPoint = high_resolution_clock::now();
     auto duration = lapPoint - _lap;
     _stream << "Benchmark";

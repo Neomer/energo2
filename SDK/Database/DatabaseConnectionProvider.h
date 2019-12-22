@@ -8,15 +8,18 @@
 #include <vector>
 #include "../Metadata/TypeMetadata.h"
 #include "DatabaseConnection.h"
+#include "../Metadata/MetadataProvider.h"
 
 namespace energo::db {
 
-class EXPORTS DatabaseConnectionProvider : public meta::TypeMetadata {
+class EXPORTS DatabaseConnectionProvider {
     std::vector<std::shared_ptr<DatabaseConnection>> _connections;
     std::random_device _randomDevice;
     const DatabaseConnectionSettings _connectionSettings;
     
 public:
+    static DatabaseConnectionProvider *GetFromMetadata(const meta::MetadataProvider &metadataProvider);
+    
     explicit DatabaseConnectionProvider(const DatabaseConnectionSettings &connectionSettings, const types::Uuid &typeUid);
     
     virtual ~DatabaseConnectionProvider() = default;

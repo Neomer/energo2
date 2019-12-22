@@ -21,6 +21,17 @@ DatabaseConnection *PostgreSqlConnectionProvider::createConnection(random_device
     return new PostgreSqlConnectionAdapter(randomDevice, connectionSettings);
 }
 
-string_view PostgreSqlConnectionProvider::getTypeName() const {
+PostgreSqlConnectionProviderMetadata::PostgreSqlConnectionProviderMetadata() :
+    meta::SingletonClassMetadata{POSTGRESQLPROVIDER_TYPE_UID, DATABASEPROVIDER_TYPE_UID}
+{
+}
+
+string_view PostgreSqlConnectionProviderMetadata::getTypeName() const {
     return "PostgreSqlConnectionProvider";
 }
+
+void *PostgreSqlConnectionProviderMetadata::createInstanceInternal() const {
+    return nullptr;
+}
+
+

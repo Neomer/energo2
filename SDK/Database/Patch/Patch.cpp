@@ -22,7 +22,8 @@ const Uuid &Patch::getPatchUid() const {
 const Uuid &Patch::getPreviousPatchUid() const {
     return _prevPatchUid;
 }
-
-bool Patch::isSupported(const DatabaseConnectionProvider &provider) const {
-    return provider.getTypeUid().equals(_databaseTypeUid);
+/*
+bool Patch::isSupported(const DatabaseConnectionProviderMetadata *providerMetadata) const {
+    return providerMetadata->getTypeUid().equals(_databaseTypeUid);
 }
+*/

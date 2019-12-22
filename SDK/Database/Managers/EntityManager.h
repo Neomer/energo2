@@ -10,6 +10,7 @@
 #include "../Model/DatabaseStoredEntity.h"
 #include "../DatabaseConnectionProvider.h"
 #include "../../Metadata/MetadataProvider.h"
+#include "../../Metadata/SingletonClassMetadata.h"
 #include "../../Metadata/EntityMetadata.h"
 #include "../../Metadata/MetaClass.h"
 
@@ -27,6 +28,8 @@ protected:
     const energo::meta::EntityMetadata *_entityMetadata;
 
 public:
+    static EntityManager *GetEntityManager(const types::Uuid &entityTypeUid);
+    
     /**
      * Создает менеджер сущности.
      * @param provider Провайдер подключений к базе данных.
@@ -78,6 +81,15 @@ public:
     [[nodiscard]] std::string_view getTypeName() const override {
         return "EntityManager";
     }
+};
+
+class EntityManagerMetadata {
+    const types::Uuid _entityTypeUid;
+    
+public:
+    explicit EntityManagerMetadata(const types::Uuid &entityTypeUid);
+    
+    [[nodiscard]] const types::Uuid &getEntityTypeUid() const;
 };
 
 }

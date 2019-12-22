@@ -10,6 +10,7 @@
 #include <string_view>
 #include "../../Metadata/EntityMetadata.h"
 #include "IdentifiedEntity.h"
+#include "../../Metadata/MetadataProvider.h"
 
 
 namespace energo::db::entity {

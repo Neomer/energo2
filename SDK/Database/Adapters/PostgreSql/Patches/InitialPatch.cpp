@@ -12,15 +12,14 @@ using namespace energo::types;
 
 
 InitialPatch::InitialPatch() :
-    Patch{types::Uuid{12423920561079274481ull, 13753580057830260991ull}, types::Uuid::Empty(), POSTGRESQLPROVIDER_TYPE_UID},
-    meta::ClassMetadata{ types::Uuid{11981550171035681722ull, 11002200308128057647ull}, PATCH_TYPE_UID }
+    Patch{types::Uuid{12423920561079274481ull, 13753580057830260991ull}, types::Uuid::Empty(), POSTGRESQLPROVIDER_TYPE_UID}
 {
 
 }
 
 void InitialPatch::apply(const DatabaseConnection &connection) const {
     // Create database Users
-    connection.exec(R"(CREATE TABLE public."Users"
+    connection.exec(R"(CREATE TABLE IF NOT EXISTS public."Users"
 (
     "Uid" uuid NOT NULL,
     "Username" character varying(128) COLLATE pg_catalog."default" NOT NULL,
@@ -38,10 +37,16 @@ ALTER TABLE public."Users"
     
 }
 
-void *InitialPatch::createInstance() const {
+
+InitialPatchMetadata::InitialPatchMetadata() :
+        meta::ClassMetadata{ types::Uuid{11981550171035681722ull, 11002200308128057647ull}, PATCH_TYPE_UID }
+{
+}
+
+void *InitialPatchMetadata::createInstance() const {
     return (void *)this;
 }
 
-string_view InitialPatch::getTypeName() const {
+string_view InitialPatchMetadata::getTypeName() const {
     return "InitialPatch";
 }

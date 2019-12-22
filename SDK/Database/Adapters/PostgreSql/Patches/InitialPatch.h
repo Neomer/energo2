@@ -10,11 +10,17 @@
 
 namespace energo::db::patch {
 
-class InitialPatch final : public Patch, public meta::ClassMetadata {
+class InitialPatch final : public Patch {
 public:
     InitialPatch();
     
     void apply(const DatabaseConnection &connection) const override;
+    
+};
+
+class InitialPatchMetadata final : public meta::ClassMetadata {
+public:
+    InitialPatchMetadata();
     
     [[nodiscard]] void *createInstance() const override;
     

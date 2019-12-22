@@ -24,11 +24,6 @@ FakeConnectionProvider::~FakeConnectionProvider() {
     cout << "Provider destructed.\n";
 }
 
-string_view FakeConnectionProvider::getTypeName() const {
-    return "FakeConnectionProvider";
-}
-
-
 extern "C" DatabaseConnectionProvider * EXPORTS create_provider(const DatabaseConnectionSettings &connectionSettings) {
     return new FakeConnectionProvider(connectionSettings);
 }

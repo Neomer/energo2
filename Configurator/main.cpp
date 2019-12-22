@@ -6,13 +6,13 @@
 
 #include <BenchmarkTimer.h>
 #include <Database/DatabaseUnavailableException.h>
-#include <Database/Model/EntityMetadataRegistrar.h>
 #include <Metadata/MetadataProvider.h>
 #include <Database/Adapters/PostgreSql/PostgreSqlConnectionProvider.h>
 #include <Database/Model/User.h>
 #include <Metadata/TypeUids.h>
 #include <Database/Managers/EntityManager.h>
 #include <Plugin/PluginLoader.h>
+#include <Metadata/MetadataRegistrar.h>
 
 using namespace std;
 using namespace energo::benchmark;
@@ -27,6 +27,11 @@ using namespace energo::plugin;
 int main(int argv, char **argc) {
     random_device rd;
     BenchmarkTimer timer("Configurator app", cout);
+    
+    auto staticMetadataProvider = MetadataProvider::GetStatic();
+    
+    timer.lap("Loading metadata...");
+    MetadataRegistrar::RegisterMetaTypes(*staticMetadataProvider);
     
     DatabaseConnectionSettings settings;
     settings.setHost("localhost");
@@ -45,35 +50,43 @@ int main(int argv, char **argc) {
                 connectionProvider = PluginLoader::createDatabaseProvider(plugin, settings);
                 break;
             }
+            case PluginType::DatabasePatch:
+                break;
         }
     }
     
     if (connectionProvider == nullptr) {
-        connectionProvider = new adapters::PostgreSqlConnectionProvider{settings};
+        auto databaseProvider = dynamic_cast<const adapters::PostgreSqlConnectionProviderMetadata *>(
+                staticMetadataProvider->find([](const TypeMetadata *metadata) -> bool {
+                    return dynamic_cast<const adapters::PostgreSqlConnectionProviderMetadata *>(metadata) != nullptr;
+                }));
+        const_cast<adapters::PostgreSqlConnectionProviderMetadata *>(databaseProvider)->setInstance(
+                        new adapters::PostgreSqlConnectionProvider{settings});
+        connectionProvider = reinterpret_cast<DatabaseConnectionProvider *>(databaseProvider->createInstance());
     }
+    timer.lap("metadata prepared");
     
     connectionProvider->initialize(1);
-    timer.lap("connection ready");
+    timer.lap("all connections are open");
 
-    MetadataProvider metadataProvider;
-    EntityMetadataRegistrar::RegisterEntityTypes(metadataProvider);
-    EntityMetadataRegistrar::RegisterEntityManagers(metadataProvider, *connectionProvider);
-    timer.lap("initialization finished");
-
-    /*
-    auto manager = dynamic_cast<const EntityManager *>(metadataProvider.find(USERMANAGER_TYPE_UID));
-    auto entity = manager->get(Uuid::Parse("4635efb6-1466-414b-97ca-5068d808032b"));
-    if (entity == nullptr) {
-        cout << "User not found.\n";
+    auto manager = EntityManager::GetEntityManager(USER_TYPE_UID);
+    timer.lap("manager found");
+    if (manager == nullptr) {
+        cout << "Manager not found!\n";
     } else {
-        auto user = dynamic_cast<User *>(entity.get());
-        cout << "User found!\n"
-             << "   " << user->getFirstName() << " [" << user->getUid() << "]\n";
+        auto entity = manager->get(Uuid::Parse("4635efb6-1466-414b-97ca-5068d808032b"));
+        if (entity == nullptr) {
+            cout << "User not found.\n";
+        } else {
+            auto user = dynamic_cast<User *>(entity.get());
+            cout << "User found!\n"
+                 << "   " << user->getFirstName() << " [" << user->getUid() << "]\n";
         
-        user->setFirstName("Администратор");
-        manager->update(*user);
+            user->setFirstName("Администратор");
+            manager->update(*user);
+        }
     }
-    */
+    timer.lap("all work is done.");
 
     connectionProvider->release();
     delete connectionProvider;
