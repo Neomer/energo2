@@ -1,6 +1,6 @@
-cmake_minimum_required(VERSION 3.9)
+cmake_minimum_required(VERSION 3.11)
 
-project(Configurator)
+project(DataServer)
 
 set(CMAKE_CXX_STANDARD 17)
 set(SOURCE_EXE main.cpp)
@@ -22,7 +22,7 @@ set_target_properties(${PROJECT_NAME} PROPERTIES LINKER_LANGUAGE CXX)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set_property(TARGET ${PROJECT_NAME} PROPERTY CXX_STANDARD 17)
 
-install(TARGETS Configurator RUNTIME DESTINATION bin)
+install(TARGETS ${PROJECT_NAME} RUNTIME DESTINATION bin)
 
 if (WIN32)
     set(LibExt dll)

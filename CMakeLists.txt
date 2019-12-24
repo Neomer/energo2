@@ -6,7 +6,7 @@ add_subdirectory(External/GoogleTest)
 add_subdirectory(External/fmtlib)
 add_subdirectory(SDK)
 add_subdirectory(SDK_Tests)
-add_subdirectory(Configurator)
+add_subdirectory(DataServer)
 
 # Tools
 add_subdirectory(Tools/HashGen)
