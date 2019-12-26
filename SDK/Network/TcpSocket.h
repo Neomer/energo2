@@ -9,10 +9,11 @@
 #include "../os.h"
 #include <cinttypes>
 #include <string_view>
+#include "../IO/AsyncIODevice.h"
 
 namespace energo::net {
 
-class EXPORTS TcpSocket {
+class EXPORTS TcpSocket : public io::AsyncIODevice<char> {
 public:
     using SocketDescriptorType =
 #ifdef ENVIRONMENT64
@@ -27,11 +28,10 @@ private:
 public:
     TcpSocket(SocketDescriptorType descriptor);
 
-    void write(std::string_view data) const;
+    bool open(OpenMode openMode) override;
 
-    size_t read(char *buffer, size_t length) const;
+    void close() override;
 
-    void close();
 };
 
 }

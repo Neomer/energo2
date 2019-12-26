@@ -20,19 +20,12 @@ TcpSocket::TcpSocket(SocketDescriptorType descriptor) :
 
 }
 
-void energo::net::TcpSocket::close() {
+bool TcpSocket::open(energo::io::IODevice<char>::OpenMode openMode) {
+    return false;
+}
+
+void TcpSocket::close() {
     closesocket(static_cast<SOCKET>(_socketDescriptor));
-}
-
-void TcpSocket::write(string_view data) const {
-    auto sent = send(static_cast<SOCKET>(_socketDescriptor), data.data(), data.size(), 0);
-    if (sent != data.size()) {
-        throw runtime_error("Не все данные были отправлены.");
-    }
-}
-
-size_t TcpSocket::read(char *buffer, size_t length) const {
-    return recv(static_cast<SOCKET>(_socketDescriptor), buffer, length, 0);
 }
 
 #endif

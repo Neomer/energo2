@@ -11,6 +11,11 @@
 
 namespace energo::io {
 
+/**
+ * Абстрактный класс для устройств ввода-вывода данных.
+ * @tparam TDataType Тип элемента массива данных.
+ */
+template<typename TDataType>
 class EXPORTS IODevice {
 public:
     enum class OpenMode {
@@ -25,8 +30,8 @@ public:
     virtual bool open(OpenMode openMode) = 0;
     virtual void close() = 0;
 
-    virtual size_t write(std::string_view data) = 0;
-    virtual size_t read(char *buffer, size_t length) = 0;
+    virtual size_t write(const TDataType* data, size_t length) = 0;
+    virtual size_t read(TDataType buffer, size_t length) = 0;
 
 };
 
