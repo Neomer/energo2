@@ -16,7 +16,7 @@ void NetworkHelper::Initialize() {
 
 }
 
-void Networkhelper::Release() {
+void NetworkHelper::Release() {
 
 }
 

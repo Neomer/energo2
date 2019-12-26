@@ -29,5 +29,40 @@ TEST_F(ThreadSafeQueue_Tests, SecondReadMustReturnFalseIfQueueHasOnlyOneValue) {
     EXPECT_FALSE(queue.take(value));
 }
 
+TEST_F(ThreadSafeQueue_Tests, ReadToArray) {
+    ThreadSafeQueue<int, 10> queue{ 1, 2, 3, 4 };
+    EXPECT_EQ(queue.getReadIdx(), 0);
+    EXPECT_EQ(queue.getWriteIdx(), 4);
+    int b[2];
+    size_t read;
+    EXPECT_TRUE(queue.take(b, 2, read));
+    EXPECT_EQ(read, 2);
+    EXPECT_EQ(b[0], 1);
+    EXPECT_EQ(b[1], 2);
+    EXPECT_EQ(queue.getReadIdx(), 2);
+    EXPECT_EQ(queue.getWriteIdx(), 4);
+}
+
+TEST_F(ThreadSafeQueue_Tests, InitializeFullQueueWritePointerMustSetToZero) {
+    ThreadSafeQueue<int, 5> queue{ 1, 2, 3, 4, 5 };
+    EXPECT_EQ(queue.getReadIdx(), 0);
+    EXPECT_EQ(queue.getWriteIdx(), 0);
+}
+
+TEST_F(ThreadSafeQueue_Tests, ReadToArrayWithSwapReadPointerToBegin) {
+    ThreadSafeQueue<int, 5> queue{ 1, 2, 3, 4, 5 };
+    EXPECT_EQ(queue.getReadIdx(), 0);
+    EXPECT_EQ(queue.getWriteIdx(), 0);
+    int b[2];
+    size_t read;
+    EXPECT_TRUE(queue.take(b, 2, read));
+    EXPECT_EQ(read, 2);
+    EXPECT_EQ(b[0], 1);
+    EXPECT_EQ(b[1], 2);
+    EXPECT_EQ(queue.getReadIdx(), 2);
+    EXPECT_EQ(queue.getWriteIdx(), 4);
+}
+
+
 
 #pragma clang diagnostic pop

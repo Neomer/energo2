@@ -69,7 +69,7 @@ set(SOURCE_EXE global.h Types/Uuid.cpp Types/Uuid.h
         Metadata/MetadataRegistrar.cpp Metadata/MetadataRegistrar.h
         Metadata/SingletonClassMetadata.cpp Metadata/SingletonClassMetadata.h
         Network/TcpSocket.h Network/Windows/TcpSocket.cpp
-        Network/NetworkHelper.h Network/Windows/NetworkHelper.cpp Network/Linux/NetworkHelper.cpp IO/IODevice.cpp IO/IODevice.h IO/AsyncIODevice.cpp IO/AsyncIODevice.h Types/ThreadSafeArray.h Types/ThreadSafeQueue.h)
+        Network/NetworkHelper.h Network/Windows/NetworkHelper.cpp Network/Linux/NetworkHelper.cpp IO/IODevice.cpp IO/IODevice.h IO/AsyncIODevice.cpp IO/AsyncIODevice.h Types/ThreadSafeArray.h Types/ThreadSafeQueue.h IO/IOStream.cpp IO/IOStream.h IO/IOException.cpp IO/IOException.h Network/Linux/TcpSocket.cpp)
 
 add_library(${PROJECT_NAME} SHARED ${SOURCE_EXE})
 

@@ -5,6 +5,8 @@
 #ifndef ENERGO_THREADSAFEQUEUE_H
 #define ENERGO_THREADSAFEQUEUE_H
 
+#include <algorithm>
+#include <mutex>
 #include "ThreadSafeArray.h"
 
 namespace energo::types {
@@ -13,6 +15,7 @@ template<typename TElement, size_t NElements>
 class ThreadSafeQueue {
     ThreadSafeArray<TElement, NElements> _queue;
     size_t _readIdx, _writeIdx;
+    std::mutex _mtx;
 
     inline void assertIndex(size_t index) {
         if (index >= NElements) {
@@ -28,13 +31,13 @@ public:
     }
 
     ThreadSafeQueue(std::initializer_list<TElement> args) :
-        _queue{args}, _readIdx{0}, _writeIdx{0}
+        _queue{args}, _readIdx{0}, _writeIdx{args.size()}
     {
 
     }
 
     [[nodiscard]] inline size_t count() const noexcept {
-        return _writeIdx - _readIdx;
+        return _writeIdx > 0 ? _writeIdx - _readIdx : NElements - _readIdx + _writeIdx;
     }
 
     [[nodiscard]] inline size_t size() const noexcept {
@@ -46,6 +49,7 @@ public:
     }
 
     [[nodiscard]] bool push(const TElement &element) {
+        std::lock_guard grd{_mtx};
         if (_writeIdx == size()) {
             if (_readIdx != 0) {
                 _writeIdx = 0;
@@ -58,6 +62,7 @@ public:
     }
 
     [[nodiscard]] bool take(TElement &element) {
+        std::lock_guard grd{_mtx};
         if (_writeIdx == _readIdx) {
             return false;
         }
@@ -65,6 +70,27 @@ public:
             _readIdx == 0;
         }
         element = _queue.get(_readIdx++);
+        defragmentation();
+        return true;
+    }
+    
+    [[nodiscard]] bool take(TElement *buffer, size_t size, size_t &actualSize) {
+        std::lock_guard grd{_mtx};
+        if (_writeIdx == _readIdx) {
+            return false;
+        }
+        actualSize = std::min<size_t>(size, NElements - _readIdx);
+        _queue.copyTo(buffer, _readIdx, 0, actualSize);
+        auto remain = size - actualSize;
+        if (remain > 0 && _writeIdx > 0) {
+            remain = std::min<size_t>(remain, _writeIdx);
+            _queue.copyTo(buffer, 0, actualSize, remain);
+            actualSize += remain;
+            _readIdx = remain;
+        } else {
+            _readIdx += actualSize;
+        }
+        defragmentation();
         return true;
     }
 
@@ -74,6 +100,14 @@ public:
 
     [[nodiscard]] inline size_t getWriteIdx() const {
         return _writeIdx;
+    }
+    
+private:
+    inline void defragmentation() {
+        if (_readIdx == _writeIdx) {
+            _readIdx = 0;
+            _writeIdx = 0;
+        }
     }
 };
 

@@ -8,6 +8,8 @@
 #include "../global.h"
 #include "../os.h"
 #include <string_view>
+#include <future>
+#include "IOStream.h"
 
 namespace energo::io {
 
@@ -28,10 +30,12 @@ public:
     virtual ~IODevice() = default;
 
     virtual bool open(OpenMode openMode) = 0;
+    
     virtual void close() = 0;
 
-    virtual size_t write(const TDataType* data, size_t length) = 0;
-    virtual size_t read(TDataType buffer, size_t length) = 0;
+    virtual std::future<size_t> write(IOStream<TDataType> &stream) = 0;
+    
+    virtual std::future<size_t> read(IOStream<TDataType> &stream) = 0;
 
 };
 
