@@ -18,6 +18,7 @@ TEST_F(ThreadSafeQueue_Tests, ReadEmptyQueueMustReturnsFalse) {
 TEST_F(ThreadSafeQueue_Tests, FullQueueMuReturnFalseOnInsert) {
     ThreadSafeQueue<int, 1> queue;
     EXPECT_TRUE(queue.push(1));
+    EXPECT_EQ(queue.count(), 1);
     EXPECT_FALSE(queue.push(2));
 }
 
@@ -61,6 +62,18 @@ TEST_F(ThreadSafeQueue_Tests, ReadToArrayWithSwapReadPointerToBegin) {
     EXPECT_EQ(b[1], 2);
     EXPECT_EQ(queue.getReadIdx(), 2);
     EXPECT_EQ(queue.getWriteIdx(), 4);
+}
+
+
+TEST_F(ThreadSafeQueue_Tests, WriteToFullQueueAfterOnReadingMustReturnsFalse) {
+    ThreadSafeQueue<int, 5> queue{ 1, 2, 3, 4, 5 };
+    EXPECT_EQ(queue.getReadIdx(), 0);
+    EXPECT_EQ(queue.getWriteIdx(), 0);
+    int val = 0;
+    EXPECT_TRUE(queue.take(val));
+    EXPECT_EQ(val, 1);
+    EXPECT_TRUE(queue.push(5));
+    EXPECT_FALSE(queue.push(6));
 }
 
 

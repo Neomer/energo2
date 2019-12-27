@@ -41,6 +41,9 @@ public:
      */
     ThreadSafeArray(std::initializer_list<TElement> args)
     {
+        if (args.size() > NElements) {
+            throw std::range_error{"Слишком много значений."};
+        }
         auto it = args.begin();
         for (size_t idx = 0; it != args.end(); ++idx, ++it) {
             _items[idx] = *it;

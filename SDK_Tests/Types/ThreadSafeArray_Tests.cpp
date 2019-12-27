@@ -99,5 +99,4 @@ TEST_F(ThreadSafeArray_Tests, CopyFromRawArrayTooManyItemsMustThrowsException) {
     EXPECT_THROW(array.copyFrom(src, 0, 0, 3), range_error);
 }
 
-
 #pragma clang diagnostic pop

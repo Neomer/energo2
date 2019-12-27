@@ -33,7 +33,9 @@ public:
     ThreadSafeQueue(std::initializer_list<TElement> args) :
         _queue{args}, _readIdx{0}, _writeIdx{args.size()}
     {
-
+        if (_writeIdx == size()) {
+            _writeIdx = 0;
+        }
     }
 
     [[nodiscard]] inline size_t count() const noexcept {
@@ -44,32 +46,35 @@ public:
         return NElements;
     }
 
+    [[nodiscard]] inline bool full() const noexcept {
+        return count() == size();
+    }
+
     [[nodiscard]] inline bool any() const {
-        return _writeIdx != _readIdx;
+        return _writeIdx != _readIdx || _readIdx != 0;
     }
 
     [[nodiscard]] bool push(const TElement &element) {
         std::lock_guard grd{_mtx};
-        if (_writeIdx == size()) {
-            if (_readIdx != 0) {
-                _writeIdx = 0;
-            } else {
-                return false;
-            }
+        if (full()) {
+            return false;
         }
         _queue.set(_writeIdx++, element);
+        if (_writeIdx == size()) {
+            _writeIdx == 0;
+        }
         return true;
     }
 
     [[nodiscard]] bool take(TElement &element) {
         std::lock_guard grd{_mtx};
-        if (_writeIdx == _readIdx) {
+        if (_writeIdx == _readIdx && !full()) {
             return false;
         }
+        element = _queue.get(_readIdx++);
         if (_readIdx == size()) {
             _readIdx == 0;
         }
-        element = _queue.get(_readIdx++);
         defragmentation();
         return true;
     }

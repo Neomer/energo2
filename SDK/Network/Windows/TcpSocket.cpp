@@ -20,12 +20,20 @@ TcpSocket::TcpSocket(SocketDescriptorType descriptor) :
 
 }
 
-bool TcpSocket::open(energo::io::IODevice<char>::OpenMode openMode) {
-    return false;
+TcpSocket::TcpSocket() {
+
 }
 
-void TcpSocket::close() {
-    closesocket(static_cast<SOCKET>(_socketDescriptor));
+TcpSocket::~TcpSocket() {
+
+}
+
+std::future<size_t> TcpSocket::write(energo::io::IOStream<char> &stream) {
+    return std::future<size_t>();
+}
+
+TcpSocket &TcpSocket::onBytesAvailable(function<void(io::IOStream<char> &)> &dataListener) {
+    return *this;
 }
 
 #endif
