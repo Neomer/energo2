@@ -40,3 +40,8 @@ const TypeMetadata *MetadataProvider::find(const function<bool(const meta::TypeM
     }
     return (it != _metadataVector.end()) ? *it : nullptr;
 }
+
+MetadataProvider *MetadataProvider::GetStatic() {
+    static auto staticMetadataProvider = new MetadataProvider{};
+    return staticMetadataProvider;
+}

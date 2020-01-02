@@ -19,6 +19,29 @@ using namespace energo::meta;
 using namespace energo::exceptions;
 using namespace energo::benchmark;
 
+
+managers::EntityManager *managers::EntityManager::GetEntityManager(const types::Uuid &entityTypeUid) {
+    auto metadata = MetadataProvider::GetStatic()->find(
+            [&entityTypeUid](const TypeMetadata *metadata) -> bool {
+                auto classMetadata = dynamic_cast<const ClassMetadata *>(metadata);
+                if (classMetadata == nullptr) {
+                    return false;
+                }
+                if (classMetadata->getParentTypeUid() != ENTITYMANAGER_TYPE_UID) {
+                    return false;
+                }
+                auto entityManagerMetadata = dynamic_cast<const EntityManagerMetadata *>(metadata);
+                if (entityManagerMetadata == nullptr) {
+                    return false;
+                }
+                return entityManagerMetadata->getEntityTypeUid() == entityTypeUid;
+            });
+    if (metadata == nullptr) {
+        return nullptr;
+    }
+    return reinterpret_cast<EntityManager *>(const_cast<SingletonClassMetadata *>(dynamic_cast<const SingletonClassMetadata *>(metadata))->createInstance());
+}
+
 managers::EntityManager::EntityManager(const energo::db::DatabaseConnectionProvider &provider,
                                        const energo::types::Uuid &typeUid,
                                        const energo::types::Uuid &entityTypeUid,
@@ -58,7 +81,7 @@ std::shared_ptr<energo::db::entity::DatabaseStoredEntity> managers::EntityManage
     timer.lap("SQL query ready");
 
     auto result = connection->exec(sql);
-    timer.lap("SQL execution");
+    timer.lap("SQL executed");
     if (!result->any()) {
         return shared_ptr<DatabaseStoredEntity>(nullptr);
     }
@@ -123,6 +146,7 @@ const Uuid &managers::EntityManager::getEntityTypeUid() const {
 }
 
 void managers::EntityManager::update(const IdentifiedEntity &entity) const {
+    BenchmarkTimer timer("entity update");
     auto connection = _connectionProvider.getConnection();
     if (connection == nullptr) {
         throw DatabaseConnectionIsClosedException();
@@ -140,6 +164,7 @@ void managers::EntityManager::update(const IdentifiedEntity &entity) const {
             ))
             .values(fieldValues)
             .build();
+    timer.lap("SQL query ready");
     
     auto result = connection->exec(sql);
 }
@@ -198,4 +223,15 @@ void managers::EntityManager::saveAll(const std::vector<const entity::Identified
     
     auto sql = queryBuilder->build();
     auto result = connection->exec(sql);
+}
+
+
+managers::EntityManagerMetadata::EntityManagerMetadata(const types::Uuid &entityTypeUid) :
+    _entityTypeUid{entityTypeUid}
+{
+
+}
+
+const Uuid &managers::EntityManagerMetadata::getEntityTypeUid() const {
+    return _entityTypeUid;
 }

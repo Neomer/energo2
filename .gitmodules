@@ -13,3 +13,6 @@
 [submodule "External/date"]
 	path = External/date
 	url = https://github.com/HowardHinnant/date.git
+[submodule "External/libzmq"]
+	path = External/libzmq
+	url = https://github.com/zeromq/libzmq.git

@@ -19,6 +19,8 @@ class EXPORTS MetadataProvider {
     std::vector<const meta::TypeMetadata *> _metadataVector;
 
 public:
+    static MetadataProvider *GetStatic();
+    
     /**
      * Зарегистрировать в контейнере метаданные для типа.
      * @param metadata Метаданные типа.
@@ -41,5 +43,8 @@ public:
 };
 
 }
+
+
+#define META_TYPE(className)    metadataProvider.registerMetadata(new className());
 
 #endif //ENERGO_METADATAPROVIDER_H

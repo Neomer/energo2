@@ -29,6 +29,12 @@ public:
     [[nodiscard]] const SqlQueryBuilder *queryBuilder() const override;
 
     [[nodiscard]] const TransformationProvider &transformationProvider() const override;
+    
+    void beginTransaction(IsolationLevel isolationLevel) override;
+    
+    void commit() override;
+    
+    void rollback() override;
 };
 
 }

@@ -5,6 +5,7 @@
 #ifndef ENERGO_POSTGRESQLCONNECTIONPROVIDER_H
 #define ENERGO_POSTGRESQLCONNECTIONPROVIDER_H
 
+#include "../../../Metadata/SingletonClassMetadata.h"
 #include "../../DatabaseConnectionProvider.h"
 
 namespace energo::db::adapters {
@@ -16,6 +17,16 @@ public:
 protected:
     DatabaseConnection *
     createConnection(std::random_device &randomDevice, const DatabaseConnectionSettings &connectionSettings) override;
+};
+
+class EXPORTS PostgreSqlConnectionProviderMetadata : public meta::SingletonClassMetadata {
+public:
+    PostgreSqlConnectionProviderMetadata();
+    
+    [[nodiscard]] std::string_view getTypeName() const override;
+
+protected:
+    void *createInstanceInternal() const override;
 };
 
 }

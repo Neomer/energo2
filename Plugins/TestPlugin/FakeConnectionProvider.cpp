@@ -11,7 +11,7 @@ using namespace energo::db;
 using namespace energo::db::adapters;
 
 FakeConnectionProvider::FakeConnectionProvider(const DatabaseConnectionSettings &connectionSettings) :
-    DatabaseConnectionProvider(connectionSettings)
+    DatabaseConnectionProvider(connectionSettings, types::Uuid{1284478206979424545ull, 10495803954008826957ull})
 {
     cout << "Provider constructed.\n";
 }
@@ -23,7 +23,6 @@ DatabaseConnection *FakeConnectionProvider::createConnection(random_device &rand
 FakeConnectionProvider::~FakeConnectionProvider() {
     cout << "Provider destructed.\n";
 }
-
 
 extern "C" DatabaseConnectionProvider * EXPORTS create_provider(const DatabaseConnectionSettings &connectionSettings) {
     return new FakeConnectionProvider(connectionSettings);

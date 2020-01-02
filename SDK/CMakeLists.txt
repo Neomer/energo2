@@ -5,6 +5,8 @@ project(SDK)
 
 include_directories(../External/fmtlib/include)
 include_directories(../External/date/include)
+include_directories(../External/libzmq/include)
+
 find_package(PostgreSQL REQUIRED)
 if (NOT ${PostgreSQL_FOUND})
     message("PostrgreSql isn't found!")
@@ -46,17 +48,37 @@ set(SOURCE_EXE global.h Types/Uuid.cpp Types/Uuid.h
         Metadata/MetadataProvider.cpp Metadata/MetadataProvider.h
         Metadata/ClassMetadata.cpp Metadata/ClassMetadata.h
         Metadata/TypeMetadata.cpp Metadata/TypeMetadata.h
-        Database/Model/EntityMetadataRegistrar.cpp Database/Model/EntityMetadataRegistrar.h
         Database/Managers/UserManager.cpp Database/Managers/UserManager.h
         Database/Managers/EntityManager.cpp Database/Managers/EntityManager.h
         Metadata/EntityMetadata.cpp Metadata/EntityMetadata.h
         Database/DatabaseConnectionProvider.cpp Database/DatabaseConnectionProvider.h
         Database/Adapters/PostgreSql/PostgreSqlConnectionProvider.cpp Database/Adapters/PostgreSql/PostgreSqlConnectionProvider.h
-        Database/SqlConditionBuilder.cpp Database/SqlConditionBuilder.h classes.h Database/SqlInsertQueryBuilder.cpp Database/SqlInsertQueryBuilder.h Database/Adapters/PostgreSql/PostgreSqlInsertQueryBuilder.cpp Database/Adapters/PostgreSql/PostgreSqlInsertQueryBuilder.h Database/SqlUpdateQueryBuilder.cpp Database/SqlUpdateQueryBuilder.h Database/Adapters/PostgreSql/PostgreSqlUpdateQueryBuilder.cpp Database/Adapters/PostgreSql/PostgreSqlUpdateQueryBuilder.h Database/SqlDeleteQueryBuilder.cpp Database/SqlDeleteQueryBuilder.h Database/Adapters/PostgreSql/PostgreSqlDeleteQueryBuilder.cpp Database/Adapters/PostgreSql/PostgreSqlDeleteQueryBuilder.h ../Tools/HashGen/main.cpp Plugin/PluginLoader.h Plugin/PluginLoader_linux.cpp Plugin/Plugin.cpp Plugin/Plugin.h Plugin/PluginInfo.h ../Plugins/TestPlugin/PluginInfo.cpp Types/Version.cpp Types/Version.h Plugin/PluginLoader_win.cpp Data/DataProvider.cpp Data/DataProvider.h)
+        Database/SqlConditionBuilder.cpp Database/SqlConditionBuilder.h
+        classes.h
+        Database/SqlInsertQueryBuilder.cpp Database/SqlInsertQueryBuilder.h
+        Database/Adapters/PostgreSql/PostgreSqlInsertQueryBuilder.cpp Database/Adapters/PostgreSql/PostgreSqlInsertQueryBuilder.h
+        Database/SqlUpdateQueryBuilder.cpp Database/SqlUpdateQueryBuilder.h
+        Database/Adapters/PostgreSql/PostgreSqlUpdateQueryBuilder.cpp Database/Adapters/PostgreSql/PostgreSqlUpdateQueryBuilder.h
+        Database/SqlDeleteQueryBuilder.cpp Database/SqlDeleteQueryBuilder.h
+        Database/Adapters/PostgreSql/PostgreSqlDeleteQueryBuilder.cpp Database/Adapters/PostgreSql/PostgreSqlDeleteQueryBuilder.h
+        Plugin/PluginLoader.h Plugin/PluginLoader_linux.cpp Plugin/PluginLoader_win.cpp
+        Plugin/Plugin.cpp Plugin/Plugin.h
+        Plugin/PluginInfo.h
+        Types/Version.cpp Types/Version.h
+        Data/DataProvider.cpp Data/DataProvider.h
+        Database/Patch/Patch.cpp Database/Patch/Patch.h
+        Database/Adapters/PostgreSql/Patches/InitialPatch.cpp Database/Adapters/PostgreSql/Patches/InitialPatch.h
+        Metadata/MetadataRegistrar.cpp Metadata/MetadataRegistrar.h
+        Metadata/SingletonClassMetadata.cpp Metadata/SingletonClassMetadata.h
+        Network/TcpSocket.h Network/Windows/TcpSocket.cpp
+        Network/NetworkHelper.h Network/Windows/NetworkHelper.cpp Network/Linux/NetworkHelper.cpp IO/IODevice.cpp IO/IODevice.h IO/AsyncIODevice.cpp IO/AsyncIODevice.h Types/ThreadSafeArray.h Types/ThreadSafeQueue.h IO/IOStream.cpp IO/IOStream.h IO/IOException.cpp IO/IOException.h Network/Linux/TcpSocket.cpp Network/ConnectionPoint.cpp Network/ConnectionPoint.h Network/NetException.cpp Network/NetException.h IO/Device.cpp IO/Device.h Network/Linux/TcpServer.cpp Network/TcpServer.h Types/DynamicSizeQueue.cpp Types/DynamicSizeQueue.h)
 
 add_library(${PROJECT_NAME} SHARED ${SOURCE_EXE})
 
-target_link_libraries(${PROJECT_NAME} fmt ${PostgreSQL_LIBRARIES})
+target_link_libraries(${PROJECT_NAME} fmt ${PostgreSQL_LIBRARIES} libzmq)
+if(WIN32)
+    target_link_libraries(${PROJECT_NAME} wsock32 ws2_32)
+endif()
 
 set_target_properties(${PROJECT_NAME} PROPERTIES LINKER_LANGUAGE CXX)
 set(CMAKE_CXX_STANDARD 17)
