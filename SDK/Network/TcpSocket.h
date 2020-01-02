@@ -21,9 +21,9 @@ class EXPORTS TcpSocket : public io::IODevice<char> {
 public:
     using SocketDescriptorType =
 #ifdef ENVIRONMENT64
-    uint64_t;
+    int64_t;
 #else
-    uint32_t ;
+    int32_t ;
 #endif
 
 protected:
@@ -31,14 +31,15 @@ protected:
 
 private:
     std::optional<std::function<void(io::IOStream<char> &)>> _dataListener;
-    std::thread _readThread;
     std::atomic_bool _run;
     io::IOStream<char> _inputStream;
     net::ConnectionPoint _remotePoint;
     io::Device::OpenMode _mode;
 
 public:
-    TcpSocket(SocketDescriptorType descriptor);
+    [[nodiscard]] static bool IsValid(SocketDescriptorType descriptor);
+    
+    TcpSocket(SocketDescriptorType descriptor, ConnectionPoint remoteConnectionPoint);
     
     TcpSocket();
     
@@ -61,9 +62,13 @@ public:
     std::future<size_t> write(io::IOStream<char> &stream) override;
     
     TcpSocket &onBytesAvailable(std::function<void(io::IOStream<char> &)> &dataListener);
+    
+    [[nodiscard]] bool valid() const;
 
 protected:
     void readProc();
+    
+    void writeProc();
     
 };
 

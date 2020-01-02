@@ -10,9 +10,10 @@ namespace energo::io {
 class Device {
 public:
     enum class OpenMode {
-        ReadOnly,
-        WriteOnly,
-        ReadWrite
+        None = 0,
+        ReadOnly = 1,
+        WriteOnly = 2,
+        ReadWrite = 3
     };
     
     Device() = default;

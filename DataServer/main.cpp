@@ -10,7 +10,7 @@
 #include <Database/Adapters/PostgreSql/PostgreSqlConnectionProvider.h>
 #include <Plugin/PluginLoader.h>
 #include <Metadata/MetadataRegistrar.h>
-#include <zmq.h>
+#include <Network/TcpServer.h>
 
 using namespace std;
 using namespace energo;
@@ -64,17 +64,20 @@ int main(int argv, char **argc) {
     connectionProvider->initialize(1);
     timer.lap("all connections are open");
 
-    auto context = zmq_ctx_new();
-    zmq_ctx_set(context, ZMQ_IO_THREADS, 4);
-    auto socket = zmq_socket(context, ZMQ_PUB);
-    zmq_connect(socket, "tcp://lib.ru:80");
-    zmq_setsockopt(socket, ZMQ_IDENTITY, nullptr, 0);
+    net::TcpServer server;
+    if (!server.bind(net::ConnectionPoint{"0.0.0.0", 5551})) {
+        throw runtime_error{"Не удалось связать сервер с портом."};
+    }
+    server.onConnectionReadyListener(
+            [](std::shared_ptr<net::TcpSocket> socket) {
+                cout << "Новое подключение!\n";
+                socket->close();
+            });
+    server.listen();
     
-    zmq_send(socket, nullptr, 0, ZMQ_NOBLOCK);
+    getchar();
     
-    zmq_close (socket);
-    zmq_ctx_destroy (context);
-
+    server.close();
     connectionProvider->release();
     delete connectionProvider;
 
