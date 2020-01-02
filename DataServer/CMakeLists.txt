@@ -14,9 +14,10 @@ else(NOT ${PostgreSQL_FOUND})
 endif(NOT ${PostgreSQL_FOUND})
 
 include_directories(../SDK)
+include_directories(../External/libzmq/include)
 
 add_executable(${PROJECT_NAME} ${SOURCE_EXE})
-target_link_libraries(${PROJECT_NAME} SDK ${PostgreSQL_LIBRARIES})
+target_link_libraries(${PROJECT_NAME} SDK ${PostgreSQL_LIBRARIES} libzmq)
 
 set_target_properties(${PROJECT_NAME} PROPERTIES LINKER_LANGUAGE CXX)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)

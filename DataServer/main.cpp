@@ -10,7 +10,7 @@
 #include <Database/Adapters/PostgreSql/PostgreSqlConnectionProvider.h>
 #include <Plugin/PluginLoader.h>
 #include <Metadata/MetadataRegistrar.h>
-#include <Network/NetworkHelper.h>
+#include <zmq.h>
 
 using namespace std;
 using namespace energo;
@@ -64,9 +64,17 @@ int main(int argv, char **argc) {
     connectionProvider->initialize(1);
     timer.lap("all connections are open");
 
-    net::NetworkHelper::Initialize();
+    auto context = zmq_ctx_new();
+    zmq_ctx_set(context, ZMQ_IO_THREADS, 4);
+    auto socket = zmq_socket(context, ZMQ_PUB);
+    zmq_connect(socket, "tcp://lib.ru:80");
+    zmq_setsockopt(socket, ZMQ_IDENTITY, nullptr, 0);
+    
+    zmq_send(socket, nullptr, 0, ZMQ_NOBLOCK);
+    
+    zmq_close (socket);
+    zmq_ctx_destroy (context);
 
-    net::NetworkHelper::Release();
     connectionProvider->release();
     delete connectionProvider;
 

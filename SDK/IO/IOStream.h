@@ -49,10 +49,9 @@ public:
     }
     
     [[nodiscard]] size_t write(const TDataType *buffer, size_t size) {
-        auto ptr = buffer;
-        size_t write = 0;
-        while (size-- && _queue.push(*ptr++)) {
-            write++;
+        size_t write;
+        if (!_queue.push(buffer, size, write)) {
+            throw exceptions::IOException{"Буффер переполнен."};
         }
         return write;
     }

@@ -16,16 +16,11 @@ class ThreadSafeQueue {
     ThreadSafeArray<TElement, NElements> _queue;
     size_t _readIdx, _writeIdx;
     std::mutex _mtx;
-
-    inline void assertIndex(size_t index) {
-        if (index >= NElements) {
-            throw std::range_error("Индекс элемента выходит за границы допустимых значений.");
-        }
-    }
+    bool _rounded;
 
 public:
     ThreadSafeQueue() :
-        _readIdx{0}, _writeIdx{0}
+        _readIdx{0}, _writeIdx{0}, _rounded{false}
     {
 
     }
@@ -35,11 +30,14 @@ public:
     {
         if (_writeIdx == size()) {
             _writeIdx = 0;
+            _rounded = true;
+        } else {
+            _rounded = false;
         }
     }
 
     [[nodiscard]] inline size_t count() const noexcept {
-        return _writeIdx > 0 ? _writeIdx - _readIdx : NElements - _readIdx + _writeIdx;
+        return _rounded ? NElements - _readIdx + _writeIdx : _writeIdx - _readIdx;
     }
 
     [[nodiscard]] inline size_t size() const noexcept {
@@ -51,7 +49,7 @@ public:
     }
 
     [[nodiscard]] inline bool any() const {
-        return _writeIdx != _readIdx || _readIdx != 0;
+        return _writeIdx != _readIdx || _rounded;
     }
 
     [[nodiscard]] bool push(const TElement &element) {
@@ -61,19 +59,41 @@ public:
         }
         _queue.set(_writeIdx++, element);
         if (_writeIdx == size()) {
-            _writeIdx == 0;
+            _rounded = true;
+            _writeIdx = 0;
         }
         return true;
     }
-
+    
+    [[nodiscard]] bool push(const TElement *data, size_t size, size_t &actualPushed) {
+        std::lock_guard grd{_mtx};
+        actualPushed = std::min<size_t>(size, this->size() - count());
+        if (!actualPushed) {
+            return false;
+        }
+        auto available = _rounded ? _readIdx - _writeIdx : this->size() - _writeIdx;
+        _queue.copyFrom(data, 0, _writeIdx, available);
+        _writeIdx += available;
+        if (_writeIdx == this->size()) {
+            auto remain = actualPushed - available;
+            if (remain) {
+                _queue.copyFrom(data, 0, available, remain);
+            }
+            _writeIdx = remain;
+            _rounded = true;
+        }
+        return true;
+    }
+    
     [[nodiscard]] bool take(TElement &element) {
         std::lock_guard grd{_mtx};
-        if (_writeIdx == _readIdx && !full()) {
+        if (!any()) {
             return false;
         }
         element = _queue.get(_readIdx++);
         if (_readIdx == size()) {
             _readIdx == 0;
+            _rounded = false;
         }
         defragmentation();
         return true;
@@ -81,7 +101,7 @@ public:
     
     [[nodiscard]] bool take(TElement *buffer, size_t size, size_t &actualSize) {
         std::lock_guard grd{_mtx};
-        if (_writeIdx == _readIdx) {
+        if (!any()) {
             return false;
         }
         actualSize = std::min<size_t>(size, NElements - _readIdx);
@@ -112,6 +132,7 @@ private:
         if (_readIdx == _writeIdx) {
             _readIdx = 0;
             _writeIdx = 0;
+            _rounded = false;
         }
     }
 };

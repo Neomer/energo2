@@ -15,7 +15,7 @@ TEST_F(ThreadSafeQueue_Tests, ReadEmptyQueueMustReturnsFalse) {
     EXPECT_FALSE(queue.take(value));
 }
 
-TEST_F(ThreadSafeQueue_Tests, FullQueueMuReturnFalseOnInsert) {
+TEST_F(ThreadSafeQueue_Tests, FullQueueMustReturnFalseOnInsert) {
     ThreadSafeQueue<int, 1> queue;
     EXPECT_TRUE(queue.push(1));
     EXPECT_EQ(queue.count(), 1);
@@ -61,9 +61,8 @@ TEST_F(ThreadSafeQueue_Tests, ReadToArrayWithSwapReadPointerToBegin) {
     EXPECT_EQ(b[0], 1);
     EXPECT_EQ(b[1], 2);
     EXPECT_EQ(queue.getReadIdx(), 2);
-    EXPECT_EQ(queue.getWriteIdx(), 4);
+    EXPECT_EQ(queue.getWriteIdx(), 0);
 }
-
 
 TEST_F(ThreadSafeQueue_Tests, WriteToFullQueueAfterOnReadingMustReturnsFalse) {
     ThreadSafeQueue<int, 5> queue{ 1, 2, 3, 4, 5 };
@@ -74,6 +73,35 @@ TEST_F(ThreadSafeQueue_Tests, WriteToFullQueueAfterOnReadingMustReturnsFalse) {
     EXPECT_EQ(val, 1);
     EXPECT_TRUE(queue.push(5));
     EXPECT_FALSE(queue.push(6));
+}
+
+TEST_F(ThreadSafeQueue_Tests, AfterReadingAllDataReadAndWriteIndexesMustSetToZero) {
+    ThreadSafeQueue<int, 3> queue{ 1, 2, 3 };
+    EXPECT_EQ(queue.getReadIdx(), 0);
+    EXPECT_EQ(queue.getWriteIdx(), 0);
+    int val = 0;
+    EXPECT_TRUE(queue.take(val));
+    EXPECT_EQ(val, 1);
+    EXPECT_TRUE(queue.push(5));
+    int buf[5];
+    size_t read = 0;
+    EXPECT_TRUE(queue.take(buf, 3, read));
+    EXPECT_EQ(buf[0], 2);
+    EXPECT_EQ(buf[1], 3);
+    EXPECT_EQ(buf[2], 5);
+    EXPECT_EQ(queue.getReadIdx(), 0);
+    EXPECT_EQ(queue.getWriteIdx(), 0);
+}
+
+
+TEST_F(ThreadSafeQueue_Tests, PushTooLongArrayMustWriteAtLeastQueueSizeItems) {
+    ThreadSafeQueue<int, 3> queue;
+    int b[] = {1, 2, 3, 4, 5};
+    size_t written = 0;
+    EXPECT_TRUE(queue.push(b, 5, written));
+    EXPECT_EQ(written, queue.size());
+    EXPECT_EQ(written, queue.count());
+    EXPECT_TRUE(queue.full());
 }
 
 

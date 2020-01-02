@@ -10,6 +10,7 @@
 #include <string_view>
 #include <future>
 #include "IOStream.h"
+#include "Device.h"
 
 namespace energo::io {
 
@@ -18,21 +19,8 @@ namespace energo::io {
  * @tparam TDataType Тип элемента массива данных.
  */
 template<typename TDataType>
-class EXPORTS IODevice {
+class EXPORTS IODevice : Device {
 public:
-    enum class OpenMode {
-        ReadOnly,
-        WriteOnly,
-        ReadWrite
-    };
-
-    IODevice() = default;
-    virtual ~IODevice() = default;
-
-    virtual bool open(OpenMode openMode) = 0;
-    
-    virtual void close() = 0;
-
     virtual std::future<size_t> write(IOStream<TDataType> &stream) = 0;
     
     virtual std::future<size_t> read(IOStream<TDataType> &stream) = 0;
