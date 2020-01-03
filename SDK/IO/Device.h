@@ -9,6 +9,9 @@ namespace energo::io {
 
 class Device {
 public:
+    /**
+     * Вариант открытия устройства.
+     */
     enum class OpenMode {
         None = 0,
         ReadOnly = 1,

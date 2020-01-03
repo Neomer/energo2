@@ -104,6 +104,24 @@ TEST_F(ThreadSafeQueue_Tests, PushTooLongArrayMustWriteAtLeastQueueSizeItems) {
     EXPECT_TRUE(queue.full());
 }
 
+TEST_F(ThreadSafeQueue_Tests, WriteString) {
+    ThreadSafeQueue<char, 10> queue;
+    size_t written;
+    EXPECT_TRUE(queue.push("Hello", 6, written));
+    EXPECT_EQ(written, 6);
+    EXPECT_EQ(queue.getWriteIdx(), 6);
+}
+
+
+TEST_F(ThreadSafeQueue_Tests, ReadShortString) {
+    ThreadSafeQueue<char, 10> queue{ 'H', 'e', 'l', 'l', 'o', 0 };
+    char buf[256];
+    size_t read;
+    EXPECT_TRUE(queue.take(buf, 256, read));
+    EXPECT_EQ(read, 6);
+    EXPECT_EQ(strcmp(buf, "Hello"), 0);
+}
+
 
 
 #pragma clang diagnostic pop

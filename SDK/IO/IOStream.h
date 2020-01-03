@@ -61,6 +61,8 @@ public:
     }
 };
 
+using StringStream = IOStream<char>;
+
 }
 
 #endif //ENERGO_IOSTREAM_H

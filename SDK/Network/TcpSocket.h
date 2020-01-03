@@ -37,6 +37,20 @@ private:
     io::Device::OpenMode _mode;
 
 public:
+    /**
+     * Вариант обработки данных.
+     */
+    enum class DataProcessMode {
+        /**
+         * Получение и отправка данных будет осуществляться с помощью методов read и write.
+         */
+        Synchronous,
+        /**
+         * Получение и отправка данных будет осуществляться с помощью установки callback-функций.
+         */
+        Asynchronous
+    };
+    
     [[nodiscard]] static bool IsValid(SocketDescriptorType descriptor);
     
     TcpSocket(SocketDescriptorType descriptor, ConnectionPoint remoteConnectionPoint);
@@ -45,7 +59,19 @@ public:
     
     virtual ~TcpSocket();
     
+    /**
+     * Устанавливает вариант открытия устройства. По-умолчанию открывается в синхронном варианте работы с данными.
+     * Для изменения необходимо вызвать метод changeDataProcessMode().
+     * @param openMode Вариант открытия устройства.
+     * @return
+     */
     [[nodiscard]] bool open(io::Device::OpenMode openMode) override;
+    
+    /**
+     * Изменить вариант обработки данных.
+     * @param mode
+     */
+    void changeDataProcessMode(DataProcessMode mode);
     
     /**
      * Подключает сокет к удаленному хосту.

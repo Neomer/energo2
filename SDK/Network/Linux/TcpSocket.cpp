@@ -48,6 +48,9 @@ TcpSocket::~TcpSocket() {
 }
 
 future<size_t> TcpSocket::write(IOStream<char> &stream) {
+    if (_mode != io::Device::OpenMode::WriteOnly && _mode != io::Device::OpenMode::ReadWrite) {
+        throw exceptions::IOException{"Устройство не открыто для записи."};
+    }
     // TODO: вынести общую логику для асинхронных устройств ввода-вывода в базовый класс.
     auto future = async(launch::async,
                         [&stream, this]() -> size_t {
@@ -71,16 +74,6 @@ TcpSocket &TcpSocket::onBytesAvailable(function<void(io::IOStream<char> &)> &dat
 
 bool TcpSocket::open(io::Device::OpenMode openMode) {
     _mode = openMode;
-    _run = true;
-    if (static_cast<uint8_t>(openMode) & static_cast<uint8_t>(io::Device::OpenMode::ReadOnly)) {
-        thread readThread{bind(&TcpSocket::readProc, this)};
-        readThread.detach();
-    }
-    
-    if (static_cast<uint8_t>(openMode) & static_cast<uint8_t>(io::Device::OpenMode::WriteOnly)) {
-        thread writeThread{bind(&TcpSocket::writeProc, this)};
-        writeThread.detach();
-    }
 
     return _socketDescriptor != INVALID_SOCKET;
 }
@@ -93,6 +86,9 @@ void TcpSocket::close() {
 }
 
 future<size_t> TcpSocket::read(IOStream<char> &stream) {
+    if (_mode != io::Device::OpenMode::ReadOnly && _mode != io::Device::OpenMode::ReadWrite) {
+        throw exceptions::IOException{"Устройство не открыто для чтения."};
+    }
     return std::future<size_t>();
 }
 
@@ -129,7 +125,6 @@ void TcpSocket::writeProc() {
 
 }
 
-
 void TcpSocket::readProc() {
     char buffer[BUFFER_SIZE];
     while (_run) {
@@ -150,6 +145,23 @@ void TcpSocket::readProc() {
             }
         } catch (exception &ex) {
             cout << ex.what() << endl;
+        }
+    }
+}
+
+void TcpSocket::changeDataProcessMode(TcpSocket::DataProcessMode mode) {
+    if (mode == DataProcessMode::Synchronous) {
+        _run = false;
+    } else {
+        _run = true;
+        if (static_cast<uint8_t>(_mode) & static_cast<uint8_t>(io::Device::OpenMode::ReadOnly)) {
+            thread readThread{bind(&TcpSocket::readProc, this)};
+            readThread.detach();
+        }
+    
+        if (static_cast<uint8_t>(_mode) & static_cast<uint8_t>(io::Device::OpenMode::WriteOnly)) {
+            thread writeThread{bind(&TcpSocket::writeProc, this)};
+            writeThread.detach();
         }
     }
 }

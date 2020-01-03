@@ -70,7 +70,16 @@ int main(int argv, char **argc) {
     }
     server.onConnectionReadyListener(
             [](std::shared_ptr<net::TcpSocket> socket) {
+                BenchmarkTimer timer("socket processing");
                 cout << "Новое подключение!\n";
+                if (!socket->open(io::Device::OpenMode::WriteOnly)) {
+                    throw exceptions::IOException{"Не удалось открыть устройство на запись."};
+                }
+                io::StringStream stream;
+                if (stream.write("Hello!", 7) != 7) {
+                    throw exceptions::IOException{"Не удалось записать все данные в поток."};
+                }
+                socket->write(stream).get();
                 socket->close();
             });
     server.listen();

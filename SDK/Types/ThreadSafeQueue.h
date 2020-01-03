@@ -67,20 +67,24 @@ public:
     
     [[nodiscard]] bool push(const TElement *data, size_t size, size_t &actualPushed) {
         std::lock_guard grd{_mtx};
-        actualPushed = std::min<size_t>(size, this->size() - count());
+        auto available = _rounded ? _readIdx - _writeIdx : this->size() - _writeIdx;
+        actualPushed = std::min<size_t>(size, available);
         if (!actualPushed) {
             return false;
         }
-        auto available = _rounded ? _readIdx - _writeIdx : this->size() - _writeIdx;
-        _queue.copyFrom(data, 0, _writeIdx, available);
-        _writeIdx += available;
+        _queue.copyFrom(data, 0, _writeIdx, actualPushed);
+        _writeIdx += actualPushed;
         if (_writeIdx == this->size()) {
-            auto remain = actualPushed - available;
+            _writeIdx = 0;
+            _rounded = true;
+            auto remain = size - actualPushed;
+            available = _rounded ? _readIdx - _writeIdx : this->size() - _writeIdx;
+            remain = std::min<size_t>(remain, available);
             if (remain) {
                 _queue.copyFrom(data, 0, available, remain);
             }
             _writeIdx = remain;
-            _rounded = true;
+            actualPushed += remain;
         }
         return true;
     }
@@ -104,16 +108,19 @@ public:
         if (!any()) {
             return false;
         }
-        actualSize = std::min<size_t>(size, NElements - _readIdx);
+        auto available = _rounded ? this->size() - _readIdx : _writeIdx - _readIdx;
+        actualSize = std::min<size_t>(size, available);
         _queue.copyTo(buffer, _readIdx, 0, actualSize);
-        auto remain = size - actualSize;
-        if (remain > 0 && _writeIdx > 0) {
-            remain = std::min<size_t>(remain, _writeIdx);
+        _readIdx += actualSize;
+        if (_readIdx == this->size()) {
+            _rounded = false;
+            _readIdx = 0;
+            size -= actualSize;
+            available = _rounded ? this->size() - _readIdx : _writeIdx - _readIdx;
+            auto remain = std::min<size_t>(size, available);
             _queue.copyTo(buffer, 0, actualSize, remain);
             actualSize += remain;
             _readIdx = remain;
-        } else {
-            _readIdx += actualSize;
         }
         defragmentation();
         return true;
