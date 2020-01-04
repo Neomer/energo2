@@ -18,3 +18,8 @@
 #define DATABASEPROVIDER_TYPE_UID      energo::types::Uuid{2, 1}
 #define POSTGRESQLPROVIDER_TYPE_UID    energo::types::Uuid{2, 2}
 
+
+/***********
+ * Entity manager types
+ */
+#define THREADPOOL_TYPE_UID      energo::types::Uuid{3, 0}

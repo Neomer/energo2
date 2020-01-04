@@ -13,6 +13,7 @@
 #include <condition_variable>
 #include <atomic>
 #include "../Types/ThreadSafeDynamicQueue.h"
+#include "../Metadata/SingletonClassMetadata.h"
 
 namespace energo::threads {
 
@@ -53,6 +54,16 @@ public:
         
         return task_ptr->get_future();
     }
+};
+
+class ThreadPoolMetadata : public meta::SingletonClassMetadata {
+protected:
+    [[nodiscard]] void *createInstanceInternal() const override;
+
+public:
+    ThreadPoolMetadata();
+    
+    [[nodiscard]] std::string_view getTypeName() const override;
 };
 
 }

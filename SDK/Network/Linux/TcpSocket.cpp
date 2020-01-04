@@ -17,6 +17,8 @@
 #include <utility>
 #include "../TcpSocket.h"
 #include "../NetException.h"
+#include "../../Metadata/MetadataProvider.h"
+#include "../../Metadata/TypeUids.h"
 
 using namespace std;
 using namespace std::chrono;
@@ -31,7 +33,9 @@ TcpSocket::TcpSocket(TcpSocket::SocketDescriptorType descriptor, ConnectionPoint
     _mode{io::Device::OpenMode::None},
     _remotePoint{std::move(remoteConnectionPoint)}
 {
-
+    auto metadataProvider = meta::MetadataProvider::GetStatic();
+    auto threadPoolMetadata = const_cast<meta::SingletonClassMetadata *>(dynamic_cast<const meta::SingletonClassMetadata *>(metadataProvider->find(THREADPOOL_TYPE_UID)));
+    _threadPool = reinterpret_cast<threads::ThreadPool *>(threadPoolMetadata->createInstance());
 }
 
 TcpSocket::TcpSocket() :
@@ -40,7 +44,9 @@ TcpSocket::TcpSocket() :
     _run{false},
     _mode{io::Device::OpenMode::None}
 {
-
+    auto metadataProvider = meta::MetadataProvider::GetStatic();
+    auto threadPoolMetadata = const_cast<meta::SingletonClassMetadata *>(dynamic_cast<const meta::SingletonClassMetadata *>(metadataProvider->find(THREADPOOL_TYPE_UID)));
+    _threadPool = reinterpret_cast<threads::ThreadPool *>(threadPoolMetadata->createInstance());
 }
 
 TcpSocket::~TcpSocket() {
@@ -52,8 +58,7 @@ future<size_t> TcpSocket::write(IOStream<char> &stream) {
         throw exceptions::IOException{"Устройство не открыто для записи."};
     }
     // TODO: вынести общую логику для асинхронных устройств ввода-вывода в базовый класс.
-    auto future = async(launch::async,
-                        [&stream, this]() -> size_t {
+    auto future = _threadPool->execute([&stream, this]() -> size_t {
                                 char buffer[BUFFER_SIZE];
                                 size_t sent = 0;
                                 while (stream.count()) {

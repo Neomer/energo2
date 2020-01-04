@@ -14,6 +14,7 @@
 #include <atomic>
 #include "../IO/AsyncIODevice.h"
 #include "ConnectionPoint.h"
+#include "../Threads/ThreadPool.h"
 
 namespace energo::net {
 
@@ -35,6 +36,7 @@ private:
     io::IOStream<char> _inputStream;
     net::ConnectionPoint _remotePoint;
     io::Device::OpenMode _mode;
+    threads::ThreadPool *_threadPool;
 
 public:
     /**

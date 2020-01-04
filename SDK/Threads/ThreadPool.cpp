@@ -3,6 +3,7 @@
 //
 
 #include "ThreadPool.h"
+#include "../Metadata/TypeUids.h"
 
 using namespace std;
 using namespace energo::threads;
@@ -50,4 +51,20 @@ void ThreadPool::Worker::operator()() {
             func();
         }
     }
+}
+
+string_view ThreadPoolMetadata::getTypeName() const {
+    return "ThreadPool";
+}
+
+void *ThreadPoolMetadata::createInstanceInternal() const {
+    auto pool = new ThreadPool{10};
+    pool->init();
+    return pool;
+}
+
+ThreadPoolMetadata::ThreadPoolMetadata() :
+    SingletonClassMetadata(THREADPOOL_TYPE_UID, types::Uuid::Empty())
+{
+
 }

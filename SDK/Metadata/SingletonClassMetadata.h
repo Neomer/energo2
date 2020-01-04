@@ -17,14 +17,14 @@ public:
     
     void setInstance(void *instance);
     
-    [[nodiscard]] void *createInstance() const override final;
+    [[nodiscard]] void *createInstance() const final;
     
     [[nodiscard]] void *createInstance();
     
-    bool isReady() const;
+    [[nodiscard]] bool isReady() const;
 
 protected:
-    virtual void *createInstanceInternal() const = 0;
+    [[nodiscard]] virtual void *createInstanceInternal() const = 0;
 };
 
 }
