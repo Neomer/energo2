@@ -17,7 +17,11 @@ set(SOURCE_EXE main.cpp
         Database/SqlComparisonBuilder_Tests.cpp Database/SqlComparisonBuilder_Tests.h
         Database/Adapters/PostgreSql/PostgreSqlInsertQueryBuilder_Tests.cpp Database/Adapters/PostgreSql/PostgreSqlInsertQueryBuilder_Tests.h
         Database/Adapters/PostgreSql/PostgreSqlUpdateQueryBuilder_Tests.cpp Database/Adapters/PostgreSql/PostgreSqlUpdateQueryBuilder_Tests.h
-        Database/Adapters/PostgreSql/PostgreSqlDeleteQueryBuilder_Tests.cpp Database/Adapters/PostgreSql/PostgreSqlDeleteQueryBuilder_Tests.h Types/Version_Tests.cpp Types/Version_Tests.h Types/ThreadSafeArray_Tests.cpp Types/ThreadSafeArray_Tests.h Types/ThreadSafeQueue_Tests.cpp Types/ThreadSafeQueue_Tests.h)
+        Database/Adapters/PostgreSql/PostgreSqlDeleteQueryBuilder_Tests.cpp Database/Adapters/PostgreSql/PostgreSqlDeleteQueryBuilder_Tests.h
+        Types/Version_Tests.cpp Types/Version_Tests.h
+        Types/ThreadSafeArray_Tests.cpp Types/ThreadSafeArray_Tests.h
+        Types/ThreadSafeQueue_Tests.cpp Types/ThreadSafeQueue_Tests.h
+        Threads/ThreadPool_Tests.cpp Threads/ThreadPool_Tests.h)
 
 include_directories(../SDK)
 include_directories(../External/GoogleTest/googletest/include)

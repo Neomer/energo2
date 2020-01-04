@@ -61,12 +61,24 @@ public:
     }
 
     /**
-     * возвращает константный указатель на элемент массива с индексом index.
+     * Возвращает константный указатель на элемент массива с индексом index.
      * @param index Индекс элемента массива.
      * @throws std::range_error Некорректный индекс элемента массива.
      * @return
      */
-    [[nodiscard]] const TElement &get(size_t index) {
+    [[nodiscard]] const TElement &get(size_t index) const {
+        assertIndex(index);
+        std::lock_guard grd(_mtx);
+        return _items[index];
+    }
+    
+    /**
+     * Возвращает указатель на элемент массива с индексом index.
+     * @param index Индекс элемента массива.
+     * @throws std::range_error Некорректный индекс элемента массива.
+     * @return
+     */
+    [[nodiscard]] TElement &get(size_t index) {
         assertIndex(index);
         std::lock_guard grd(_mtx);
         return _items[index];
@@ -83,7 +95,18 @@ public:
         std::lock_guard grd(_mtx);
         _items[index] = element;
     }
-
+    
+    /**
+     * Устанавливает значение элементу массива.
+     * @param index Индекс элемента массива.
+     * @param element Новое значение.
+     * @throws std::range_error Некорректный индекс элемента массива.
+     */
+    void set__(size_t index, TElement element) {
+        assertIndex(index);
+        std::lock_guard grd(_mtx);
+        _items[index] = element;
+    }
     /**
      * Копирует несколько элементов внутрь массива.
      * @param data массив элементов, из которого происходит копирование элементов.

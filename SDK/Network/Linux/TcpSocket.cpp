@@ -6,8 +6,8 @@
 
 #ifdef OS_LINUX
 
-#define INVALID_SOCKET  -1
-#define BUFFER_SIZE     10240
+#define INVALID_SOCKET      (-1)
+#define BUFFER_SIZE         10240
 
 #include <sys/socket.h>
 #include <sys/types.h>
@@ -59,7 +59,8 @@ future<size_t> TcpSocket::write(IOStream<char> &stream) {
                                 while (stream.count()) {
                                     auto read = stream.read(buffer, 10240);
                                     sent += read;
-                                    while ((read -= send(_socketDescriptor, buffer, read, 0)) > 0);
+                                    size_t written = 0;
+                                    while ((written += send(_socketDescriptor, buffer + written, read - written, 0)) < read);
                                 }
                                 return sent;
                             });
@@ -138,6 +139,9 @@ void TcpSocket::readProc() {
             if (read) {
                 //TODO: обработка кейса, когда не удалось положить все данные в поток.
                 auto written = _inputStream.write(buffer, read);
+                if (written < read) {
+                    throw exceptions::NetException{"Не все данные были отправлены."};
+                }
                 _dataListener.value()(_inputStream);
             } else {
                 _run = false;
@@ -166,7 +170,7 @@ void TcpSocket::changeDataProcessMode(TcpSocket::DataProcessMode mode) {
     }
 }
 
-
+#undef INVALID_SOCKET
 #undef BUFFER_SIZE
 
 
