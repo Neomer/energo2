@@ -13,8 +13,10 @@ namespace energo::ui {
 class EXPORTS Button : public Widget {
 public:
     Button();
+    explicit Button(std::string_view label);
+    explicit Button(std::string_view label, const std::function<void()> &clickedListener);
     
-    Button &label(std::string_view label);
+    void setOnClickListener(const std::function<void()> &listener);
 };
 
 }

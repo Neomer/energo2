@@ -15,25 +15,47 @@ using namespace std;
 using namespace energo::ui;
 
 Window::Window(Window *parent) :
-    _instance{new Gtk::Window{}},
-    _windowState{WindowState::Normal},
-    _visible{true},
-    _parent{parent},
-    _toolbar{nullptr},
-    _statusBar{nullptr},
-    _actionbar{nullptr},
-    _generalLayout{new VerticalLayout{}},
-    _contentLayout{new VerticalLayout{}}
+        _instance{new Gtk::Window{}},
+        _windowState{WindowState::Normal},
+        _visible{true},
+        _parent{parent},
+        _toolbar{nullptr},
+        _statusBar{nullptr},
+        _actionBar{nullptr},
+        _generalLayout{new VerticalLayout{}},
+        _contentLayout{new VerticalLayout{}}
 {
-    cast(_instance)->set_default_geometry(600, 400);
+    cast(_instance)->set_position(parent != nullptr ? Gtk::WIN_POS_CENTER_ON_PARENT : Gtk::WIN_POS_CENTER_ALWAYS);
     gtk_container_add(GTK_CONTAINER(cast(_instance)->gobj()), reinterpret_cast<Gtk::Widget *>(_generalLayout->instance())->gobj());
-    _generalLayout->append(shared_ptr<Widget>(_contentLayout), Layout::SizePolicy::Expand);
+    _generalLayout->append(
+            shared_ptr<Widget>(_contentLayout),
+                    Layout::SizePolicy::Expand,
+                    Layout::Align::Fill);
+}
+
+Window::Window(void *instance, Window *parent) :
+        _instance{instance},
+        _windowState{WindowState::Normal},
+        _visible{true},
+        _parent{parent},
+        _toolbar{nullptr},
+        _statusBar{nullptr},
+        _actionBar{nullptr},
+        _generalLayout{new VerticalLayout{}},
+        _contentLayout{new VerticalLayout{}}
+{
+    cast(_instance)->set_position(parent != nullptr ? Gtk::WIN_POS_CENTER_ON_PARENT : Gtk::WIN_POS_CENTER_ALWAYS);
+    gtk_container_add(GTK_CONTAINER(cast(_instance)->gobj()), reinterpret_cast<Gtk::Widget *>(_generalLayout->instance())->gobj());
+    _generalLayout->append(
+            shared_ptr<Widget>(_contentLayout),
+                    Layout::SizePolicy::Expand,
+                    Layout::Align::Fill);
 }
 
 Window::~Window() {
     delete _toolbar;
     delete _statusBar;
-    delete _actionbar;
+    delete _actionBar;
 }
 
 Window &Window::setState(WindowState state) {
@@ -78,25 +100,25 @@ Window &Window::setTitle(std::string_view title) {
 Window &Window::addToolBar(ToolBar *toolBar) {
     delete _toolbar;
     _toolbar = toolBar;
-    if (_actionbar != nullptr) {
-        _generalLayout->insert(std::shared_ptr<Widget>(toolBar), 1, Layout::SizePolicy::Stretch);
+    if (_actionBar != nullptr) {
+        _generalLayout->insert(std::shared_ptr<Widget>(toolBar), 1, Layout::SizePolicy::Stretch, Layout::Align::Fill);
     } else {
-        _generalLayout->append(std::shared_ptr<Widget>(toolBar), Layout::SizePolicy::Stretch);
+        _generalLayout->append(std::shared_ptr<Widget>(toolBar), Layout::SizePolicy::Stretch, Layout::Align::Fill);
     }
     return *this;
 }
 
 Window &Window::addActionBar(ActionBar *actionBar) {
-    delete _actionbar;
-    _actionbar = actionBar;
-    _generalLayout->prepend(std::shared_ptr<Widget>(actionBar), Layout::SizePolicy::Stretch);
+    delete _actionBar;
+    _actionBar = actionBar;
+    _generalLayout->prepend(std::shared_ptr<Widget>(actionBar), Layout::SizePolicy::Stretch, Layout::Align::Fill);
     return *this;
 }
 
 Window &Window::addStatusBar(StatusBar *statusBar) {
     delete _statusBar;
     _statusBar = statusBar;
-    _generalLayout->append(std::shared_ptr<Widget>(statusBar), Layout::SizePolicy::Stretch);
+    _generalLayout->append(std::shared_ptr<Widget>(statusBar), Layout::SizePolicy::Stretch, Layout::Align::Fill);
     return *this;
 }
 
@@ -109,4 +131,13 @@ Window &Window::setLayout(Layout *layout) {
 
 Layout *Window::contentLayout() {
     return _contentLayout;
+}
+
+Window &Window::setSize(int width, int height) {
+    cast(_instance)->set_default_geometry(width, height);
+    return *this;
+}
+
+void Window::close() {
+    cast(_instance)->close();
 }

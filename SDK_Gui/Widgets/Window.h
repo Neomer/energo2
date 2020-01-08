@@ -31,11 +31,12 @@ private:
     bool _visible;
     Window *_parent;
     ToolBar *_toolbar;
-    ActionBar *_actionbar;
+    ActionBar *_actionBar;
     StatusBar *_statusBar;
     Layout *_generalLayout, *_contentLayout;
 
 public:
+    explicit Window(void *instance, Window *parent);
     explicit Window(Window *parent);
     virtual ~Window();
     
@@ -45,15 +46,16 @@ public:
     Window &addActionBar(ActionBar *actionBar);
     Window &addStatusBar(StatusBar *statusBar);
     Window &setLayout(Layout *layout);
+    Window &setSize(int width, int height);
     
     Layout *contentLayout();
-    
     
     void *instance();
     
     void show();
-    
     void hide();
+    
+    void close();
 };
 
 }

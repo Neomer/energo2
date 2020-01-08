@@ -18,6 +18,18 @@ Button::Button() :
 
 }
 
-Button &Button::label(string_view label) {
-    cast(instance())->set_label(label.data());
+Button::Button(std::string_view label) :
+        Widget(new Gtk::Button{label.data()})
+{
+
+}
+
+Button::Button(std::string_view label, const std::function<void()> &clickedListener) :
+        Widget(new Gtk::Button{label.data()})
+{
+    setOnClickListener(clickedListener);
+}
+
+void Button::setOnClickListener(const std::function<void()> &listener) {
+    cast(instance())->signal_clicked().connect(listener);
 }

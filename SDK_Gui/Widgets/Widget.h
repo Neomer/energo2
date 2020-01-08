@@ -5,6 +5,7 @@
 #ifndef ENERGO_WIDGET_H
 #define ENERGO_WIDGET_H
 
+#include <functional>
 #include <global.h>
 
 namespace energo::ui {

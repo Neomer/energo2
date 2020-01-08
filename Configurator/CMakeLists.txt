@@ -11,7 +11,7 @@ include_directories( ${GTKMM_INCLUDE_DIRS} )
 link_directories(${GTKMM_LIBRARY_DIRS})
 
 set(CMAKE_CXX_STANDARD 17)
-set(SOURCE_EXE main.cpp UI/MainWindow.cpp UI/MainWindow.h)
+set(SOURCE_EXE main.cpp UI/MainWindow.cpp UI/MainWindow.h UI/LoginWindow.cpp UI/LoginWindow.h)
 
 add_executable(${PROJECT_NAME} ${SOURCE_EXE})
 

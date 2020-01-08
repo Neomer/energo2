@@ -10,7 +10,7 @@ include_directories( ${GTKMM_INCLUDE_DIRS} )
 link_directories(${GTKMM_LIBRARY_DIRS})
 
 set(CMAKE_CXX_STANDARD 17)
-set(SOURCE_EXE Widgets/Window.h Widgets/Window.cpp Widgets/Widget.cpp Widgets/Widget.h Widgets/ToolBar.cpp Widgets/ToolBar.h Widgets/ActionBar.cpp Widgets/ActionBar.h Widgets/StatusBar.cpp Widgets/StatusBar.h Widgets/ActionItem.cpp Widgets/ActionItem.h Widgets/TextActionItem.cpp Widgets/TextActionItem.h Widgets/Layout.cpp Widgets/Layout.h Widgets/VerticalLayout.cpp Widgets/VerticalLayout.h Widgets/Button.cpp Widgets/Button.h ViewModels/Menu.cpp ViewModels/Menu.h ViewModels/MenuItem.cpp ViewModels/MenuItem.h Widgets/IconButton.cpp Widgets/IconButton.h Widgets/TextBox.cpp Widgets/TextBox.h)
+set(SOURCE_EXE Widgets/Window.h Widgets/Window.cpp Widgets/Widget.cpp Widgets/Widget.h Widgets/ToolBar.cpp Widgets/ToolBar.h Widgets/ActionBar.cpp Widgets/ActionBar.h Widgets/StatusBar.cpp Widgets/StatusBar.h Widgets/ActionItem.cpp Widgets/ActionItem.h Widgets/TextActionItem.cpp Widgets/TextActionItem.h Widgets/Layout.cpp Widgets/Layout.h Widgets/VerticalLayout.cpp Widgets/VerticalLayout.h Widgets/Button.cpp Widgets/Button.h ViewModels/Menu.cpp ViewModels/Menu.h ViewModels/MenuItem.cpp ViewModels/MenuItem.h Widgets/IconButton.cpp Widgets/IconButton.h Widgets/TextBox.cpp Widgets/TextBox.h Widgets/Dialog.cpp Widgets/Dialog.h Widgets/Label.cpp Widgets/Label.h)
 
 add_library(${PROJECT_NAME} SHARED ${SOURCE_EXE})
 

@@ -5,6 +5,7 @@
 #include <glibmm/i18n.h>
 #include <ViewModels/Menu.h>
 #include <Widgets/TextBox.h>
+#include <Widgets/Label.h>
 #include "MainWindow.h"
 
 using namespace std;
@@ -16,8 +17,16 @@ MainWindow::MainWindow() :
     setState(ui::Window::WindowState::Maximized)
             .setTitle("Конфигуратор Energo Pro v.2")
             .addActionBar(new ActionBar{});
-
-    contentLayout()->append(shared_ptr<ui::Widget>{new ui::TextBox{}}, ui::Layout::SizePolicy::Stretch);
+    
+    contentLayout()->append(
+            shared_ptr<ui::Widget>{new ui::Label{_("Логин:")}},
+            ui::Layout::SizePolicy::Stretch,
+            ui::Layout::Align::Start);
+    
+    contentLayout()->append(
+            shared_ptr<ui::Widget>{new ui::TextBox{}},
+            ui::Layout::SizePolicy::Stretch,
+            ui::Layout::Align::Start);
     
     addStatusBar(new StatusBar{});
 }
