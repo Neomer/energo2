@@ -10,6 +10,8 @@ add_subdirectory(External/libzmq)
 # Core
 add_subdirectory(SDK)
 add_subdirectory(SDK_Tests)
+add_subdirectory(SDK_Gui)
+add_subdirectory(Configurator)
 add_subdirectory(DataServer)
 
 # Tools
