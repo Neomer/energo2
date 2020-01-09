@@ -21,6 +21,7 @@ inline Gtk::Align to_gtk_align(Layout::Align align) {
         case Layout::Align::Center: return Gtk::ALIGN_CENTER;
         case Layout::Align::End: return Gtk::ALIGN_END;
     }
+    return Gtk::ALIGN_BASELINE;
 }
 
 #define DEFAULT_PADDING     3

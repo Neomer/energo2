@@ -75,7 +75,7 @@ set(SOURCE_EXE global.h Types/Uuid.cpp Types/Uuid.h
 
 add_library(${PROJECT_NAME} SHARED ${SOURCE_EXE})
 
-target_link_libraries(${PROJECT_NAME} fmt ${PostgreSQL_LIBRARIES} libzmq)
+target_link_libraries(${PROJECT_NAME} fmt ${PostgreSQL_LIBRARIES})
 if(WIN32)
     target_link_libraries(${PROJECT_NAME} wsock32 ws2_32)
 endif()

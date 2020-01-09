@@ -5,7 +5,6 @@ project(Energo VERSION 2.0.0 DESCRIPTION "Resources consumption monitoring syste
 #Externals
 add_subdirectory(External/GoogleTest)
 add_subdirectory(External/fmtlib)
-add_subdirectory(External/libzmq)
 
 # Core
 add_subdirectory(SDK)

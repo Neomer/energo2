@@ -22,27 +22,27 @@ LoginWindow::LoginWindow() :
     
     contentLayout()->setPadding(10);
     contentLayout()->append(
-            shared_ptr<ui::Widget>{new ui::Label{_("Логин:")}},
+            make_shared<ui::Label>(_("Логин:")),
             ui::Layout::SizePolicy::Stretch,
             ui::Layout::Align::Start);
     
     contentLayout()->append(
-            shared_ptr<ui::Widget>{new ui::TextBox{}},
+            make_shared<ui::TextBox>(),
             ui::Layout::SizePolicy::Stretch,
             ui::Layout::Align::Fill);
     
     contentLayout()->append(
-            shared_ptr<ui::Widget>{new ui::Label{_("Пароль:")}},
+            make_shared<ui::Label>(_("Пароль:")),
             ui::Layout::SizePolicy::Stretch,
             ui::Layout::Align::Start);
     
     contentLayout()->append(
-            shared_ptr<ui::Widget>{new ui::TextBox{}},
+            make_shared<ui::TextBox>(),
             ui::Layout::SizePolicy::Stretch,
             ui::Layout::Align::Fill);
     
     contentLayout()->append(
-            shared_ptr<ui::Widget>{new ui::Button{_("Войти"), bind(&LoginWindow::signInClicked, this)}},
+            make_shared<ui::Button>(_("Войти"), bind(&LoginWindow::signInClicked, this)),
             ui::Layout::SizePolicy::Stretch,
             ui::Layout::Align::Center);
 }

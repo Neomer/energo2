@@ -18,16 +18,6 @@ MainWindow::MainWindow() :
             .setTitle("Конфигуратор Energo Pro v.2")
             .addActionBar(new ActionBar{});
     
-    contentLayout()->append(
-            shared_ptr<ui::Widget>{new ui::Label{_("Логин:")}},
-            ui::Layout::SizePolicy::Stretch,
-            ui::Layout::Align::Start);
-    
-    contentLayout()->append(
-            shared_ptr<ui::Widget>{new ui::TextBox{}},
-            ui::Layout::SizePolicy::Stretch,
-            ui::Layout::Align::Start);
-    
     addStatusBar(new StatusBar{});
 }
 
