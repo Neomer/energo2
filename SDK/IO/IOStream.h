@@ -17,7 +17,7 @@ namespace energo::io {
 
 template<typename TDataType>
 class IOStream {
-    types::ThreadSafeQueue<TDataType, IOSTREAM_BUFFER_SIZE> _queue;
+    std::vector<TDataType> _data;
 
 public:
     IOStream() = default;
